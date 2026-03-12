@@ -1,0 +1,291 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CatanFileReader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.catan.datasource</a>
+</div>
+
+<h1>Coverage Summary for Class: CatanFileReader (com.catan.datasource)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CatanFileReader</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (24/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.9%
+  </span>
+  <span class="absValue">
+    (53/61)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CatanFileReader$Harbors</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (9/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (24/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.1%
+  </span>
+  <span class="absValue">
+    (54/62)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.catan.datasource;
+&nbsp;
+&nbsp;import com.catan.domain.ResourceType;
+&nbsp;import com.catan.domain.Terrain;
+&nbsp;
+&nbsp;import java.awt.*;
+&nbsp;import java.io.*;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;public class CatanFileReader {</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public record Harbors(int x, int y, ResourceType tradeResource) {}</b>
+&nbsp;
+&nbsp;    public static ArrayList&lt;Point&gt; readCoordinatesFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;Point&gt; coordinates = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String coordinatePairAsString;
+<b class="fc">&nbsp;            while ((coordinatePairAsString = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                String[] splitCoordinates = coordinatePairAsString.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                Point coordAsPoint = new Point(Integer.parseInt(splitCoordinates[0]), Integer.parseInt(splitCoordinates[1]));</b>
+<b class="fc">&nbsp;                coordinates.add(coordAsPoint);</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exeption reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return coordinates;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;ArrayList&lt;Terrain&gt;&gt; readTerrainsFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;ArrayList&lt;Terrain&gt;&gt; allTerrains = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String terrainInput;
+<b class="fc">&nbsp;            while ((terrainInput = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                ArrayList&lt;Terrain&gt; terrainsPerPoint = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                String[] splitTerrains = terrainInput.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                for (String splitTerrain : splitTerrains) {</b>
+<b class="fc">&nbsp;                    terrainsPerPoint.add(Terrain.valueOf(splitTerrain));</b>
+&nbsp;                }
+<b class="fc">&nbsp;                allTerrains.add(terrainsPerPoint);</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exeption reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return allTerrains;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;ResourceType&gt; readResourceTypesFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;ResourceType&gt; resourceTypes = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String resourceTypeInput;
+<b class="fc">&nbsp;            while ((resourceTypeInput = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                resourceTypes.add(ResourceType.valueOf(resourceTypeInput));</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exception reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return resourceTypes;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;Integer&gt; readRobberNumbersFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String numberInput;
+<b class="fc">&nbsp;            while ((numberInput = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                numbers.add(Integer.parseInt(numberInput));</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exception reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return numbers;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;Set&lt;Integer&gt;&gt; readNeighborsFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;Set&lt;Integer&gt;&gt; allNeighborSets = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String neighborsInput;
+<b class="fc">&nbsp;            while ((neighborsInput = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                Set&lt;Integer&gt; neighborSet = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;                String[] splitNeighbors = neighborsInput.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                for (String splitNeighbor : splitNeighbors) {</b>
+<b class="fc">&nbsp;                    neighborSet.add(Integer.parseInt(splitNeighbor));</b>
+&nbsp;                }
+<b class="fc">&nbsp;                allNeighborSets.add(neighborSet);</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exeption reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return allNeighborSets;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;ArrayList&lt;Integer&gt;&gt; readTileValues(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;ArrayList&lt;Integer&gt;&gt; allTileValues = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String tileValueString;
+<b class="fc">&nbsp;            while ((tileValueString = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                ArrayList&lt;Integer&gt; tileValuesPerPoint = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                String[] splitValues = tileValueString.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                for (String splitValue : splitValues) {</b>
+<b class="fc">&nbsp;                    tileValuesPerPoint.add(Integer.parseInt(splitValue));</b>
+&nbsp;                }
+<b class="fc">&nbsp;                allTileValues.add(tileValuesPerPoint);</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exeption reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return allTileValues;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static BufferedReader getBufferedReaderFromFileName(FileInputStream stream) {
+<b class="fc">&nbsp;        DataInputStream dataStream = new DataInputStream(stream);</b>
+<b class="fc">&nbsp;        return new BufferedReader(new InputStreamReader(dataStream));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static ArrayList&lt;Harbors&gt; readHarborsFromFile(BufferedReader bufferedReader) {
+<b class="fc">&nbsp;        ArrayList&lt;Harbors&gt; harbors = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+&nbsp;            String line;
+<b class="fc">&nbsp;            while ((line = bufferedReader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                line = line.trim();</b>
+<b class="pc">&nbsp;                if (line.isEmpty() || line.startsWith(&quot;#&quot;)) continue;</b>
+&nbsp;
+<b class="fc">&nbsp;                String[] parts = line.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                int x = Integer.parseInt(parts[0].trim());</b>
+<b class="fc">&nbsp;                int y = Integer.parseInt(parts[1].trim());</b>
+<b class="fc">&nbsp;                String resourceText = parts[2].trim().toUpperCase();</b>
+<b class="fc">&nbsp;                ResourceType res = resourceText.equalsIgnoreCase(&quot;null&quot;)</b>
+<b class="fc">&nbsp;                        ? ResourceType.NULL</b>
+<b class="fc">&nbsp;                        : ResourceType.valueOf(resourceText.toUpperCase());</b>
+&nbsp;
+<b class="fc">&nbsp;                harbors.add(new Harbors(x, y, res));</b>
+&nbsp;            }
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;I/O exeption reading line&quot;, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return harbors;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-01 20:25</div>
+</div>
+</body>
+</html>

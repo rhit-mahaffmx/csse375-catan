@@ -1,0 +1,9 @@
+1. Formal code inspections will take place to approve git pull requests
+2. The code reviewer should be the person with the least familiarity with the code in the pull request and the moderator should be the final teammate. Ideally, neither teammate will have contributed to the pull request.
+3. GitHub code review comments
+4. Obsolete comments, redundant comments, commented out code, tests require more than one step, too many arguments, output arguments, dead functions, magic numbers, duplication (field/methods), code of wrong level of abstraction, lack of vertical separation, feature envy, <100% business logic code coverage, nondescript naming, negative conditionals, functions/classes having more than one responsibility, temporal coupling, boundary value checks not being at the edge of code, “trainwrecks” (transitive navigation), boundary conditions are not tested, tests are slow, and lack of encapsulation in classes
+5. Everyone will apply all criteria to the file
+6. Only code modified in the feature branch
+7. Each person will look at every file in consideration
+8. We will have checkstyle provide cursory automated checks
+9. Design decisions and nomenclature must be human-checked to ensure it meets standards

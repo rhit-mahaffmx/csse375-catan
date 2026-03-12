@@ -1,0 +1,238 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CityPoint</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.catan.domain</a>
+</div>
+
+<h1>Coverage Summary for Class: CityPoint (com.catan.domain)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CityPoint</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$0KQ6aA8A</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$5aGAyiY7</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$5ibHEvkN</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$7jWhxhYg</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$82cvGAtB</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$9g0w5ZWd</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$ArhcH0hs</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$eC5QMoNR</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$OKNFC3xt</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$rodlOaRc</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$ul9SOCMK</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$Xpxl348F</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$YWK1k80v</td>
+  </tr>
+  <tr>
+    <td class="name">CityPoint$$$EasyMock$8$auxiliary$ZuQ4gIJg</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.catan.domain;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class CityPoint extends GameComponent {
+&nbsp;
+<b class="fc">&nbsp;    HashMap&lt;Integer, Terrain&gt; tileValueToTerrain = new HashMap&lt;&gt;();</b>
+&nbsp;    ArrayList&lt;RoadPoint&gt; neighbors;
+<b class="fc">&nbsp;    boolean hasSettlement = false;</b>
+<b class="fc">&nbsp;    public boolean isCity = false;</b>
+<b class="fc">&nbsp;    Turn owner = Turn.NONE;</b>
+&nbsp;
+&nbsp;    public CityPoint(int x, int y) {
+<b class="fc">&nbsp;        super(x, y);</b>
+<b class="fc">&nbsp;        this.neighbors = new ArrayList&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Terrain&gt; getTerrains(){
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(tileValueToTerrain.values());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Integer&gt; getTileValues(){
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(tileValueToTerrain.keySet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setTileValues(List&lt;Integer&gt; tileNumbers, List&lt;Terrain&gt; tileTerrains){
+<b class="fc">&nbsp;        for(int i = 0; i &lt; tileTerrains.size(); i++){</b>
+<b class="fc">&nbsp;            tileValueToTerrain.put(tileNumbers.get(i), tileTerrains.get(i));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addNeighbor(RoadPoint roadPoint) {
+<b class="fc">&nbsp;        neighbors.add(roadPoint);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean hasSettlement(){
+<b class="fc">&nbsp;        return hasSettlement;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Turn getOwner(){
+<b class="fc">&nbsp;        return owner;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void placeSettlement(Turn currentTurn){
+<b class="fc">&nbsp;        this.owner = currentTurn;</b>
+<b class="fc">&nbsp;        this.hasSettlement = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ArrayList&lt;ResourceCard&gt; gatherResources() {
+&nbsp;
+<b class="fc">&nbsp;        ArrayList&lt;ResourceCard&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Terrain terrain : getTerrains()) {</b>
+<b class="fc">&nbsp;            ResourceType type = terrain.getResourceType();</b>
+<b class="pc">&nbsp;            if (type != null) {</b>
+<b class="fc">&nbsp;                result.add(new ResourceCard(type));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-01 20:25</div>
+</div>
+</body>
+</html>
