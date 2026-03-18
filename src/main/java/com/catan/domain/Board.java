@@ -200,9 +200,9 @@ public class Board {
                 cityPoints.get(i).addNeighbor(roadPoints.get(neighbor));
             }
         }
-    }ArrayList
+    }
 
-    public void addAllRoadNeighbors(<RoadPoint> roadPoints, ArrayList<CityPoint> cityPoints, FileInputStream neighborsStream) {
+    public void addAllRoadNeighbors(ArrayList<RoadPoint> roadPoints, ArrayList<CityPoint> cityPoints, FileInputStream neighborsStream) {
         BufferedReader bufferedReader = CatanFileReader.getBufferedReaderFromFileName(neighborsStream);
 
         ArrayList<Set<Integer>> roadNeighbors = CatanFileReader.readNeighborsFromFile(bufferedReader);
