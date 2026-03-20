@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 22
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '22'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Install JavaFX SDK
@@ -35,10 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 22
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '22'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Install JavaFX SDK
@@ -50,7 +50,7 @@ jobs:
         echo "JAVA_FX_HOME=$HOME/.javafx/javafx-sdk-21" >> $GITHUB_ENV
         echo "PATH=$JAVA_FX_HOME/bin:$PATH" >> $GITHUB_ENV
     - name: Run tests with JaCoCo coverage
-      run: mvn -B test jacoco:check --file pom.xml -Dpitest.skip=true
+      run: mvn -B verify --file pom.xml -Dpitest.skip=true
     - name: Upload code coverage report
       if: always()
       uses: actions/upload-artifact@v4
@@ -64,10 +64,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 22
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '22'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Install JavaFX SDK
@@ -93,10 +93,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 22
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '22'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Install JavaFX SDK
