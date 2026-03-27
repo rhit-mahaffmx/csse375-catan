@@ -1,11 +1,18 @@
 package com.catan.domain;
 
+import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import com.catan.datasource.BoardDataInputs;
 import com.catan.datasource.CatanFileReader;
-
-import java.awt.*;
-import java.io.*;
-import java.util.*;
 
 public class Board {
     public final static String CITY_COORDINATES_FILE_PATH = "src/main/resources/inputs/cityCoords";
@@ -726,9 +733,13 @@ public class Board {
     }
 
     public void onRobberPointClick(int x, int y) {
+        Turn currentTurn = turnStateMachine.getTurn();
+        Player player = turnToPlayer.get(currentTurn);
         if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
             return;
         } else if (robberMoved) {
+            return;
+        } else if (player.getVictoryPoints() == 2) {
             return;
         }
         for (RobberPoint robberPoint : robberPoints) {
@@ -769,20 +780,28 @@ public class Board {
 
     Set<Player> getEligiblePlayersToRob(RobberPoint robberPoint) {
         Set<Player> players = new HashSet<>();
-        Turn turn = turnStateMachine.getTurn();
-        for (CityPoint cityPoint : cityPoints) {
-            if (!cityPoint.hasSettlement) {
-                continue;
-            }
-            for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
-                Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
+        // Turn turn = turnStateMachine.getTurn();
+        Turn activeTurn = turnStateMachine.getTurn();
+        // for (CityPoint cityPoint : cityPoints) {
+        //     if (!cityPoint.hasSettlement) {
+        //         continue;
+        //     }
+        //     for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
+        //         Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
 
-                if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
-                    players.add(turnToPlayer.get(cityPoint.owner));
-                }
+        //         if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
+        //             players.add(turnToPlayer.get(cityPoint.owner));
+        //         }
+        //     }
+        // }
+
+        for (CityPoint cityPoint : cityPoints) {
+            if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
+                players.add(turnToPlayer.get(cityPoint.getOwner()));
             }
         }
-        players.remove(turnToPlayer.get(turn));
+
+        players.remove(turnToPlayer.get(activeTurn));
         return players;
     }
 
