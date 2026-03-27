@@ -4,7 +4,10 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Collections;
+=======
+>>>>>>> c7923818c92ea49b87fff76185657e015233d71b
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -59,8 +62,12 @@ public class Board {
     private static final int MIN_LONGEST_ROAD_LEN = 5;
     private static final int LONGEST_ROAD_BONUS = 2;
     public final static int DISCARD_THRESHOLD = 7;
-    private Turn currentLongestRoadPlayer = Turn.BANK;
-    private int currentLongestRoadLength = 0;
+    private static final int MIN_HARBOR_SETTLEMENTS = 2;
+    private static final int HARBOR_MASTER_BONUS = 2;
+    TitleBonus longestRoadBonus = new TitleBonus(MIN_LONGEST_ROAD_LEN, LONGEST_ROAD_BONUS);
+    TitleBonus largestArmyBonus = new TitleBonus(MINIMUM_ARMY, ARMY_VP);
+    TitleBonus harbormasterBonus = new TitleBonus(MIN_HARBOR_SETTLEMENTS, HARBOR_MASTER_BONUS);
+    HashMap<Turn, Integer> harborSettlements = new HashMap<>();
 
     GameWindowController gameWindowController;
     TurnStateMachine turnStateMachine;
@@ -91,6 +98,11 @@ public class Board {
         longestRoad.put(Turn.BLUE, 0);
         longestRoad.put(Turn.ORANGE, 0);
         longestRoad.put(Turn.WHITE, 0);
+
+        harborSettlements.put(Turn.RED, 0);
+        harborSettlements.put(Turn.BLUE, 0);
+        harborSettlements.put(Turn.ORANGE, 0);
+        harborSettlements.put(Turn.WHITE, 0);
 
         robberResource = INITIAL_ROBBER_RESOURCE_TYPE;
         robberNumber = INITIAL_ROBBER_NUMBER;
@@ -346,6 +358,11 @@ public class Board {
 
         player.settlements--;
 
+        if (cityPoint instanceof HarborPoint) {
+            harborSettlements.put(player.color, harborSettlements.getOrDefault(player.color, 0) + 1);
+            harbormasterBonus.evaluate(harborSettlements, turnToPlayer);
+        }
+
         gameWindowController.showSettlement(player.color, cityPoint.getX(), cityPoint.getY());
         TurnStateData updatedTurnData = new TurnStateData(player.color, player.settlements, player.roads, player.getVictoryPoints());
         gameWindowController.showInitialTurnState(updatedTurnData);
@@ -438,35 +455,8 @@ public class Board {
                 }
             }
             longestRoad.put(turnToCheck, longestPathLen);
-            for (Turn turn : longestRoad.keySet()) {
-                // tested by hand, changing conditional boundaries causes tests to fail, so there is an equivalent mutant here
-                if (longestRoad.get(turn) > currentLongestRoadLength && longestRoad.get(turn) >= MIN_LONGEST_ROAD_LEN) {
-                    handleGiveNewPlayerLongestRoad(turn);
-                } else if (longestRoad.get(turn) < MIN_LONGEST_ROAD_LEN && turn == currentLongestRoadPlayer){
-                    handleLongestRoadBlockedBySettlement();
-                }
-            }
         }
-    }
-
-    private void handleGiveNewPlayerLongestRoad(Turn turn) {
-        if (turn == currentLongestRoadPlayer) {
-            return;
-        }
-        Player longestRoadPlayer = turnToPlayer.get(currentLongestRoadPlayer);
-        longestRoadPlayer.addVictoryPoints(-LONGEST_ROAD_BONUS);
-
-        Player newLongestRoadPlayer = turnToPlayer.get(turn);
-        newLongestRoadPlayer.addVictoryPoints(LONGEST_ROAD_BONUS);
-
-        currentLongestRoadPlayer = turn;
-        currentLongestRoadLength = longestRoad.get(turn);
-    }
-
-    private void handleLongestRoadBlockedBySettlement() {
-        Player longestRoadPlayer = turnToPlayer.get(currentLongestRoadPlayer);
-        longestRoadPlayer.addVictoryPoints(-LONGEST_ROAD_BONUS);
-        currentLongestRoadPlayer = Turn.BANK;
+        longestRoadBonus.evaluate(longestRoad, turnToPlayer);
     }
 
     private int calculateRoadLen(RoadPoint roadPoint, Turn player) {
@@ -1016,31 +1006,11 @@ public class Board {
     }
 
     private void checkLargestArmy(){
-        ArrayList<Integer> knightsPlayed = new ArrayList<>();
-        for(Player player : turnToPlayer.values()){
-            knightsPlayed.add(player.numKnightsPlayed);
+        HashMap<Turn, Integer> knightCounts = new HashMap<>();
+        for(Map.Entry<Turn, Player> entry : turnToPlayer.entrySet()){
+            knightCounts.put(entry.getKey(), entry.getValue().numKnightsPlayed);
         }
-        int mostPlayed = Collections.max(knightsPlayed);
-        for(Player player : turnToPlayer.values()){
-            if(player.hasLargestArmy && player.numKnightsPlayed == mostPlayed){
-                return;
-            }
-        }
-        if(mostPlayed >= MINIMUM_ARMY) {
-            for (Player player : turnToPlayer.values()) {
-                if (player.numKnightsPlayed == mostPlayed) {
-                    if(!player.hasLargestArmy){
-                        player.addVictoryPoints(ARMY_VP);
-                        player.hasLargestArmy = true;
-                    }
-                } else {
-                    if (player.hasLargestArmy) {
-                        player.addVictoryPoints(-ARMY_VP);
-                    }
-                    player.hasLargestArmy = false;
-                }
-            }
-        }
+        largestArmyBonus.evaluate(knightCounts, turnToPlayer);
     }
 
     public void onMonopolyClick() {

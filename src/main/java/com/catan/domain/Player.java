@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class Player {
     public Turn color;
     public int numKnightsPlayed = 0;
-    public boolean hasLargestArmy = false;
     public final static int DISCARD_THRESHOLD = 7;
 
     public int settlements = Board.INITIAL_SETTLEMENTS;
