@@ -721,13 +721,33 @@ public class Board {
     }
 
     public void onRobberPointClick(int x, int y) {
+        Turn currentTurn = turnStateMachine.getTurn();
+        Player player = turnToPlayer.get(currentTurn);
         if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
             return;
         } else if (robberMoved) {
             return;
         }
+
         for (RobberPoint robberPoint : robberPoints) {
             if (robberPoint.getX() == x && robberPoint.getY() == y && !robberPoint.hasRobber) {
+                Boolean isPlayerSafe = false;
+
+                for (CityPoint cityPoint : cityPoints) {
+                    if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
+                        Player owner = turnToPlayer.get(cityPoint.getOwner());
+
+                        if(owner.getVictoryPoints() < 2){
+                            isPlayerSafe = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(isPlayerSafe){ //robber leaves player alone
+                    return;
+                }
+
                 robberPoint.hasRobber = true;
                 robberResource = robberPoint.resourceType;
                 robberNumber = robberPoint.diceNumber;
@@ -736,8 +756,7 @@ public class Board {
 
                 gameWindowController.showInitialRobberState(x, y);
                 eligiblePlayers = getEligiblePlayersToRob(robberPoint);
-                if (eligiblePlayers.size() > 0) {
-
+                if (!eligiblePlayers.isEmpty()) {
                     gameWindowController.showStealDialog(this, eligiblePlayers);
                 }
             }
@@ -764,20 +783,28 @@ public class Board {
 
     Set<Player> getEligiblePlayersToRob(RobberPoint robberPoint) {
         Set<Player> players = new HashSet<>();
-        Turn turn = turnStateMachine.getTurn();
-        for (CityPoint cityPoint : cityPoints) {
-            if (!cityPoint.hasSettlement) {
-                continue;
-            }
-            for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
-                Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
+        // Turn turn = turnStateMachine.getTurn();
+        Turn activeTurn = turnStateMachine.getTurn();
+        // for (CityPoint cityPoint : cityPoints) {
+        //     if (!cityPoint.hasSettlement) {
+        //         continue;
+        //     }
+        //     for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
+        //         Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
 
-                if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
-                    players.add(turnToPlayer.get(cityPoint.owner));
-                }
+        //         if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
+        //             players.add(turnToPlayer.get(cityPoint.owner));
+        //         }
+        //     }
+        // }
+
+        for (CityPoint cityPoint : cityPoints) {
+            if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
+                players.add(turnToPlayer.get(cityPoint.getOwner()));
             }
         }
-        players.remove(turnToPlayer.get(turn));
+
+        players.remove(turnToPlayer.get(activeTurn));
         return players;
     }
 

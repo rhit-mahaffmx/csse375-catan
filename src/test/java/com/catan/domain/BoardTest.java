@@ -1,14 +1,12 @@
 package com.catan.domain;
 
-
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,18 +16,18 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.catan.datasource.BoardDataInputs;
-import com.catan.presentation.GameWindow;
 import org.easymock.EasyMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.catan.datasource.BoardDataInputs;
+import com.catan.presentation.GameWindow;
 
 public class BoardTest {
-
 
     private ArrayList<CityPoint> helpCreateCities(Board board) {
         try {
@@ -78,7 +76,6 @@ public class BoardTest {
         }
     }
 
-
     private FileInputStream createMockFileInputStreamFromString(String data) throws IOException {
         File tempFile = File.createTempFile("test_board_init_", ".txt");
         tempFile.deleteOnExit();
@@ -87,7 +84,6 @@ public class BoardTest {
         }
         return new FileInputStream(tempFile);
     }
-
 
     private String readFileContentToString(String filePath) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
@@ -331,7 +327,6 @@ public class BoardTest {
         assertEquals(8, cityPoints.getFirst().getTileValues().getFirst());
         assertEquals(4, cityPoints.getLast().getTileValues().getFirst());
     }
-
 
     @Test
     public void testStartGame() {
@@ -2565,6 +2560,33 @@ public class BoardTest {
         EasyMock.verify(turnStateMachine, dice);
 
         assertFalse(testBoard.robberMoved);
+    }
+
+    @Test
+    public void testFriendlyRobberExactly2VP() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
+        cityPoint.placeSettlement(Turn.BLUE);
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        bluePlayer.addVictoryPoints(2);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
+
+        assertTrue(eligiblePlayers.contains(bluePlayer));
+        EasyMock.verify(turnStateMachine);
     }
 
     @Test
@@ -9851,6 +9873,183 @@ public class BoardTest {
         assertEquals(3, bluePlaced);
         assertEquals(5, bluePlayer.getVictoryPoints());
         assertEquals(2, redPlayer.getVictoryPoints());
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testFriendlyRobberWithZeroVP() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(8), List.of(Terrain.FOREST));
+        cityPoint.placeSettlement(Turn.BLUE);
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        // Player has 0 VP - should be protected
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WOOD, 8);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
+
+        assertFalse(eligiblePlayers.contains(bluePlayer));
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testFriendlyRobberWithOneVP() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(9), List.of(Terrain.PASTURE));
+        cityPoint.placeSettlement(Turn.BLUE);
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        bluePlayer.addVictoryPoints(1);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 9);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
+
+        assertFalse(eligiblePlayers.contains(bluePlayer));
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testFriendlyRobberWith3VP() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(5), List.of(Terrain.HILL));
+        cityPoint.placeSettlement(Turn.BLUE);
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        bluePlayer.addVictoryPoints(3);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.BRICK, 5);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
+
+        assertTrue(eligiblePlayers.contains(bluePlayer));
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testFriendlyRobberBlocksRobberMovement() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
+        cityPoint.placeSettlement(Turn.BLUE);
+
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+        testBoard.numRolled = 7;
+        testBoard.robberMoved = false;
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        bluePlayer.addVictoryPoints(0); // 0 VP - friendly robber should protect
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        testBoard.onRobberPointClick(1, 1);
+
+        assertFalse(robberPoint.hasRobber);
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testFriendlyRobberAllowsMovementAbove2VP() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
+        CityPoint cityPoint = new CityPoint(2, 2);
+        cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
+        cityPoint.placeSettlement(Turn.BLUE);
+
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+        testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+        testBoard.numRolled = 7;
+        testBoard.robberMoved = false;
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        bluePlayer.addVictoryPoints(2); // 2 VP - not protected
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        testBoard.onRobberPointClick(1, 1);
+
+        assertTrue(robberPoint.hasRobber);
+        assertEquals(ResourceType.WHEAT, testBoard.robberResource);
+        assertEquals(6, testBoard.robberNumber);
+        EasyMock.verify(turnStateMachine);
+    }
+
+    @Test
+    public void testMultipleSettlementsDifferentPlayersOnHex() {
+        TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(null, turnStateMachine, dice);
+
+        // Setup Blue player with 0 VP (protected)
+        CityPoint blueCityPoint = new CityPoint(2, 2);
+        blueCityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
+        blueCityPoint.placeSettlement(Turn.BLUE);
+        
+        // Setup White player with 3 VP (not protected)
+        CityPoint whiteCityPoint = new CityPoint(3, 3);
+        whiteCityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
+        whiteCityPoint.placeSettlement(Turn.WHITE);
+
+        testBoard.cityPoints = new ArrayList<>(List.of(blueCityPoint, whiteCityPoint));
+
+        Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+        Player whitePlayer = testBoard.turnToPlayer.get(Turn.WHITE);
+        whitePlayer.addVictoryPoints(3);
+
+        RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
+        testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
+        Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
+
+        assertFalse(eligiblePlayers.contains(bluePlayer));
+        assertTrue(eligiblePlayers.contains(whitePlayer));
         EasyMock.verify(turnStateMachine);
     }
 
