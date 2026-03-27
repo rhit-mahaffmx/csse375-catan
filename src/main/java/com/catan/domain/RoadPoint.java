@@ -6,6 +6,7 @@ public class RoadPoint extends GameComponent {
 
     ArrayList<CityPoint> neighbors;
     boolean hasRoad = false;
+    boolean isSideways = false;
     Turn owner = Turn.NONE;
 
     public RoadPoint(int x, int y) {
@@ -28,5 +29,13 @@ public class RoadPoint extends GameComponent {
     public void placeRoad(Turn turn) {
         owner = turn;
         hasRoad = true;
+    }
+
+    public boolean isSideways() {
+        return isSideways;
+    }
+
+    public void setSideways(boolean sideways) {
+        this.isSideways = sideways;
     }
 }

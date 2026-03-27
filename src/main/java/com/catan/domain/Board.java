@@ -47,6 +47,7 @@ public class Board {
 
     public int numRolled;
     public boolean robberMoved;
+    boolean epidemicActive = false;
 
     ResourceType robberResource;
     int robberNumber;
@@ -475,7 +476,7 @@ public class Board {
                 }
             }
         }
-        return maxLen + 1;
+        return maxLen + (road.isSideways() ? 0 : 1);
     }
 
     public RoadPoint getRoadAtCoords(int x, int y) {
@@ -515,6 +516,7 @@ public class Board {
 
         this.gameWindowController.clearDevCards();
         player.removeFreeRoads(player.getFreeRoads());
+        epidemicActive = false;
         turnStateMachine.nextTurn();
         turn = turnStateMachine.getTurn();
         player = turnToPlayer.get(turn);
@@ -620,7 +622,7 @@ public class Board {
                     resourceType = ResourceType.SHEEP;
                 }
                 if (cityPoint.isCity) {
-                    owner.addResources(resourceType, 2);
+                    owner.addResources(resourceType, epidemicActive ? 1 : 2);
                 } else {
                     owner.addResources(resourceType, 1);
                 }
@@ -1034,5 +1036,198 @@ public class Board {
             }
         }
         showResources();
+    }
+
+    // ==================== Event Card Handling ====================
+
+    private static final Turn[] PLAYER_ORDER = {Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE};
+
+    public void handleEvent(EventType eventType) {
+        switch (eventType) {
+            case ROBBER_ATTACK:
+                handleRobberAttackEvent();
+                break;
+            case EARTHQUAKE:
+                handleEarthquakeEvent();
+                break;
+            case EPIDEMIC:
+                handleEpidemicEvent();
+                break;
+            case GOOD_NEIGHBORS:
+                break;
+            case CALM_SEAS:
+                break;
+            case TOURNAMENT:
+                break;
+            case TRADE_ADVANTAGE:
+                handleTradeAdvantageEvent();
+                break;
+            case CONFLICT:
+                handleConflictEvent();
+                break;
+            case NO_EVENT:
+                break;
+            case NEW_YEAR:
+                break;
+        }
+    }
+
+    void handleRobberAttackEvent() {
+        robberMoved = false;
+        for (Player player : turnToPlayer.values()) {
+            if (player.color == Turn.BANK) continue;
+            if (player.needsToDiscard()) {
+                showDiscardDialog();
+                return;
+            }
+        }
+    }
+
+    void handleEarthquakeEvent() {
+        for (Turn turn : PLAYER_ORDER) {
+            ArrayList<RoadPoint> ownedRoads = new ArrayList<>();
+            for (RoadPoint road : roadPoints) {
+                if (road.getOwner().equals(turn) && road.hasRoad() && !road.isSideways()) {
+                    ownedRoads.add(road);
+                }
+            }
+            if (!ownedRoads.isEmpty()) {
+                int index = rand.nextInt(ownedRoads.size());
+                ownedRoads.get(index).setSideways(true);
+            }
+        }
+        updateLongestRoad();
+    }
+
+    void handleEpidemicEvent() {
+        epidemicActive = true;
+    }
+
+    public void executeGoodNeighbors(HashMap<Turn, ResourceType> chosenResources) {
+        HashMap<Turn, ResourceType> received = new HashMap<>();
+        for (int i = 0; i < PLAYER_ORDER.length; i++) {
+            Turn giver = PLAYER_ORDER[i];
+            Turn receiver = PLAYER_ORDER[(i + 1) % PLAYER_ORDER.length];
+            ResourceType resource = chosenResources.get(giver);
+            if (resource == null) continue;
+
+            Player giverPlayer = turnToPlayer.get(giver);
+            if (giverPlayer.getResource(resource) <= 0) continue;
+
+            received.put(receiver, resource);
+            giverPlayer.subResources(resource, 1);
+        }
+
+        for (Map.Entry<Turn, ResourceType> entry : received.entrySet()) {
+            turnToPlayer.get(entry.getKey()).addResources(entry.getValue(), 1);
+        }
+        showResources();
+    }
+
+    public ArrayList<Turn> getCalmSeasWinners() {
+        int maxHarbors = 0;
+        ArrayList<Turn> winners = new ArrayList<>();
+        for (Turn turn : PLAYER_ORDER) {
+            int count = harborSettlements.getOrDefault(turn, 0);
+            if (count > maxHarbors && count > 0) {
+                maxHarbors = count;
+                winners.clear();
+                winners.add(turn);
+            } else if (count == maxHarbors && count > 0) {
+                winners.add(turn);
+            }
+        }
+        return winners;
+    }
+
+    public void giveResourceToPlayer(Turn turn, ResourceType resource) {
+        turnToPlayer.get(turn).addResources(resource, 1);
+        showResources();
+    }
+
+    public ArrayList<Turn> getTournamentWinners() {
+        int maxKnights = 0;
+        ArrayList<Turn> winners = new ArrayList<>();
+        for (Turn turn : PLAYER_ORDER) {
+            int count = turnToPlayer.get(turn).numKnightsPlayed;
+            if (count > maxKnights && count > 0) {
+                maxKnights = count;
+                winners.clear();
+                winners.add(turn);
+            } else if (count == maxKnights && count > 0) {
+                winners.add(turn);
+            }
+        }
+        return winners;
+    }
+
+    void handleTradeAdvantageEvent() {
+        Turn holder = longestRoadBonus.getCurrentHolder();
+        if (holder != Turn.BANK) {
+            eligiblePlayers = new HashSet<>();
+            for (Turn turn : PLAYER_ORDER) {
+                if (turn != holder) {
+                    Player p = turnToPlayer.get(turn);
+                    if (p.getTotalResources() > 0) {
+                        eligiblePlayers.add(p);
+                    }
+                }
+            }
+            if (!eligiblePlayers.isEmpty()) {
+                gameWindowController.showStealDialog(this, eligiblePlayers);
+            }
+        }
+    }
+
+    void handleConflictEvent() {
+        Turn holder = largestArmyBonus.getCurrentHolder();
+        if (holder != Turn.BANK) {
+            eligiblePlayers = new HashSet<>();
+            for (Turn turn : PLAYER_ORDER) {
+                if (turn != holder) {
+                    Player p = turnToPlayer.get(turn);
+                    if (p.getTotalResources() > 0) {
+                        eligiblePlayers.add(p);
+                    }
+                }
+            }
+            if (!eligiblePlayers.isEmpty()) {
+                gameWindowController.showStealDialog(this, eligiblePlayers);
+            }
+        }
+    }
+
+    public void stealFromPlayer(Turn thiefTurn, Turn victimTurn, Random random) {
+        Player thief = turnToPlayer.get(thiefTurn);
+        Player victim = turnToPlayer.get(victimTurn);
+        ArrayList<ResourceType> cardsAsList = victim.getResourcesAsList();
+        if (cardsAsList.isEmpty()) return;
+
+        int cardStolen = random.nextInt(cardsAsList.size());
+        ResourceType resourceToSteal = cardsAsList.get(cardStolen);
+        thief.addResources(resourceToSteal, 1);
+        victim.subResources(resourceToSteal, 1);
+        showResources();
+    }
+
+    public void repairRoad(int x, int y) {
+        Turn currentTurn = turnStateMachine.getTurn();
+        Player player = turnToPlayer.get(currentTurn);
+
+        for (RoadPoint road : roadPoints) {
+            if (road.getX() == x && road.getY() == y
+                    && road.getOwner().equals(currentTurn)
+                    && road.isSideways()) {
+                if (player.getResource(ResourceType.WOOD) >= 1
+                        && player.getResource(ResourceType.BRICK) >= 1) {
+                    player.subResources(ResourceType.WOOD, 1);
+                    player.subResources(ResourceType.BRICK, 1);
+                    road.setSideways(false);
+                    updateLongestRoad();
+                    showResources();
+                }
+                return;
+            }
+        }
     }
 }
