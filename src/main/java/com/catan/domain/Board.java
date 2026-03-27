@@ -721,8 +721,6 @@ public class Board {
     }
 
     public void onRobberPointClick(int x, int y) {
-        Turn currentTurn = turnStateMachine.getTurn();
-        Player player = turnToPlayer.get(currentTurn);
         if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
             return;
         } else if (robberMoved) {
@@ -783,24 +781,14 @@ public class Board {
 
     Set<Player> getEligiblePlayersToRob(RobberPoint robberPoint) {
         Set<Player> players = new HashSet<>();
-        // Turn turn = turnStateMachine.getTurn();
         Turn activeTurn = turnStateMachine.getTurn();
-        // for (CityPoint cityPoint : cityPoints) {
-        //     if (!cityPoint.hasSettlement) {
-        //         continue;
-        //     }
-        //     for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
-        //         Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
-
-        //         if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
-        //             players.add(turnToPlayer.get(cityPoint.owner));
-        //         }
-        //     }
-        // }
 
         for (CityPoint cityPoint : cityPoints) {
             if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
-                players.add(turnToPlayer.get(cityPoint.getOwner()));
+                Player owner = turnToPlayer.get(cityPoint.getOwner());
+                if (owner.getVictoryPoints() >= 2) {
+                    players.add(owner);
+                }
             }
         }
 

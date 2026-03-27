@@ -4552,6 +4552,9 @@ public class BoardTest {
         testBoard.robberMoved = false;
         testBoard.cityPoints = new ArrayList<>();
 
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
         testBoard.onRobberPointClick(1, 1);
 
         assertTrue(robberPoint.hasRobber);
@@ -4591,7 +4594,8 @@ public class BoardTest {
         testBoard.cityPoints = new ArrayList<>();
 
         testController.showInitialRobberState(1, 1);
-        EasyMock.replay(testController);
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(testController, turnStateMachine);
 
         testBoard.onRobberPointClick(1, 1);
 
@@ -4635,6 +4639,9 @@ public class BoardTest {
         testBoard.robberPoints = new ArrayList<>(List.of(robberPointOne));
         testBoard.cityPoints = new ArrayList<>();
 
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
+
         testBoard.onRobberPointClick(1, 1);
 
         assertEquals(robberPointOne.resourceType, testBoard.robberResource);
@@ -4656,6 +4663,9 @@ public class BoardTest {
         testBoard.robberMoved = false;
         testBoard.robberPoints = new ArrayList<>(List.of(robberPointOne, robberPointTwo));
         testBoard.cityPoints = new ArrayList<>();
+
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
+        EasyMock.replay(turnStateMachine);
 
         testBoard.onRobberPointClick(1, 1);
         testBoard.onRobberPointClick(2, 2);
@@ -5606,6 +5616,7 @@ public class BoardTest {
         cityPoint.owner = Turn.RED;
         cityPoint.hasSettlement = true;
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5632,6 +5643,7 @@ public class BoardTest {
 
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5658,6 +5670,8 @@ public class BoardTest {
 
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5684,6 +5698,9 @@ public class BoardTest {
         cityPoint2.setTileValues(List.of(3, 4, 8), List.of(Terrain.MOUNTAIN, Terrain.HILL, Terrain.PASTURE));
         cityPoint2.owner = Turn.BLUE;
         cityPoint2.hasSettlement = true;
+
+        testBoard.turnToPlayer.get(Turn.ORANGE).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
 
@@ -5726,7 +5743,8 @@ public class BoardTest {
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
 
         controllerTest.showInitialRobberState(1, 1);
-        EasyMock.replay(controllerTest);
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
+        EasyMock.replay(controllerTest, turnStateMachine);
 
         testBoard.numRolled = Board.DISCARD_THRESHOLD;
         testBoard.robberMoved = false;
@@ -5860,6 +5878,9 @@ public class BoardTest {
         cityPoint2.setTileValues(List.of(3, 4, 8), List.of(Terrain.MOUNTAIN, Terrain.HILL, Terrain.PASTURE));
         cityPoint2.owner = Turn.BLUE;
         cityPoint2.hasSettlement = true;
+
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -9988,6 +10009,7 @@ public class BoardTest {
 
     @Test
     public void testFriendlyRobberAllowsMovementAbove2VP() {
+        GameWindowController controllerTest = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
@@ -9997,7 +10019,7 @@ public class BoardTest {
 
         Dice dice = EasyMock.mock(Dice.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -10095,7 +10117,7 @@ public class BoardTest {
                 .findFirst()
                 .orElseThrow();
         blueCity.placeSettlement(Turn.BLUE);
-        bluePlayer.addVictoryPoints(2);
+        bluePlayer.addVictoryPoints(1);
 
         RobberPoint matchingRobberPoint = null;
         for (Map.Entry<Integer, Terrain> tileData : blueCity.tileValueToTerrain.entrySet()) {
