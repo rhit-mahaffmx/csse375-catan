@@ -4,10 +4,6 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.Collections;
-=======
->>>>>>> c7923818c92ea49b87fff76185657e015233d71b
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -729,11 +725,27 @@ public class Board {
             return;
         } else if (robberMoved) {
             return;
-        } else if (player.getVictoryPoints() == 2) {
-            return;
         }
+
         for (RobberPoint robberPoint : robberPoints) {
             if (robberPoint.getX() == x && robberPoint.getY() == y && !robberPoint.hasRobber) {
+                Boolean isPlayerSafe = false;
+
+                for (CityPoint cityPoint : cityPoints) {
+                    if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
+                        Player owner = turnToPlayer.get(cityPoint.getOwner());
+
+                        if(owner.getVictoryPoints() < 2){
+                            isPlayerSafe = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(isPlayerSafe){ //robber leaves player alone
+                    return;
+                }
+
                 robberPoint.hasRobber = true;
                 robberResource = robberPoint.resourceType;
                 robberNumber = robberPoint.diceNumber;
@@ -742,8 +754,7 @@ public class Board {
 
                 gameWindowController.showInitialRobberState(x, y);
                 eligiblePlayers = getEligiblePlayersToRob(robberPoint);
-                if (eligiblePlayers.size() > 0) {
-
+                if (!eligiblePlayers.isEmpty()) {
                     gameWindowController.showStealDialog(this, eligiblePlayers);
                 }
             }
