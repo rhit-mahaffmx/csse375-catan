@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -423,6 +424,53 @@ public class BoardTest {
         assertEquals(Turn.BLUE, secondTurn);
         assertEquals(Turn.ORANGE, thirdTurn);
         assertEquals(Turn.WHITE, fourthTurn);
+    }
+
+    @Test
+    public void testNextTurnUpdatesDisplay() {
+        // Setup mocks
+        GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
+        TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
+        Dice dice = EasyMock.mock(Dice.class);
+
+        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+
+        // Mock initial state
+        EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
+        Player player = testBoard.turnToPlayer.get(Turn.RED);
+        player.settlements = 2; // Ensure not initial
+        player.roads = 2;
+
+        // Mock next turn
+        turnStateMachine.nextTurn();
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
+        Player nextPlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+
+        // Capture the TurnStateData passed to showInitialTurnState
+        Capture<TurnStateData> capturedTurnData = EasyMock.newCapture();
+        controllerTest.showInitialTurnState(EasyMock.capture(capturedTurnData));
+
+        // Other calls
+        controllerTest.clearDevCards();
+        controllerTest.showDevCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
+        controllerTest.showResourceCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
+
+        // Replay
+        EasyMock.replay(turnStateMachine, controllerTest);
+
+        // Assume robber moved
+        testBoard.robberMoved = true;
+
+        // Call onNextTurnClick
+        testBoard.onNextTurnClick();
+
+        // Verify
+        EasyMock.verify(turnStateMachine, controllerTest);
+
+        // Check that the captured TurnStateData has the correct turn
+        TurnStateData turnData = capturedTurnData.getValue();
+        assertEquals(Turn.BLUE, turnData.turn);
     }
 
     @Test
