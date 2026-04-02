@@ -84,4 +84,5 @@ public class CityPoint extends GameComponent {
 
         return false;
     }
+    
 }
