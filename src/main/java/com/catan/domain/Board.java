@@ -828,21 +828,27 @@ public class Board {
 
     Set<Player> getEligiblePlayersToRob(RobberPoint robberPoint) {
         Set<Player> players = new HashSet<>();
-        Turn activeTurn = turnStateMachine.getTurn();
-
+        Turn currentTurn = turnStateMachine.getTurn(); // Get the current turn color
+        
         for (CityPoint cityPoint : cityPoints) {
-            if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
-                Player owner = turnToPlayer.get(cityPoint.getOwner());
-                if (owner.getVictoryPoints() > 2) {
-                    players.add(owner);
+            if (!cityPoint.hasSettlement) {
+                continue;
+            }
+            // Only consider settlements NOT owned by the current player
+            if (cityPoint.owner == currentTurn) {
+                continue;
+            }
+
+            for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
+                Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
+                if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
+                    players.add(turnToPlayer.get(cityPoint.owner));
                 }
             }
         }
-
-        players.remove(turnToPlayer.get(activeTurn));
+        // Remove the redundant players.remove line if you use the 'if' check above
         return players;
     }
-
 
     public void showResources() {
         Turn currentTurn = turnStateMachine.getTurn();
