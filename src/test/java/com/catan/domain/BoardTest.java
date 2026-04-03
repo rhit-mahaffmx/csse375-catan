@@ -2299,7 +2299,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(6);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 6));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(6);
@@ -2339,7 +2339,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(12);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 12));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
 
@@ -2383,7 +2383,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(12);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 12));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -2431,7 +2431,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(12);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 12));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
         controllerTest.showDiceRoll(12);
@@ -2478,7 +2478,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(12);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 12));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(12);
 
@@ -2525,7 +2525,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(8);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 8));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN).times(1);
 
         EasyMock.replay(turnStateMachine, deck);
@@ -2560,7 +2560,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(8);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 8));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
@@ -2598,7 +2598,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         EasyMock.replay(turnStateMachine, deck);
 
         testBoard.onRollDiceClick();
@@ -2631,7 +2631,7 @@ public class BoardTest {
 
         Set<Player> eligiblePlayers = testBoard.getEligiblePlayersToRob(robberPoint);
 
-        assertTrue(eligiblePlayers.contains(bluePlayer));
+        assertFalse(eligiblePlayers.contains(bluePlayer));
         EasyMock.verify(turnStateMachine);
     }
 
@@ -2645,7 +2645,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         EasyMock.replay(turnStateMachine, deck);
 
         testBoard.onRollDiceClick();
@@ -2667,7 +2667,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         EasyMock.replay(turnStateMachine, deck);
 
         ArrayList<Turn> turns = new ArrayList<>(List.of(Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE));
@@ -2706,7 +2706,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(6);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 6));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
@@ -2748,7 +2748,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        EasyMock.expect(deck.drawNumber()).andReturn(6);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 6));
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -5572,7 +5572,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         controllerTest.showDiceRoll(7);
 
         controllerTest.showDiscardDialog(testBoard);
@@ -5593,7 +5593,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         controller.showDiceRoll(7);
 
         EasyMock.replay(turnStateMachine, deck, controller);
@@ -5824,7 +5824,7 @@ public class BoardTest {
         cityPoint.owner = Turn.RED;
         cityPoint.hasSettlement = true;
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
-        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(3);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5851,7 +5851,7 @@ public class BoardTest {
 
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
-        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(3);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5878,8 +5878,8 @@ public class BoardTest {
 
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
-        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
-        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(3);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(3);
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.SHEEP, 8);
 
@@ -5907,8 +5907,8 @@ public class BoardTest {
         cityPoint2.owner = Turn.BLUE;
         cityPoint2.hasSettlement = true;
 
-        testBoard.turnToPlayer.get(Turn.ORANGE).addVictoryPoints(2);
-        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.ORANGE).addVictoryPoints(3);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(3);
 
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPoint2));
 
@@ -6087,8 +6087,8 @@ public class BoardTest {
         cityPoint2.owner = Turn.BLUE;
         cityPoint2.hasSettlement = true;
 
-        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2);
-        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(2);
+        testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(3);
+        testBoard.turnToPlayer.get(Turn.BLUE).addVictoryPoints(3);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -7823,7 +7823,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
-        EasyMock.expect(deck.drawNumber()).andReturn(8);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 8));
 
         EasyMock.replay(turnStateMachine, deck);
 
@@ -9849,7 +9849,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(deck.drawNumber()).andReturn(9);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 9));
         EasyMock.replay(deck, turnStateMachine);
 
         //PLACE RED
@@ -9921,7 +9921,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
-        EasyMock.expect(deck.drawNumber()).andReturn(8);
+        EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 8));
 
         EasyMock.replay(turnStateMachine, deck);
 
@@ -10229,7 +10229,7 @@ public class BoardTest {
         testBoard.robberMoved = false;
 
         Player bluePlayer = testBoard.turnToPlayer.get(Turn.BLUE);
-        bluePlayer.addVictoryPoints(2); // 2 VP - not protected
+        bluePlayer.addVictoryPoints(3); // 3 VP - not protected
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
