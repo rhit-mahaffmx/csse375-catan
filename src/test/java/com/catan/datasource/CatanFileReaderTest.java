@@ -1,7 +1,7 @@
 package com.catan.datasource;
 
 import com.catan.domain.Board;
-import com.catan.domain.Dice;
+import com.catan.domain.NumberCardDeck;
 import com.catan.domain.GameWindowController;
 import com.catan.domain.TurnStateMachine;
 import org.easymock.EasyMock;
@@ -20,9 +20,9 @@ public class CatanFileReaderTest {
     public void testReadCoordinatesFromFileIOException() throws IOException {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
         EasyMock.expect(bufferedReader.readLine()).andThrow(new IOException("This is an IO Exception"));
@@ -42,9 +42,9 @@ public class CatanFileReaderTest {
     public void testReadResourceTypesFromFileIOException() throws IOException {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
         EasyMock.expect(bufferedReader.readLine()).andThrow(new IOException("This is an IO Exception"));
@@ -65,9 +65,9 @@ public class CatanFileReaderTest {
     public void testReadRobberNumbersFromFileIOException() throws IOException {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
         EasyMock.expect(bufferedReader.readLine()).andThrow(new IOException("This is an IO Exception"));
@@ -89,9 +89,9 @@ public class CatanFileReaderTest {
     public void testReadTerrainsFromFileIOException() throws IOException {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
         EasyMock.expect(bufferedReader.readLine()).andThrow(new IOException("This is an IO Exception"));
@@ -111,9 +111,9 @@ public class CatanFileReaderTest {
     public void testReadNeighborsFromFileIOException() throws IOException {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
         EasyMock.expect(bufferedReader.readLine()).andThrow(new IOException("This is an IO Exception"));
@@ -133,9 +133,9 @@ public class CatanFileReaderTest {
     public void testReadNeighborsFromFileTwoNeighbors() throws IOException {
         GameWindowController gameWindowController = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         BoardDataInputs boardDataInput = EasyMock.niceMock(BoardDataInputs.class);
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         BufferedReader bufferedReader = EasyMock.createMock(BufferedReader.class);
 
         EasyMock.expect(bufferedReader.readLine()).andReturn("0,1");

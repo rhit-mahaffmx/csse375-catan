@@ -147,9 +147,9 @@ public class BoardTest {
     public void testCreateAllCities() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         assertEquals(Board.NUM_CITYPOINTS, helpCreateCities(testBoard).size());
     }
 
@@ -157,9 +157,9 @@ public class BoardTest {
     public void testCreateAllRoads() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         assertEquals(Board.NUM_ROADPOINTS, helpCreateRoads(testBoard).size());
     }
 
@@ -167,9 +167,9 @@ public class BoardTest {
     public void testCreateAllRobberPoints() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         try {
             FileInputStream coordsStream = new FileInputStream(Board.ROBBER_COORDINATES_FILE_PATH);
             FileInputStream resourceStream = new FileInputStream(Board.ROBBER_RESOURCE_FILE_PATH);
@@ -184,9 +184,9 @@ public class BoardTest {
     public void testAddAllCityNeighbors() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
         ArrayList<RoadPoint> roadPoints = helpCreateRoads(testBoard);
 
@@ -199,9 +199,9 @@ public class BoardTest {
     public void testAddAllRoadNeighbors() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         ArrayList<RoadPoint> roadPoints = helpCreateRoads(testBoard);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
 
@@ -214,9 +214,9 @@ public class BoardTest {
     public void testAddAllRobberPoints() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         ArrayList<RobberPoint> robberPoints;
         try {
             FileInputStream coordsStream = new FileInputStream(Board.ROBBER_COORDINATES_FILE_PATH);
@@ -242,9 +242,9 @@ public class BoardTest {
     public void testAddAllRoads() {
         GameWindowController gameWindowController = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
         ArrayList<RoadPoint> roadPoints = helpCreateRoads(testBoard);
 
         for (int i = 0; i < Board.NUM_ROADPOINTS; i++) {
@@ -262,9 +262,9 @@ public class BoardTest {
     public void testAddAllCitiesTopRow() {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
 
@@ -283,9 +283,9 @@ public class BoardTest {
     public void testAddCityPlacesTerrain() {
         GameWindowController testWindowController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(testWindowController, turnStateMachine, deck);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
         for (CityPoint cityPoint : cityPoints) {
             assertFalse(cityPoint.getTerrains().isEmpty());
@@ -296,9 +296,9 @@ public class BoardTest {
     public void testAddCityPlacesCorrectTerrain() {
         GameWindowController testWindowController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(testWindowController, turnStateMachine, deck);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
         assertEquals(Terrain.HILL, cityPoints.getFirst().getTerrains().getFirst());
         assertEquals(Terrain.FIELD, cityPoints.getLast().getTerrains().getFirst());
@@ -308,9 +308,9 @@ public class BoardTest {
     public void testAddCityAssignsNumbers() {
         GameWindowController testWindowController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(testWindowController, turnStateMachine, deck);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
         for (CityPoint cityPoint : cityPoints) {
             assertFalse(cityPoint.getTileValues().isEmpty());
@@ -321,8 +321,8 @@ public class BoardTest {
     public void testAddCityAssignsValueCorrectly() throws IOException {
         GameWindowController testWindowController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testWindowController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testWindowController, turnStateMachine, deck);
         ArrayList<CityPoint> cityPoints = helpCreateCities(testBoard);
         assertEquals(8, cityPoints.getFirst().getTileValues().getFirst());
         assertEquals(4, cityPoints.getLast().getTileValues().getFirst());
@@ -332,9 +332,9 @@ public class BoardTest {
     public void testStartGame() {
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         gameWindowController.startGame();
 
@@ -349,9 +349,9 @@ public class BoardTest {
         // Record
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -369,9 +369,9 @@ public class BoardTest {
         //Record
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         turnStateMachine.nextTurn();
@@ -395,9 +395,9 @@ public class BoardTest {
         //Record
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         turnStateMachine.nextTurn();
@@ -430,9 +430,9 @@ public class BoardTest {
         //Record
         GameWindowController gameWindowController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(gameWindowController, turnStateMachine, dice);
+        Board testBoard = new Board(gameWindowController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         turnStateMachine.nextTurn();
@@ -470,9 +470,9 @@ public class BoardTest {
     public void testGetRedsInitialSettlements() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         assertEquals(5, testBoard.getPlayersSettlements(Turn.RED));
     }
 
@@ -480,9 +480,9 @@ public class BoardTest {
     public void testGetRedsInitialRoads() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         assertEquals(15, testBoard.getPlayersRoads(Turn.RED));
     }
 
@@ -490,9 +490,9 @@ public class BoardTest {
     public void testShowInitialTurnState() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
@@ -510,9 +510,9 @@ public class BoardTest {
     public void testShowInitialRobberState() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.showInitialRobberState(220, 504);
 
@@ -529,10 +529,10 @@ public class BoardTest {
 
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testPoint));
         RoadPoint testRoad = new RoadPoint(10, 10);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
@@ -553,10 +553,10 @@ public class BoardTest {
 
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testPoint));
         RoadPoint testRoad = new RoadPoint(10, 10);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
@@ -578,9 +578,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testPoint));
         RoadPoint testRoad = new RoadPoint(10, 10);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
@@ -604,9 +604,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testPoint));
         RoadPoint testRoad = new RoadPoint(10, 10);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
@@ -638,9 +638,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testPoint));
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
 
@@ -672,9 +672,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -695,9 +695,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         turnStateMachine.nextTurn();
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
@@ -728,9 +728,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         turnStateMachine.nextTurn();
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
@@ -765,9 +765,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
@@ -800,12 +800,12 @@ public class BoardTest {
     public void testOnNextTurnClickAfterPlacedSettlementAndRoad() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 1;
         player.roads = Board.INITIAL_ROADS - 1;
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -837,10 +837,10 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
@@ -855,12 +855,12 @@ public class BoardTest {
     public void testNextTurnBeforePlaceFirstRoadNextTurnNotCalled() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 1;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(Turn.RED, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -877,13 +877,13 @@ public class BoardTest {
     public void testNextTurnBeforePlaceSecondSettlementNextTurnNotCalled() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 1;
         player.roads = Board.INITIAL_ROADS - 1;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
@@ -900,13 +900,13 @@ public class BoardTest {
     public void testNextTurnBeforePlaceSecondRoadNextTurnNotCalled() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 2;
         player.roads = Board.INITIAL_ROADS - 1;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
@@ -923,13 +923,13 @@ public class BoardTest {
     public void testNextTurnAfterPlaceSecondRoad() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 2;
         player.roads = Board.INITIAL_ROADS - 2;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
@@ -960,13 +960,13 @@ public class BoardTest {
     public void testNextTurnBeforeRollDiceNextTurnNotCalled() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 2;
         player.roads = Board.INITIAL_ROADS - 2;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
@@ -984,13 +984,13 @@ public class BoardTest {
     public void testNextTurnAfterRollDice() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 2;
         player.roads = Board.INITIAL_ROADS - 2;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
@@ -1015,13 +1015,13 @@ public class BoardTest {
     public void testNextTurnWithAllSettlementsAfterRound1IsAllowed() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS;
         player.roads = Board.INITIAL_ROADS - 2;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
@@ -1045,13 +1045,13 @@ public class BoardTest {
     public void testNextTurnWithAllRoadsAfterRound1IsAllowed() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player = new Player(TurnStateMachine.FIRST_TURN);
         player.settlements = Board.INITIAL_SETTLEMENTS - 2;
         player.roads = Board.INITIAL_ROADS;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.put(TurnStateMachine.FIRST_TURN, player);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
@@ -1075,9 +1075,9 @@ public class BoardTest {
     public void testAddNextTurnButton() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.addNextTurnButton(testBoard);
 
@@ -1096,9 +1096,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(Arrays.asList(testPoint, testPoint2));
         RoadPoint testRoad = new RoadPoint(10, 10);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoad));
@@ -1114,9 +1114,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -1141,9 +1141,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoadPoint));
 
         RoadPoint testReturn = testBoard.getRoadAtCoords(1, 1);
@@ -1158,9 +1158,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.roadPoints = new ArrayList<>(List.of(testRoadPoint));
 
         RoadPoint testReturn = testBoard.getRoadAtCoords(-100, -100);
@@ -1173,9 +1173,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -1195,9 +1195,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -1219,9 +1219,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testCityPoint));
 
         CityPoint testReturn = testBoard.getCityAtCoords(1, 1);
@@ -1236,9 +1236,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(testCityPoint));
 
         CityPoint testReturn = testBoard.getCityAtCoords(-100, -100);
@@ -1251,9 +1251,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         CityPoint neighborCity = EasyMock.mock(CityPoint.class);
         CityPoint pointToCheck = EasyMock.mock(CityPoint.class);
@@ -1266,9 +1266,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -1289,13 +1289,13 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Board testBoard = EasyMock.partialMockBuilder(Board.class)
                 .addMockedMethod("withinTwoRoads")
                 .addMockedMethod("updateLongestRoad")
-                .withConstructor(GameWindowController.class, TurnStateMachine.class, Dice.class)
-                .withArgs(controllerTest, turnStateMachine, dice)
+                .withConstructor(GameWindowController.class, TurnStateMachine.class, NumberCardDeck.class)
+                .withArgs(controllerTest, turnStateMachine, deck)
                 .createMock();
 
         CityPoint ownedCity = new CityPoint(1, 1);
@@ -1322,9 +1322,9 @@ public class BoardTest {
     public void testCheckRoadNeighborsDepthOfTwo() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         RoadPoint roadPoint = EasyMock.mock(RoadPoint.class);
         CityPoint cityPoint = EasyMock.mock(CityPoint.class);
@@ -1337,9 +1337,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
         ArrayList<RoadPoint> roads = helpCreateRoads(testBoard);
@@ -1360,9 +1360,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -1399,9 +1399,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -1442,9 +1442,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -1567,9 +1567,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -1692,9 +1692,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.WOOD, 1);
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.BRICK, 1);
         assertEquals(1, testBoard.turnToPlayer.get(Turn.RED).getResource(ResourceType.WOOD));
@@ -1832,9 +1832,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.WOOD, 1);
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.BRICK, 1);
         assertEquals(1, testBoard.turnToPlayer.get(Turn.RED).getResource(ResourceType.WOOD));
@@ -1968,9 +1968,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -2090,9 +2090,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -2224,9 +2224,9 @@ public class BoardTest {
     public void testAddDiceRollButton() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = new TurnStateMachine();
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.addDiceRollButton(testBoard);
 
@@ -2241,19 +2241,19 @@ public class BoardTest {
     public void testOnClickDiceRollButtonUpdateNumRolled() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.owner = TurnStateMachine.FIRST_TURN;
         cityPoint.hasSettlement = true;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(6);
+        EasyMock.expect(deck.drawNumber()).andReturn(6);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(6);
@@ -2267,12 +2267,12 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(6, testBoard.numRolled);
     }
 
@@ -2280,7 +2280,7 @@ public class BoardTest {
     public void testRollNumberWithOneTilePlayerHasZeroBuildings() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2288,12 +2288,12 @@ public class BoardTest {
         cityPoint.hasSettlement = true;
         cityPoint.setTileValues(List.of(12), List.of(Terrain.PASTURE));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(12);
+        EasyMock.expect(deck.drawNumber()).andReturn(12);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
 
@@ -2307,14 +2307,14 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         assertEquals(0, testBoard.turnToPlayer.get(Turn.BLUE).getResource(ResourceType.SHEEP));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(0, testBoard.turnToPlayer.get(Turn.BLUE).getResource(ResourceType.SHEEP));
 
     }
@@ -2324,7 +2324,7 @@ public class BoardTest {
     public void testRollNumberWithOneTilePlayerHasOneBuilding() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2332,12 +2332,12 @@ public class BoardTest {
         cityPoint.hasSettlement = true;
         cityPoint.setTileValues(List.of(12), List.of(Terrain.PASTURE));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(12);
+        EasyMock.expect(deck.drawNumber()).andReturn(12);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -2351,14 +2351,14 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(1, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
 
     }
@@ -2367,7 +2367,7 @@ public class BoardTest {
     public void testRollNumberDontGiveToNonOwned() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2380,12 +2380,12 @@ public class BoardTest {
         cityPointTwo.hasSettlement = false;
         cityPointTwo.setTileValues(List.of(12), List.of(Terrain.PASTURE));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPointTwo));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(12);
+        EasyMock.expect(deck.drawNumber()).andReturn(12);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
         controllerTest.showDiceRoll(12);
@@ -2399,14 +2399,14 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(1, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
     }
 
@@ -2414,7 +2414,7 @@ public class BoardTest {
     public void testRollNumberDontGiveToWrongNumber() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2427,12 +2427,12 @@ public class BoardTest {
         cityPointTwo.hasSettlement = true;
         cityPointTwo.setTileValues(List.of(10), List.of(Terrain.FOREST));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPointTwo));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(12);
+        EasyMock.expect(deck.drawNumber()).andReturn(12);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(12);
 
@@ -2444,7 +2444,7 @@ public class BoardTest {
         expected.put(ResourceType.BRICK, 0);
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expected));
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
@@ -2452,7 +2452,7 @@ public class BoardTest {
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(1, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.SHEEP));
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.WOOD));
     }
@@ -2461,7 +2461,7 @@ public class BoardTest {
     public void testRollNumberOnePlayerHasMultipleSettlements() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2474,21 +2474,21 @@ public class BoardTest {
         cityPointTwo.hasSettlement = true;
         cityPointTwo.setTileValues(List.of(8), List.of(Terrain.MOUNTAIN));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPointTwo));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(8);
+        EasyMock.expect(deck.drawNumber()).andReturn(8);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN).times(1);
 
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.replay(turnStateMachine, deck);
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
         assertEquals(2, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
     }
 
@@ -2496,7 +2496,7 @@ public class BoardTest {
     public void testRollNumberMoreThanOnePlayerHasOneSettlements() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
@@ -2509,12 +2509,12 @@ public class BoardTest {
         cityPointTwo.hasSettlement = true;
         cityPointTwo.setTileValues(List.of(8), List.of(Terrain.MOUNTAIN));
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint, cityPointTwo));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(8);
+        EasyMock.expect(deck.drawNumber()).andReturn(8);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
@@ -2528,7 +2528,7 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
@@ -2537,7 +2537,7 @@ public class BoardTest {
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
         assertEquals(1, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
         assertEquals(1, testBoard.turnToPlayer.get(Turn.BLUE).getResource(ResourceType.ORE));
     }
@@ -2546,18 +2546,18 @@ public class BoardTest {
     public void testRoll7AllowsRobberToBeMoved() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(7);
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.replay(turnStateMachine, deck);
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
 
         assertFalse(testBoard.robberMoved);
     }
@@ -2565,9 +2565,9 @@ public class BoardTest {
     @Test
     public void testFriendlyRobberExactly2VP() {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
@@ -2593,19 +2593,19 @@ public class BoardTest {
     public void testNextTurnBeforeMoveRobberFails() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(7);
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.replay(turnStateMachine, deck);
 
         testBoard.onRollDiceClick();
         testBoard.onNextTurnClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
 
         EasyMock.verify(turnStateMachine);
 
@@ -2615,14 +2615,14 @@ public class BoardTest {
     public void testRoll7NoResourcesGathered() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(7);
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.expect(deck.drawNumber()).andReturn(7);
+        EasyMock.replay(turnStateMachine, deck);
 
         ArrayList<Turn> turns = new ArrayList<>(List.of(Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE));
         ArrayList<ResourceType> resources = new ArrayList<>(List.of(ResourceType.ORE, ResourceType.WOOD, ResourceType.BRICK, ResourceType.SHEEP, ResourceType.WHEAT));
@@ -2635,7 +2635,7 @@ public class BoardTest {
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
 
         for (Turn turn : turns) {
             for (ResourceType resourceType : resources) {
@@ -2648,19 +2648,19 @@ public class BoardTest {
     public void testRollNon7DoesNotAllowRobberToBeMoved() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.owner = TurnStateMachine.FIRST_TURN;
         cityPoint.hasSettlement = true;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(6);
+        EasyMock.expect(deck.drawNumber()).andReturn(6);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
@@ -2674,12 +2674,12 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
 
         assertTrue(testBoard.robberMoved);
     }
@@ -2688,21 +2688,21 @@ public class BoardTest {
     public void testClickDiceTwiceInOnceTurn() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.owner = TurnStateMachine.FIRST_TURN;
         cityPoint.hasSettlement = true;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        EasyMock.expect(dice.roll()).andReturn(6);
+        EasyMock.expect(deck.drawNumber()).andReturn(6);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -2716,13 +2716,13 @@ public class BoardTest {
 
         controllerTest.showResourceCards(EasyMock.eq(testBoard), EasyMock.eq(expectedResources));
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
 
         testBoard.onRollDiceClick();
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(dice, controllerTest);
+        EasyMock.verify(deck, controllerTest);
         assertEquals(6, testBoard.numRolled);
 
     }
@@ -2731,14 +2731,14 @@ public class BoardTest {
     public void testClickRollDiceInFirstTurnDontRoll() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.owner = TurnStateMachine.FIRST_TURN;
         cityPoint.hasSettlement = true;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -2754,14 +2754,14 @@ public class BoardTest {
     public void testClickRollDiceInSecondTurnDontRoll() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.owner = TurnStateMachine.FIRST_TURN;
         cityPoint.hasSettlement = true;
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
@@ -2778,9 +2778,9 @@ public class BoardTest {
     public void testShowDice() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         controllerTest.showDiceRoll(7);
 
 
@@ -2798,9 +2798,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -2901,9 +2901,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3027,9 +3027,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3059,9 +3059,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3099,9 +3099,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3139,9 +3139,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3179,9 +3179,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3219,9 +3219,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3261,9 +3261,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3319,9 +3319,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3358,9 +3358,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3400,9 +3400,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3444,9 +3444,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3490,9 +3490,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3544,9 +3544,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3587,9 +3587,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3634,9 +3634,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3681,9 +3681,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3731,9 +3731,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3780,9 +3780,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3826,9 +3826,9 @@ public class BoardTest {
     public void testPlayerHasRoadResourcesUpdatesResourceCount() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3879,9 +3879,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3932,9 +3932,9 @@ public class BoardTest {
     public void testPlaceRoadDecrementsResources() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -3986,9 +3986,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -4050,9 +4050,9 @@ public class BoardTest {
     public void buyDevCardDecrementsResources() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -4083,10 +4083,10 @@ public class BoardTest {
     public void buyDevCardKnight() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Random rand = EasyMock.mock(Random.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.rand = rand;
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4112,10 +4112,10 @@ public class BoardTest {
     public void buyDevCardVictoryPoint() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Random rand = EasyMock.mock(Random.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.rand = rand;
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4140,10 +4140,10 @@ public class BoardTest {
     public void buyDevCardYoP() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Random rand = EasyMock.mock(Random.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.rand = rand;
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4169,10 +4169,10 @@ public class BoardTest {
     public void buyDevCardRoadBuilding() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Random rand = EasyMock.mock(Random.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.rand = rand;
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4198,10 +4198,10 @@ public class BoardTest {
     public void buyDevCardMonopoly() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Random rand = EasyMock.mock(Random.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.rand = rand;
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4228,9 +4228,9 @@ public class BoardTest {
     public void buyDevCardNotEnoughResources() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -4252,9 +4252,9 @@ public class BoardTest {
     public void addDevCardButton() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.placeDevCardButton(testBoard);
 
@@ -4269,9 +4269,9 @@ public class BoardTest {
     public void testOnClickBuysDevCard() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 2);
@@ -4307,9 +4307,9 @@ public class BoardTest {
     public void testOnClickBuysMultipleDevCard() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 2);
@@ -4351,9 +4351,9 @@ public class BoardTest {
     public void testShowDevCards() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         DevelopmentCard testDevCard = EasyMock.strictMock(DevelopmentCard.class);
         ArrayList<DevelopmentCard> testCards = new ArrayList<>(List.of(testDevCard));
 
@@ -4376,9 +4376,9 @@ public class BoardTest {
     public void testOnClickBuysDevCardNoSheep() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 1);
@@ -4411,9 +4411,9 @@ public class BoardTest {
     public void testOnClickBuysDevCardNoWheat() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 1);
@@ -4446,9 +4446,9 @@ public class BoardTest {
     public void testOnClickBuysDevCardNoOre() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 1);
@@ -4481,9 +4481,9 @@ public class BoardTest {
     public void testOnClickBuysDevCardNoResources() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.BRICK, 0);
@@ -4518,9 +4518,9 @@ public class BoardTest {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         assertEquals(ResourceType.NULL, testBoard.robberResource);
     }
@@ -4530,9 +4530,9 @@ public class BoardTest {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         assertEquals(10, testBoard.robberNumber);
     }
@@ -4544,9 +4544,9 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -4568,9 +4568,9 @@ public class BoardTest {
         RobberPoint robberPoint = new RobberPoint(1, 2, ResourceType.BRICK, 8);
 
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -4585,9 +4585,9 @@ public class BoardTest {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -4612,9 +4612,9 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
 
         testBoard.numRolled = 3;
@@ -4631,9 +4631,9 @@ public class BoardTest {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         RobberPoint robberPointOne = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
         testBoard.robberPoints = new ArrayList<>(List.of(robberPointOne));
@@ -4656,9 +4656,9 @@ public class BoardTest {
         RobberPoint robberPointOne = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
         RobberPoint robberPointTwo = new RobberPoint(2, 2, ResourceType.BRICK, 8);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
         testBoard.robberPoints = new ArrayList<>(List.of(robberPointOne, robberPointTwo));
@@ -4680,9 +4680,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
 
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).once();
         EasyMock.replay(turnStateMachine);
@@ -4715,9 +4715,9 @@ public class BoardTest {
         // haha bryson take this
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.replay(turnStateMachine);
@@ -4752,9 +4752,9 @@ public class BoardTest {
     public void testTradeBetweenPlayers() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
@@ -4806,9 +4806,9 @@ public class BoardTest {
     public void testTradeBeforeMoveRobberAfter7Rolled() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
         EasyMock.replay(turnStateMachine);
@@ -4858,9 +4858,9 @@ public class BoardTest {
     public void testTradeBetweenPlayersTwoValues() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4913,9 +4913,9 @@ public class BoardTest {
     public void testTradeBetweenPlayersNotEnoughResources() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -4971,9 +4971,9 @@ public class BoardTest {
     public void showTradeDialogue() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         controllerTest.showTradeDialogue(testBoard);
 
@@ -4988,9 +4988,9 @@ public class BoardTest {
     public void testShowResourcesMultipleResources() {
         GameWindowController controllerMock = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controllerMock, turnStateMachine, dice);
+        Board board = new Board(controllerMock, turnStateMachine, deck);
 
         Player redPlayer = board.turnToPlayer.get(Turn.RED);
         redPlayer.addResources(ResourceType.WHEAT, 3);
@@ -5018,9 +5018,9 @@ public class BoardTest {
     public void testShowResourcesDifferentTurn() {
         GameWindowController controllerMock = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controllerMock, turnStateMachine, dice);
+        Board board = new Board(controllerMock, turnStateMachine, deck);
 
 
         Player bluePlayer = board.turnToPlayer.get(Turn.BLUE);
@@ -5048,9 +5048,9 @@ public class BoardTest {
     public void testPlayerResourcesMapReturnsCorrectCounts() {
         GameWindowController controllerMock = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controllerMock, turnStateMachine, dice);
+        Board board = new Board(controllerMock, turnStateMachine, deck);
 
         Player redPlayer = board.turnToPlayer.get(Turn.RED);
         redPlayer.addResources(ResourceType.WOOD, 3);
@@ -5070,9 +5070,9 @@ public class BoardTest {
     public void testUpgradeSettlementBeforeRound3() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5093,9 +5093,9 @@ public class BoardTest {
     public void testUpgradeSettlementNoResources() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5118,9 +5118,9 @@ public class BoardTest {
     public void testUpgradeSettlementInsufficientOre() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5145,9 +5145,9 @@ public class BoardTest {
     public void testUpgradeSettlementInsufficientWheat() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5172,9 +5172,9 @@ public class BoardTest {
     public void testUpgradeSettlementSuccess() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5205,10 +5205,10 @@ public class BoardTest {
     public void testCityUpgradeGivesVP() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player1 = EasyMock.mock(Player.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -5240,10 +5240,10 @@ public class BoardTest {
     public void testSettlementGivesVP() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player1 = EasyMock.mock(Player.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = false;
@@ -5283,10 +5283,10 @@ public class BoardTest {
     public void testWinOnNextTurn10VP() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player1 = EasyMock.mock(Player.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(5);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -5310,10 +5310,10 @@ public class BoardTest {
     public void testWinOnNextTurn11VP() {
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
         Player player1 = EasyMock.mock(Player.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(5);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -5337,9 +5337,9 @@ public class BoardTest {
     public void testShowDiscardDialog() {
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, dice);
+        Board board = new Board(controller, turnStateMachine, deck);
 
 
         controller.showDiscardDialog(board);
@@ -5354,9 +5354,9 @@ public class BoardTest {
     public void testRollSevenPromptsDiscard() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player red = testBoard.turnToPlayer.get(Turn.RED);
         red.addResources(ResourceType.WOOD, 5);
@@ -5364,31 +5364,31 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(7);
+        EasyMock.expect(deck.drawNumber()).andReturn(7);
         controllerTest.showDiceRoll(7);
 
         controllerTest.showDiscardDialog(testBoard);
 
-        EasyMock.replay(turnStateMachine, dice, controllerTest);
+        EasyMock.replay(turnStateMachine, deck, controllerTest);
 
         testBoard.onRollDiceClick();
-        EasyMock.verify(turnStateMachine, dice, controllerTest);
+        EasyMock.verify(turnStateMachine, deck, controllerTest);
     }
 
     @Test
     public void testRollSevenNoDiscardPrompt() {
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, dice);
+        Board board = new Board(controller, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(7);
+        EasyMock.expect(deck.drawNumber()).andReturn(7);
         controller.showDiceRoll(7);
 
-        EasyMock.replay(turnStateMachine, dice, controller);
+        EasyMock.replay(turnStateMachine, deck, controller);
 
         board.onRollDiceClick();
 
@@ -5399,9 +5399,9 @@ public class BoardTest {
     public void testCloseDiscardDialog() {
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, dice);
+        Board board = new Board(controller, turnStateMachine, deck);
 
         Player player = new Player(Turn.RED);
         player.addResources(ResourceType.WOOD, 5);
@@ -5420,9 +5420,9 @@ public class BoardTest {
 
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, dice);
+        Board board = new Board(controller, turnStateMachine, deck);
 
 
         Player mockRed = EasyMock.strictMock(Player.class);
@@ -5439,9 +5439,9 @@ public class BoardTest {
     public void testGetAllPlayersResourceMaps() {
         GameWindowController gameController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(gameController, turnStateMachine, dice);
+        Board board = new Board(gameController, turnStateMachine, deck);
 
         HashMap<Turn, HashMap<ResourceType, Integer>> maps = board.getAllPlayersResourceMaps();
 
@@ -5458,9 +5458,9 @@ public class BoardTest {
 
         GameWindowController gameController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(gameController, turnStateMachine, dice);
+        Board board = new Board(gameController, turnStateMachine, deck);
 
 
         Player red = board.turnToPlayer.get(Turn.RED);
@@ -5499,9 +5499,9 @@ public class BoardTest {
     public void testOnSubmitDiscardSomeStillNeedsTo() {
         GameWindowController gameController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(gameController, turnStateMachine, dice);
+        Board board = new Board(gameController, turnStateMachine, deck);
 
         Player red = board.turnToPlayer.get(Turn.RED);
         Player blue = board.turnToPlayer.get(Turn.BLUE);
@@ -5528,9 +5528,9 @@ public class BoardTest {
     public void testPlaceValidRoadTwoAwayFromSettlement() {
         GameWindowController gameController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(gameController, turnStateMachine, dice);
+        Board board = new Board(gameController, turnStateMachine, deck);
 
         CityPoint redCity = new CityPoint(1, 1);
         RoadPoint redRoad = new RoadPoint(2, 2);
@@ -5572,10 +5572,10 @@ public class BoardTest {
     public void testGetAllPlayersEligibleForRobNoneEligible() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 3), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.FIELD));
         cityPoint.owner = Turn.RED;
@@ -5590,10 +5590,10 @@ public class BoardTest {
     public void testGetAllPlayersEligibleForRobNoSettlementsOnBoard() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 3), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.FIELD));
         testBoard.cityPoints = new ArrayList<>(List.of());
@@ -5607,10 +5607,10 @@ public class BoardTest {
     public void testGetAllPlayersEligibleForRobOneEligible() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 8), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.PASTURE));
         cityPoint.owner = Turn.RED;
@@ -5627,10 +5627,10 @@ public class BoardTest {
     public void testGetAllPlayersEligibleForRobNoDuplicates() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 8), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.PASTURE));
         cityPoint.owner = Turn.RED;
@@ -5654,10 +5654,10 @@ public class BoardTest {
     public void testGetAllPlayersEligibleForRobMultiplePlayers() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 8), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.PASTURE));
         cityPoint.owner = Turn.RED;
@@ -5685,10 +5685,10 @@ public class BoardTest {
     public void testMoveRobberEligibleForStealOpensDialog() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 8), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.PASTURE));
         cityPoint.owner = Turn.ORANGE;
@@ -5728,10 +5728,10 @@ public class BoardTest {
     public void testMoveRobberNotEligibleForStealDoesNotOpenDialog() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 3), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.FIELD));
         cityPoint.owner = Turn.RED;
@@ -5757,10 +5757,10 @@ public class BoardTest {
     public void testRobCardFromPlayerHasOneCard() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player red = new Player(Turn.RED);
         Player blue = new Player(Turn.BLUE);
@@ -5788,10 +5788,10 @@ public class BoardTest {
     public void testRobCardFromPlayerHasMultipleOfOneCard() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player red = new Player(Turn.RED);
         Player blue = new Player(Turn.BLUE);
@@ -5819,10 +5819,10 @@ public class BoardTest {
     public void testRobCardFromPlayerHasMultipleOfMultipleCards() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         Player red = new Player(Turn.RED);
         Player blue = new Player(Turn.BLUE);
@@ -5865,10 +5865,10 @@ public class BoardTest {
     public void testCurrentTurnDoesNotShowAsRobOption() {
         GameWindowController controllerTest = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(1, 2, 8), List.of(Terrain.FIELD, Terrain.FIELD, Terrain.PASTURE));
         cityPoint.owner = Turn.RED;
@@ -5898,9 +5898,9 @@ public class BoardTest {
     public void testVPDevCardAddsVP() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         Random randomMock = EasyMock.mock(Random.class);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -5926,9 +5926,9 @@ public class BoardTest {
     public void testYoPClick() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -5953,9 +5953,9 @@ public class BoardTest {
     public void testCannotUseYoPSameTurnBought() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -5977,9 +5977,9 @@ public class BoardTest {
     public void testUseYoPRemovesCard() {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
@@ -6004,9 +6004,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6044,9 +6044,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6084,9 +6084,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6140,9 +6140,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6195,9 +6195,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6257,9 +6257,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6304,9 +6304,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6359,9 +6359,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6416,9 +6416,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6470,9 +6470,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6541,9 +6541,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6592,9 +6592,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6645,9 +6645,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6737,9 +6737,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6826,8 +6826,8 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6911,9 +6911,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -6999,9 +6999,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -7087,9 +7087,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -7155,9 +7155,9 @@ public class BoardTest {
 
         GameWindowController mockController = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine mockTurnMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(mockController, mockTurnMachine, mockDice);
+        Board board = new Board(mockController, mockTurnMachine, mockDeck);
 
         ArrayList<HarborPoint> harborPoints = helpCreateHarbors(board);
 
@@ -7174,9 +7174,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -7223,9 +7223,9 @@ public class BoardTest {
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         ArrayList<CityPoint> cities = helpCreateCities(testBoard);
         testBoard.cityPoints = cities;
@@ -7279,9 +7279,9 @@ public class BoardTest {
     public void testOnSubmitClickBankCorrectAmounts() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -7321,9 +7321,9 @@ public class BoardTest {
     public void testOnSubmitClickBankIncorrectAmount() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -7360,9 +7360,9 @@ public class BoardTest {
     public void testOnSubmitClickBankNotFour() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -7399,9 +7399,9 @@ public class BoardTest {
     public void testOnSubmitClickBankReceiveTooMuch() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -7439,9 +7439,9 @@ public class BoardTest {
     public void testOnSubmitClickBankReceiveTooLittle() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -7479,9 +7479,9 @@ public class BoardTest {
     public void testOnSubmitClickBankGiveTooMuch() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
@@ -7518,9 +7518,9 @@ public class BoardTest {
     public void testOnSubmitClickBankEightToOne() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -7558,9 +7558,9 @@ public class BoardTest {
     public void testOnSubmitClickBankEightToTwo() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
@@ -7598,9 +7598,9 @@ public class BoardTest {
     public void testCityPointGivesDouble() {
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         CityPoint city = new CityPoint(1, 1);
 
@@ -7615,15 +7615,15 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
-        EasyMock.expect(dice.roll()).andReturn(8);
+        EasyMock.expect(deck.drawNumber()).andReturn(8);
 
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.replay(turnStateMachine, deck);
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
         assertEquals(2, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
 
     }
@@ -7632,9 +7632,9 @@ public class BoardTest {
     void onBankSubmitClickGenericHarborThreeToOneTrade() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7677,9 +7677,9 @@ public class BoardTest {
     void onBankSubmitClickSpecificHarborTwoToOneTrade() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7726,9 +7726,9 @@ public class BoardTest {
     void onBankSubmitClickSpecificHarborInvalidResourceTrade() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7769,9 +7769,9 @@ public class BoardTest {
     void onBankSubmitClickSpecificHarborCorrectResourceButIncorrectAmount() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7810,9 +7810,9 @@ public class BoardTest {
     void onBankSubmitClickGenericHarborGiveTooMuch() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7851,9 +7851,9 @@ public class BoardTest {
     void onBankSubmitClickMultipleResourceTypesWithGenericHarbor() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7901,9 +7901,9 @@ public class BoardTest {
     void onBankSubmitClickMultipleResourceTypesWithSpecificHarbor() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -7952,9 +7952,9 @@ public class BoardTest {
     void onBankSubmitClickWithBothHarborTypes() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(turnStateMachine);
@@ -8010,9 +8010,9 @@ public class BoardTest {
     void onBankSubmitClickOfferIncludesNegativeResource() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
@@ -8054,9 +8054,9 @@ public class BoardTest {
     void onBankSubmitClickRequestIsZeroAmount() {
         GameWindowController controller = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice mockDice = EasyMock.mock(Dice.class);
+        NumberCardDeck mockDeck = EasyMock.mock(NumberCardDeck.class);
 
-        Board board = new Board(controller, turnStateMachine, mockDice);
+        Board board = new Board(controller, turnStateMachine, mockDeck);
 
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes();
@@ -8096,8 +8096,8 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.robberMoved = true;
         testBoard.cityPoints = new ArrayList<>();
@@ -8127,8 +8127,8 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.robberMoved = true;
         testBoard.cityPoints = new ArrayList<>();
@@ -8158,8 +8158,8 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.robberMoved = true;
         testBoard.cityPoints = new ArrayList<>();
@@ -8191,8 +8191,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 2;
         testBoard.robberMoved = true;
@@ -8231,8 +8231,8 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.WHEAT, 6);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.robberMoved = true;
         testBoard.cityPoints = new ArrayList<>();
@@ -8266,8 +8266,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8314,8 +8314,8 @@ public class BoardTest {
         ArrayList<RobberPoint> robberPoints = new ArrayList<>();
         robberPoints.add(robberPoint);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8353,8 +8353,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8406,8 +8406,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8468,8 +8468,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8513,8 +8513,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8566,8 +8566,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8613,8 +8613,8 @@ public class BoardTest {
         robberPoints.add(robberPoint);
         robberPoints.add(robberPoint2);
 
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = robberPoints;
         testBoard.numRolled = 7;
         testBoard.robberMoved = false;
@@ -8666,8 +8666,8 @@ public class BoardTest {
     public void testMonopolyCannotBePlayedInPurchaseRound() {
         GameWindowController controller       = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine     turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = new Player(Turn.RED);
         DevelopmentCard monopolyCard = new DevelopmentCard(DevCards.MONOPOLY);
@@ -8689,8 +8689,8 @@ public class BoardTest {
     public void testMonopolyClickOpensDialog() {
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = new Player(Turn.RED);
         DevelopmentCard monopolyCard = new DevelopmentCard(DevCards.MONOPOLY);
@@ -8712,8 +8712,8 @@ public class BoardTest {
     public void testExecuteMonopolyTransfersResources() {
         GameWindowController controller = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = new Player(Turn.RED);
         Player bluePlayer = new Player(Turn.BLUE);
@@ -8747,8 +8747,8 @@ public class BoardTest {
     public void testExecuteMonopolyWhenNoResourcesAvailable() {
         GameWindowController controller = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice diceStub = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, diceStub);
+        NumberCardDeck deckStub = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deckStub);
 
         Player redPlayer = new Player(Turn.RED);
         Player bluePlayer = new Player(Turn.BLUE);
@@ -8777,8 +8777,8 @@ public class BoardTest {
     public void testHandlePlacementUpdatesLongestRoadVP() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         // --- Setup ---
         // Segment 1: CityA(RED) -- R1(RED) -- C1 -- R2(RED) -- CityB(Target) (Length 2 roads to B)
@@ -8839,13 +8839,13 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3); // Must be > 2
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice); // Replay all mocks
+        EasyMock.replay(turnStateMachine, controller, deck); // Replay all mocks
 
         // Action: Place the settlement at CityB
         testBoard.onCityPointClick(cityB.getX(), cityB.getY());
 
         // Verification
-        EasyMock.verify(turnStateMachine, controller, dice); // Verify all mocks
+        EasyMock.verify(turnStateMachine, controller, deck); // Verify all mocks
         assertTrue(cityB.hasSettlement, "Settlement should be placed at CityB"); // Check placement first
         assertEquals(Turn.RED, cityB.getOwner(), "CityB owner should be RED");
         // VP = Initial(2) + Settlement(1) + LongestRoad(2) = 5
@@ -8856,8 +8856,8 @@ public class BoardTest {
     public void testOnRoadClickFailsIfAdjacentRoadOpponentOwned() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint city1 = new CityPoint(10, 10);
         RoadPoint blueRoad = new RoadPoint(20, 10); blueRoad.owner = Turn.BLUE; blueRoad.hasRoad = true;
@@ -8879,11 +8879,11 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(40, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertFalse(targetRoad.hasRoad, "RED should not be able to place road next to only BLUE road.");
         assertEquals(Turn.NONE, targetRoad.getOwner());
     }
@@ -8892,8 +8892,8 @@ public class BoardTest {
     public void testOnRoadClickAdjacentToOwnedSettlement() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint redCity = new CityPoint(10, 10); redCity.owner = Turn.RED; redCity.hasSettlement = true;
         RoadPoint targetRoad = new RoadPoint(20, 10);
@@ -8912,11 +8912,11 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(20, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertTrue(targetRoad.hasRoad, "Road should be placed next to owned settlement.");
         assertEquals(Turn.RED, targetRoad.getOwner());
     }
@@ -8925,8 +8925,8 @@ public class BoardTest {
     public void testOnRoadClickAdjacentToUnownedSettlementWithOwnedRoad() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint city1 = new CityPoint(10, 10);
         RoadPoint redRoad = new RoadPoint(20, 10); redRoad.owner = Turn.RED; redRoad.hasRoad = true;
@@ -8949,11 +8949,11 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(40, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertTrue(targetRoad.hasRoad, "Road should be placed adjacent to unowned city via owned road.");
         assertEquals(Turn.RED, targetRoad.getOwner());
     }
@@ -8962,8 +8962,8 @@ public class BoardTest {
     public void testOnRoadClickFailsAdjacentToOpponentSettlement() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint blueCity = new CityPoint(10, 10); blueCity.owner = Turn.BLUE; blueCity.hasSettlement = true;
         RoadPoint targetRoad = new RoadPoint(20, 10);
@@ -8982,11 +8982,11 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(20, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertFalse(targetRoad.hasRoad, "Road should not be placed next to opponent settlement.");
         assertEquals(Turn.NONE, targetRoad.getOwner());
     }
@@ -8995,8 +8995,8 @@ public class BoardTest {
     public void testOnRoadClickFailsAdjacentToUnownedSettlementNoOwnedRoad() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint unownedCity = new CityPoint(10, 10);
         RoadPoint targetRoad = new RoadPoint(20, 10);
@@ -9015,11 +9015,11 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(20, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertFalse(targetRoad.hasRoad, "Road should not be placed next to unowned settlement without connection.");
         assertEquals(Turn.NONE, targetRoad.getOwner());
     }
@@ -9028,8 +9028,8 @@ public class BoardTest {
     public void testConnectedToOwnedRoadOrCityTrueForOwnedCity() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint redCity = new CityPoint(10, 10); redCity.owner = Turn.RED; redCity.hasSettlement = true;
         RoadPoint targetRoad = new RoadPoint(20, 10);
@@ -9039,7 +9039,7 @@ public class BoardTest {
         testBoard.cityPoints = new ArrayList<>(List.of(redCity));
         testBoard.roadPoints = new ArrayList<>(List.of(targetRoad));
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.WOOD, 1);
         testBoard.turnToPlayer.get(Turn.RED).addResources(ResourceType.BRICK, 1);
@@ -9060,8 +9060,8 @@ public class BoardTest {
     public void testConnectedToOwnedRoadOrCityTrueForOwnedConnectingRoad() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         CityPoint city1 = new CityPoint(10, 10);
         RoadPoint redRoad = new RoadPoint(20, 10); redRoad.owner = Turn.RED; redRoad.hasRoad = true;
@@ -9082,7 +9082,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(40, 10);
 
@@ -9094,8 +9094,8 @@ public class BoardTest {
     public void testConnectedToOwnedRoadOrCityReturnsFalseForUnconnectedRoad() {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
 
         CityPoint city1 = new CityPoint(10, 10);
@@ -9117,21 +9117,21 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
 
-        EasyMock.replay(turnStateMachine, controller, dice);
+        EasyMock.replay(turnStateMachine, controller, deck);
 
         testBoard.onRoadPointClick(20, 10);
 
-        EasyMock.verify(turnStateMachine, controller, dice);
+        EasyMock.verify(turnStateMachine, controller, deck);
         assertFalse(targetRoad.hasRoad, "Road placement should fail if not connected to owned pieces.");
     }
     @Test
     public void testLoadBoardDataFullDataPopulatesCorrectly() throws IOException {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         BoardDataInputs dataInputs = EasyMock.createStrictMock(BoardDataInputs.class);
 
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         String cityCoordsDataStr = getActualCityCoordsData();
         String cityNeighborsDataStr = getActualCityNeighborsData();
@@ -9155,7 +9155,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(robberResourcesDataStr));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(robberNumbersDataStr));
 
-        EasyMock.replay(controller, turnStateMachine, dice, dataInputs);
+        EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
         testBoard.loadBoardData(dataInputs);
         EasyMock.verify(dataInputs);
 
@@ -9238,9 +9238,9 @@ public class BoardTest {
     public void testLoadBoardDataAllStreamsEmptyThrowsExpectedException() throws IOException {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         BoardDataInputs dataInputs = EasyMock.createStrictMock(BoardDataInputs.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         String emptyData = "";
 
@@ -9255,7 +9255,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(emptyData));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(emptyData));
 
-        EasyMock.replay(controller, turnStateMachine, dice, dataInputs);
+        EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
         assertThrows(RuntimeException.class, () -> {
             testBoard.loadBoardData(dataInputs);
@@ -9266,9 +9266,9 @@ public class BoardTest {
     public void testLoadBoardDataCityNeighborIndexOutOfBounds() throws IOException {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         BoardDataInputs dataInputs = EasyMock.createStrictMock(BoardDataInputs.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         String cityCoords = "0,0\n1,1";
         String roadCoords = "10,10";
@@ -9285,7 +9285,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(getActualRobberResourceData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(getActualRobberNumberData())).anyTimes();
 
-        EasyMock.replay(controller, turnStateMachine, dice, dataInputs);
+        EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
 
         assertThrows(IndexOutOfBoundsException.class, () -> testBoard.loadBoardData(dataInputs));
@@ -9295,9 +9295,9 @@ public class BoardTest {
     public void testLoadBoardDataNoHarbors() throws IOException {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         BoardDataInputs dataInputs = EasyMock.createStrictMock(BoardDataInputs.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         String cityCoordsDataStr = getActualCityCoordsData();
         String cityNeighborsDataStr = getActualCityNeighborsData();
@@ -9320,7 +9320,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(robberCoordsDataStr));
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(robberResourcesDataStr));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(robberNumbersDataStr));
-        EasyMock.replay(controller, turnStateMachine, dice, dataInputs);
+        EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
         testBoard.loadBoardData(dataInputs);
         EasyMock.verify(dataInputs);
@@ -9341,9 +9341,9 @@ public class BoardTest {
     public void testLoadBoardDataBadCityPoint() throws IOException {
         GameWindowController controller = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         BoardDataInputs dataInputs = EasyMock.createStrictMock(BoardDataInputs.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         String malformedCityCoords = "275,113\nabc,def\n515,113";
 
@@ -9357,7 +9357,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(getActualRobberCoordsData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(getActualRobberResourceData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(getActualRobberNumberData())).anyTimes();
-        EasyMock.replay(controller, turnStateMachine, dice, dataInputs);
+        EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
         assertThrows(RuntimeException.class, () -> testBoard.loadBoardData(dataInputs));
     }
@@ -9365,8 +9365,8 @@ public class BoardTest {
     public void testOnBankSubmitClickOwnsSettlementNotAHarborPoint() {
         GameWindowController controller = EasyMock.createStrictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createStrictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
         testBoard.cityPoints = new ArrayList<>();
 
         Player redPlayer = testBoard.turnToPlayer.get(Turn.RED);
@@ -9391,7 +9391,7 @@ public class BoardTest {
         controller.showResourceCards(EasyMock.eq(testBoard), EasyMock.anyObject(HashMap.class));
         EasyMock.expectLastCall().times(1);
 
-        EasyMock.replay(controller, turnStateMachine, dice);
+        EasyMock.replay(controller, turnStateMachine, deck);
         testBoard.onBankSubmitClick(playerTrade, bankTrade);
         EasyMock.verify(controller, turnStateMachine);
 
@@ -9405,8 +9405,8 @@ public class BoardTest {
     public void testExecuteMonopolyIgnoresPlayerWithZeroResources() {
         GameWindowController controller = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board testBoard = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board testBoard = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = new Player(Turn.RED);
         Player bluePlayer = new Player(Turn.BLUE);
@@ -9440,8 +9440,8 @@ public class BoardTest {
     void onMonopolyClickPlayerHasOtherDevCardNotMonopoly() {
         GameWindowController controller = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board board = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board board = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = board.turnToPlayer.get(Turn.RED);
 
@@ -9474,8 +9474,8 @@ public class BoardTest {
     void executeMonopolyPlayerHasNoDevCards() {
         GameWindowController controller = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board board = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board board = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = board.turnToPlayer.get(Turn.RED);
         Player bluePlayer = board.turnToPlayer.get(Turn.BLUE);
@@ -9508,8 +9508,8 @@ public class BoardTest {
     void executeMonopolyPlayerHasOtherDevCardsNotMonopoly() {
         GameWindowController controller = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
-        Board board = new Board(controller, turnStateMachine, dice);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
+        Board board = new Board(controller, turnStateMachine, deck);
 
         Player redPlayer = board.turnToPlayer.get(Turn.RED);
         Player bluePlayer = board.turnToPlayer.get(Turn.BLUE);
@@ -9549,10 +9549,10 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController gameWindowController = new GameWindowController(gameWindow);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
         try {
-            board = new Board(gameWindowController, turnStateMachine, dice);
+            board = new Board(gameWindowController, turnStateMachine, deck);
             FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
             FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
             FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
@@ -9603,10 +9603,10 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController gameWindowController = new GameWindowController(gameWindow);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
         try {
-            board = new Board(gameWindowController, turnStateMachine, dice);
+            board = new Board(gameWindowController, turnStateMachine, deck);
             FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
             FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
             FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
@@ -9643,8 +9643,8 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
-        EasyMock.expect(dice.roll()).andReturn(9);
-        EasyMock.replay(dice, turnStateMachine);
+        EasyMock.expect(deck.drawNumber()).andReturn(9);
+        EasyMock.replay(deck, turnStateMachine);
 
         //PLACE RED
         board.onCityPointClick(211, 352);
@@ -9661,9 +9661,9 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(1, 1);
         cityPoint.hasSettlement = true;
@@ -9696,9 +9696,9 @@ public class BoardTest {
     public void testRobberBlocksResource(){
         GameWindowController controllerTest = EasyMock.createMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.strictMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         CityPoint city = new CityPoint(1, 1);
 
@@ -9716,15 +9716,15 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
-        EasyMock.expect(dice.roll()).andReturn(8);
+        EasyMock.expect(deck.drawNumber()).andReturn(8);
 
-        EasyMock.replay(turnStateMachine, dice);
+        EasyMock.replay(turnStateMachine, deck);
 
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
 
         testBoard.onRollDiceClick();
 
-        EasyMock.verify(turnStateMachine, dice);
+        EasyMock.verify(turnStateMachine, deck);
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.ORE));
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.WOOD));
         assertEquals(0, testBoard.turnToPlayer.get(TurnStateMachine.FIRST_TURN).getResource(ResourceType.BRICK));
@@ -9738,10 +9738,10 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController gameWindowController = new GameWindowController(gameWindow);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
         try {
-            board = new Board(gameWindowController, turnStateMachine, dice);
+            board = new Board(gameWindowController, turnStateMachine, deck);
             FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
             FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
             FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
@@ -9805,10 +9805,10 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController gameWindowController = new GameWindowController(gameWindow);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
         try {
-            board = new Board(gameWindowController, turnStateMachine, dice);
+            board = new Board(gameWindowController, turnStateMachine, deck);
             FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
             FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
             FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
@@ -9900,9 +9900,9 @@ public class BoardTest {
     @Test
     public void testFriendlyRobberWithZeroVP() {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(8), List.of(Terrain.FOREST));
@@ -9927,9 +9927,9 @@ public class BoardTest {
     @Test
     public void testFriendlyRobberWithOneVP() {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(9), List.of(Terrain.PASTURE));
@@ -9954,9 +9954,9 @@ public class BoardTest {
     @Test
     public void testFriendlyRobberWith3VP() {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
 
         CityPoint cityPoint = new CityPoint(2, 2);
         cityPoint.setTileValues(List.of(5), List.of(Terrain.HILL));
@@ -9987,9 +9987,9 @@ public class BoardTest {
         cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
         cityPoint.placeSettlement(Turn.BLUE);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -10017,9 +10017,9 @@ public class BoardTest {
         cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD));
         cityPoint.placeSettlement(Turn.BLUE);
 
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -10042,9 +10042,9 @@ public class BoardTest {
     @Test
     public void testMultipleSettlementsDifferentPlayersOnHex() {
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(null, turnStateMachine, dice);
+        Board testBoard = new Board(null, turnStateMachine, deck);
 
         // Setup Blue player with 0 VP (protected)
         CityPoint blueCityPoint = new CityPoint(2, 2);
@@ -10080,10 +10080,10 @@ public class BoardTest {
         GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController gameWindowController = new GameWindowController(gameWindow);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
         try {
-            board = new Board(gameWindowController, turnStateMachine, dice);
+            board = new Board(gameWindowController, turnStateMachine, deck);
             FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
             FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
             FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);

@@ -68,7 +68,7 @@ public class Board {
 
     GameWindowController gameWindowController;
     TurnStateMachine turnStateMachine;
-    Dice dice;
+    NumberCardDeck deck;
 
     public ArrayList<CityPoint> cityPoints;
     public ArrayList<RoadPoint> roadPoints;
@@ -80,10 +80,10 @@ public class Board {
 
     Random rand = new Random();
 
-    public Board(GameWindowController gameWindowController, TurnStateMachine turnStateMachine, Dice dice){
+    public Board(GameWindowController gameWindowController, TurnStateMachine turnStateMachine, NumberCardDeck deck){
         this.gameWindowController = gameWindowController;
         this.turnStateMachine = turnStateMachine;
-        this.dice = dice;
+        this.deck = deck;
 
         turnToPlayer.put(Turn.RED, new Player(Turn.RED));
         turnToPlayer.put(Turn.BLUE, new Player(Turn.BLUE));
@@ -588,7 +588,7 @@ public class Board {
         if (turnStateMachine.getRound() < 3) {
             gameWindowController.showInvalidInputAndPass("Cannot roll dice until third turn");
         } else if (!turnStateMachine.getHasRolled()) {
-            numRolled = dice.roll();
+            numRolled = deck.drawNumber();
             turnStateMachine.hasRolled = true;
             showDiceRoll(numRolled);
             if (numRolled == DISCARD_THRESHOLD) {

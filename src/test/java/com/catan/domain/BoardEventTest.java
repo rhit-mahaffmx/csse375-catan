@@ -15,16 +15,16 @@ public class BoardEventTest {
     private Board createBoard() {
         GameWindowController gwc = EasyMock.niceMock(GameWindowController.class);
         TurnStateMachine tsm = EasyMock.niceMock(TurnStateMachine.class);
-        Dice dice = EasyMock.niceMock(Dice.class);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
         EasyMock.expect(tsm.getTurn()).andReturn(Turn.RED).anyTimes();
-        EasyMock.replay(gwc, tsm, dice);
-        return new Board(gwc, tsm, dice);
+        EasyMock.replay(gwc, tsm, deck);
+        return new Board(gwc, tsm, deck);
     }
 
     private Board createBoardWithMocks(GameWindowController gwc, TurnStateMachine tsm) {
-        Dice dice = EasyMock.niceMock(Dice.class);
-        EasyMock.replay(dice);
-        return new Board(gwc, tsm, dice);
+        NumberCardDeck deck = EasyMock.niceMock(NumberCardDeck.class);
+        EasyMock.replay(deck);
+        return new Board(gwc, tsm, deck);
     }
 
     // ==================== Epidemic Tests ====================
