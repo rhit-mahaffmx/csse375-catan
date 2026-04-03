@@ -1117,29 +1117,39 @@ public class Board {
     public void handleEvent(EventType eventType) {
         switch (eventType) {
             case ROBBER_ATTACK:
+                gameWindowController.showEventText("Robber Attack! Discard half if >7 cards, move robber, steal.");
                 handleRobberAttackEvent();
                 break;
             case EARTHQUAKE:
+                gameWindowController.showEventText("Earthquake! Each player must turn one road sideways.");
                 handleEarthquakeEvent();
                 break;
             case EPIDEMIC:
+                gameWindowController.showEventText("Epidemic! Cities produce only 1 resource this turn.");
                 handleEpidemicEvent();
                 break;
             case GOOD_NEIGHBORS:
+                gameWindowController.showEventText("Good Neighbors! Pass 1 resource to the player on your left.");
                 break;
             case CALM_SEAS:
+                gameWindowController.showEventText("Calm Seas! Most harbor settlements gets a free resource.");
                 break;
             case TOURNAMENT:
+                gameWindowController.showEventText("Tournament! Most Knights gets a free resource.");
                 break;
             case TRADE_ADVANTAGE:
+                gameWindowController.showEventText("Trade Advantage! Longest Road holder steals 1 resource.");
                 handleTradeAdvantageEvent();
                 break;
             case CONFLICT:
+                gameWindowController.showEventText("Conflict! Largest Army holder steals 1 resource.");
                 handleConflictEvent();
                 break;
             case NO_EVENT:
+                gameWindowController.showEventText("No Event — collect resources.");
                 break;
             case NEW_YEAR:
+                gameWindowController.showEventText("New Year! Deck reshuffled.");
                 break;
         }
     }

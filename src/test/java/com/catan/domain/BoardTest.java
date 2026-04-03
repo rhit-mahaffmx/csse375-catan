@@ -2304,6 +2304,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(6);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
 
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
@@ -2345,6 +2346,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
 
         controllerTest.showDiceRoll(12);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
         expectedResources.put(ResourceType.WOOD, 0);
@@ -2389,6 +2391,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
         controllerTest.showDiceRoll(12);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
         expectedResources.put(ResourceType.WOOD, 0);
@@ -2436,6 +2439,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
         controllerTest.showDiceRoll(12);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
 
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
@@ -2482,6 +2486,7 @@ public class BoardTest {
         EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.NO_EVENT, 12));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         controllerTest.showDiceRoll(12);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
 
         HashMap<ResourceType, Integer> expected = new HashMap<>();
         expected.put(ResourceType.SHEEP, 1);
@@ -2566,6 +2571,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
         controllerTest.showDiceRoll(8);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
         expectedResources.put(ResourceType.WOOD, 0);
@@ -2712,6 +2718,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(TurnStateMachine.FIRST_TURN);
 
         controllerTest.showDiceRoll(6);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
         expectedResources.put(ResourceType.WOOD, 0);
@@ -2754,6 +2761,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
 
         controllerTest.showDiceRoll(6);
+        controllerTest.showEventText("No Event \u2014 collect resources.");
         HashMap<ResourceType, Integer> expectedResources = new HashMap<>();
         expectedResources.put(ResourceType.BRICK, 0);
         expectedResources.put(ResourceType.WOOD, 0);
@@ -5575,6 +5583,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         controllerTest.showDiceRoll(7);
+        controllerTest.showEventText("Robber Attack! Discard half if >7 cards, move robber, steal.");
 
         controllerTest.showDiscardDialog(testBoard);
 
@@ -5596,6 +5605,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(false);
         EasyMock.expect(deck.drawCard()).andReturn(new EventCard(EventType.ROBBER_ATTACK, 7));
         controller.showDiceRoll(7);
+        controller.showEventText("Robber Attack! Discard half if >7 cards, move robber, steal.");
 
         EasyMock.replay(turnStateMachine, deck, controller);
 

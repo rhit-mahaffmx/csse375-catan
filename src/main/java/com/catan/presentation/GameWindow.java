@@ -354,7 +354,7 @@ public class GameWindow {
             board.onRollDiceClick();
         });
 
-        button.setText(i18n.getText("rollDice"));
+        button.setText(i18n.getText("drawCard"));
 
         button.setLayoutX(pane.getWidth() - button.getShape().getBoundsInLocal().getWidth() * 5.25);
         button.setLayoutY(pane.getHeight() - button.getShape().getBoundsInLocal().getHeight() * 7);
@@ -381,6 +381,20 @@ public class GameWindow {
         pane.getChildren().add(diceImageView);
 
         currentDiceImageView = diceImageView;
+    }
+
+    private Text currentEventText;
+
+    public void showEventText(String message) {
+        if (currentEventText != null) {
+            pane.getChildren().remove(currentEventText);
+        }
+        currentEventText = new Text(message);
+        currentEventText.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        currentEventText.setFill(Color.DARKRED);
+        currentEventText.setLayoutX(450);
+        currentEventText.setLayoutY(680);
+        pane.getChildren().add(currentEventText);
     }
 
 
