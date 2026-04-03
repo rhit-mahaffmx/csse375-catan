@@ -588,12 +588,12 @@ public class Board {
         if (turnStateMachine.getRound() < 3) {
             gameWindowController.showInvalidInputAndPass("Cannot roll dice until third turn");
         } else if (!turnStateMachine.getHasRolled()) {
-            numRolled = deck.drawNumber();
+            EventCard card = deck.drawCard();
+            numRolled = card.getDiceNumber();
             turnStateMachine.hasRolled = true;
             showDiceRoll(numRolled);
-            if (numRolled == DISCARD_THRESHOLD) {
-                handleTellPlayersToDiscard();
-            } else {
+            handleEvent(card.getEventType());
+            if (numRolled != DISCARD_THRESHOLD) {
                 giveResourcesToBorderingSettlements();
             }
         }
@@ -780,7 +780,7 @@ public class Board {
                 for (CityPoint city : cityPoints) {
                     if (city.hasSettlement() && city.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)) {
                         Player owner = turnToPlayer.get(city.getOwner());
-                        if (owner.getVictoryPoints() < 2) {
+                        if (owner.getVictoryPoints() < 3) {
                             isProtected = true;
                             break; 
                         }
@@ -840,7 +840,7 @@ public class Board {
             }
 
             Player owner = turnToPlayer.get(cityPoint.owner);
-            if (owner.getVictoryPoints() < 2) {
+            if (owner.getVictoryPoints() < 3) {
                 continue;
             }
             for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
