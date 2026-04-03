@@ -780,7 +780,7 @@ public class Board {
                 for (CityPoint city : cityPoints) {
                     if (city.hasSettlement() && city.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)) {
                         Player owner = turnToPlayer.get(city.getOwner());
-                        if (owner.getVictoryPoints() <= 2) {
+                        if (owner.getVictoryPoints() < 2) {
                             isProtected = true;
                             break; 
                         }
@@ -839,10 +839,14 @@ public class Board {
                 continue;
             }
 
+            Player owner = turnToPlayer.get(cityPoint.owner);
+            if (owner.getVictoryPoints() < 2) {
+                continue;
+            }
             for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
                 Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
                 if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
-                    players.add(turnToPlayer.get(cityPoint.owner));
+                    players.add(owner);
                 }
             }
         }

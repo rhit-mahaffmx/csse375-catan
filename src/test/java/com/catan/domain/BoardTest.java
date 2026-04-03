@@ -431,9 +431,9 @@ public class BoardTest {
         // Setup mocks
         GameWindowController controllerTest = EasyMock.strictMock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.createMock(TurnStateMachine.class);
-        Dice dice = EasyMock.mock(Dice.class);
+        NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
 
-        Board testBoard = new Board(controllerTest, turnStateMachine, dice);
+        Board testBoard = new Board(controllerTest, turnStateMachine, deck);
 
         // Mock initial state
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
@@ -444,17 +444,17 @@ public class BoardTest {
 
         // Mock next turn
         turnStateMachine.nextTurn();
-        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
+        EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE).anyTimes();
         Player nextPlayer = testBoard.turnToPlayer.get(Turn.BLUE);
+
+        // Other calls (in actual execution order)
+        controllerTest.clearDevCards();
+        controllerTest.showDevCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
+        controllerTest.showResourceCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
 
         // Capture the TurnStateData passed to showInitialTurnState
         Capture<TurnStateData> capturedTurnData = EasyMock.newCapture();
         controllerTest.showInitialTurnState(EasyMock.capture(capturedTurnData));
-
-        // Other calls
-        controllerTest.clearDevCards();
-        controllerTest.showDevCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
-        controllerTest.showResourceCards(EasyMock.anyObject(Board.class), EasyMock.anyObject());
 
         // Replay
         EasyMock.replay(turnStateMachine, controllerTest);
@@ -4732,9 +4732,9 @@ public class BoardTest {
         cityPoint.setTileValues(List.of(6), List.of(Terrain.FIELD)); // FIELD is WHEAT
         cityPoint.placeSettlement(Turn.RED);
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -4758,9 +4758,9 @@ public class BoardTest {
         cityPoint.setTileValues(List.of(8), List.of(Terrain.HILL)); // HILL is BRICK
         cityPoint.placeSettlement(Turn.BLUE);
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -4784,9 +4784,9 @@ public class BoardTest {
         cityPoint.setTileValues(List.of(10), List.of(Terrain.MOUNTAIN)); // MOUNTAIN is ORE
         cityPoint.placeSettlement(Turn.ORANGE);
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint));
         testBoard.numRolled = 7;
@@ -4814,9 +4814,9 @@ public class BoardTest {
         cityPoint2.setTileValues(List.of(4), List.of(Terrain.PASTURE));
         cityPoint2.placeSettlement(Turn.BLUE);
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint1, cityPoint2));
         testBoard.numRolled = 7;
@@ -4845,9 +4845,9 @@ public class BoardTest {
         cityPoint2.setTileValues(List.of(5), List.of(Terrain.FOREST));
         cityPoint2.placeSettlement(Turn.BLUE);
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(List.of(cityPoint1, cityPoint2));
         testBoard.numRolled = 7;
@@ -4869,9 +4869,9 @@ public class BoardTest {
 
         RobberPoint robberPoint = new RobberPoint(1, 1, ResourceType.NULL, 10); // DESERT
 
-        Dice dice = new Dice(new Random());
+        NumberCardDeck deck = new NumberCardDeck(new Random());
 
-        Board testBoard = new Board(testController, turnStateMachine, dice);
+        Board testBoard = new Board(testController, turnStateMachine, deck);
         testBoard.robberPoints = new ArrayList<>(List.of(robberPoint));
         testBoard.cityPoints = new ArrayList<>(); // No settlements
         testBoard.numRolled = 7;
