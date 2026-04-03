@@ -573,6 +573,11 @@ public class GameWindow {
 
     public void showInvalidInputAndPass(String message) {
         System.out.println(message);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Input");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
     }
 
     public void showResourceCards(HashMap<ResourceType, Integer> resourceMap) {
@@ -706,8 +711,11 @@ public class GameWindow {
         if(text.getText().isEmpty()){
             return 0;
         }
-        else{
-            return Integer.parseInt(text.getText());
+        try {
+            int value = Integer.parseInt(text.getText());
+            return Math.max(value, 0);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 
@@ -809,7 +817,6 @@ public class GameWindow {
                 allDiscards.put(turn, dm);
             }
             board.onSubmitDiscard(allDiscards);
-            pane.getChildren().remove(dialog);
         });
 
         dialog.add(submit, 0, 2, 2, 1);
@@ -821,7 +828,7 @@ public class GameWindow {
 
     public void removeDiscardDialog() {
         pane.getChildren().removeIf(node ->
-                "discardPrompt".equals(node.getId())
+                "discardDialog".equals(node.getId())
         );
     }
 

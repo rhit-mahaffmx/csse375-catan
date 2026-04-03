@@ -10391,6 +10391,41 @@ public class BoardTest {
         public void showStealDialog(Board board, Set<Player> players) {
             // No-op for testing
         }
+
+        @Override
+        public void showSettlement(Turn turn, int x, int y) {
+            // No-op for testing
+        }
+
+        @Override
+        public void showDiceRoll(int diceRoll) {
+            // No-op for testing
+        }
+
+        @Override
+        public void showEventText(String message) {
+            // No-op for testing
+        }
+
+        @Override
+        public void showRoad(Turn turn, int x, int y) {
+            // No-op for testing
+        }
+
+        @Override
+        public void showCity(Turn turn, int x, int y) {
+            // No-op for testing
+        }
+
+        @Override
+        public void showDevCards(Board board, ArrayList<DevelopmentCard> devCards) {
+            // No-op for testing
+        }
+
+        @Override
+        public void clearDevCards() {
+            // No-op for testing
+        }
     }
 
     /**

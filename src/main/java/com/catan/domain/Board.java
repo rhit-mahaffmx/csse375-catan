@@ -885,8 +885,36 @@ public class Board {
         for (var entry : allDiscards.entrySet()) {
             Turn turn = entry.getKey();
             Player player = turnToPlayer.get(turn);
-            player.discardHalf(entry.getValue());
+            if (!player.needsToDiscard()) {
+                continue;
+            }
+            int required = player.getRequiredDiscardCount();
+            int sum = 0;
+            for (int val : entry.getValue().values()) {
+                sum += val;
+            }
+            if (sum != required) {
+                gameWindowController.showInvalidInputAndPass(
+                        turn + " must discard exactly " + required + " cards, but chose " + sum + ".");
+                return;
+            }
+            for (var res : entry.getValue().entrySet()) {
+                if (res.getValue() > player.getResource(res.getKey())) {
+                    gameWindowController.showInvalidInputAndPass(
+                            turn + " cannot discard more " + res.getKey() + " than they own.");
+                    return;
+                }
+            }
         }
+
+        for (var entry : allDiscards.entrySet()) {
+            Turn turn = entry.getKey();
+            Player player = turnToPlayer.get(turn);
+            if (player.needsToDiscard()) {
+                player.discard(entry.getValue());
+            }
+        }
+
         boolean anyoneLeft = false;
         for (Player player : turnToPlayer.values()) {
             if (player.needsToDiscard()) {
