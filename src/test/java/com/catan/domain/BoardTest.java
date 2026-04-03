@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.catan.datasource.BoardDataInputs;
-import com.catan.presentation.GameWindow;
 
 public class BoardTest {
 
@@ -9755,8 +9754,7 @@ public class BoardTest {
 
     @Test
     public void testCannotRobOnSecond9(){
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
-        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        GameWindowController gameWindowController = new TestGameWindowController();
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
@@ -9809,8 +9807,7 @@ public class BoardTest {
 
     @Test
     public void testDouble9CorrectResources(){
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
-        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        GameWindowController gameWindowController = new TestGameWindowController();
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
@@ -9867,7 +9864,6 @@ public class BoardTest {
 
     @Test
     public void testUpgradeSettlementCostsResources() {
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
         GameWindowController testController = EasyMock.mock(GameWindowController.class);
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
@@ -9944,8 +9940,7 @@ public class BoardTest {
 
     @Test
     public void testHarbormasterBonus() throws IOException {
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
-        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        GameWindowController gameWindowController = new TestGameWindowController();
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
@@ -10011,8 +10006,7 @@ public class BoardTest {
 
     @Test
     public void testHarbormasterTransfer() throws IOException {
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
-        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        GameWindowController gameWindowController = new TestGameWindowController();
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;
@@ -10286,8 +10280,7 @@ public class BoardTest {
 
     @Test
     public void testFriendlyRobberLowVp() throws IOException {
-        GameWindow gameWindow = EasyMock.mock(GameWindow.class);
-        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        GameWindowController gameWindowController = new TestGameWindowController();
         TurnStateMachine turnStateMachine = EasyMock.mock(TurnStateMachine.class);
         NumberCardDeck deck = EasyMock.mock(NumberCardDeck.class);
         Board board;

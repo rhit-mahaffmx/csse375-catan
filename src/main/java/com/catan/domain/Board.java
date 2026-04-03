@@ -720,50 +720,6 @@ public class Board {
 
     }
 
-    // public void onRobberPointClick(int x, int y) {
-    //     if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
-    //         return;
-    //     } else if (robberMoved) {
-    //         return;
-    //     }
-
-    //     for (RobberPoint robberPoint : robberPoints) {
-    //         if (robberPoint.getX() == x && robberPoint.getY() == y && !robberPoint.hasRobber) {
-    //             Boolean isPlayerSafe = false;
-
-    //             for (CityPoint cityPoint : cityPoints) {
-    //                 if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
-    //                     Player owner = turnToPlayer.get(cityPoint.getOwner());
-
-    //                     if(owner.getVictoryPoints() < 2){
-    //                         isPlayerSafe = true;
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-
-    //             if(isPlayerSafe){ //robber leaves player alone
-    //                 return;
-    //             }
-
-    //             robberPoint.hasRobber = true;
-    //             robberResource = robberPoint.resourceType;
-    //             robberNumber = robberPoint.diceNumber;
-    //             robberMoved = ROBBER_ALREADY_MOVED;
-    //             knightUsed = false;
-
-    //             gameWindowController.showInitialRobberState(x, y);
-    //             eligiblePlayers = getEligiblePlayersToRob(robberPoint);
-    //             if (!eligiblePlayers.isEmpty()) {
-    //                 gameWindowController.showStealDialog(this, eligiblePlayers);
-    //             }
-    //         }
-    //         else{
-    //             robberPoint.hasRobber = false;
-    //         }
-    //     }
-    // }
-
     public void onRobberPointClick(int x, int y) {
         if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
             return;
@@ -780,7 +736,7 @@ public class Board {
                 for (CityPoint city : cityPoints) {
                     if (city.hasSettlement() && city.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)) {
                         Player owner = turnToPlayer.get(city.getOwner());
-                        if (owner.getVictoryPoints() < 2) {
+                        if (owner.getVictoryPoints() < 3) {
                             isProtected = true;
                             break; 
                         }
