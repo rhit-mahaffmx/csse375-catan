@@ -720,6 +720,50 @@ public class Board {
 
     }
 
+    // public void onRobberPointClick(int x, int y) {
+    //     if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
+    //         return;
+    //     } else if (robberMoved) {
+    //         return;
+    //     }
+
+    //     for (RobberPoint robberPoint : robberPoints) {
+    //         if (robberPoint.getX() == x && robberPoint.getY() == y && !robberPoint.hasRobber) {
+    //             Boolean isPlayerSafe = false;
+
+    //             for (CityPoint cityPoint : cityPoints) {
+    //                 if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
+    //                     Player owner = turnToPlayer.get(cityPoint.getOwner());
+
+    //                     if(owner.getVictoryPoints() < 2){
+    //                         isPlayerSafe = true;
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+
+    //             if(isPlayerSafe){ //robber leaves player alone
+    //                 return;
+    //             }
+
+    //             robberPoint.hasRobber = true;
+    //             robberResource = robberPoint.resourceType;
+    //             robberNumber = robberPoint.diceNumber;
+    //             robberMoved = ROBBER_ALREADY_MOVED;
+    //             knightUsed = false;
+
+    //             gameWindowController.showInitialRobberState(x, y);
+    //             eligiblePlayers = getEligiblePlayersToRob(robberPoint);
+    //             if (!eligiblePlayers.isEmpty()) {
+    //                 gameWindowController.showStealDialog(this, eligiblePlayers);
+    //             }
+    //         }
+    //         else{
+    //             robberPoint.hasRobber = false;
+    //         }
+    //     }
+    // }
+
     public void onRobberPointClick(int x, int y) {
         if (numRolled != DISCARD_THRESHOLD && !knightUsed) {
             return;
@@ -729,22 +773,25 @@ public class Board {
 
         for (RobberPoint robberPoint : robberPoints) {
             if (robberPoint.getX() == x && robberPoint.getY() == y && !robberPoint.hasRobber) {
-                Boolean isPlayerSafe = false;
 
-                for (CityPoint cityPoint : cityPoints) {
-                    if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
-                        Player owner = turnToPlayer.get(cityPoint.getOwner());
+                // === FRIENDLY ROBBER VALIDATION ===
+                boolean isProtected = false;
 
-                        if(owner.getVictoryPoints() < 2){
-                            isPlayerSafe = true;
-                            break;
+                for (CityPoint city : cityPoints) {
+                    if (city.hasSettlement() && city.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)) {
+                        Player owner = turnToPlayer.get(city.getOwner());
+                        if (owner.getVictoryPoints() <= 2) {
+                            isProtected = true;
+                            break; 
                         }
                     }
                 }
 
-                if(isPlayerSafe){ //robber leaves player alone
-                    return;
+                if (isProtected) {
+                    System.out.println("Friendly Robber: Move Rejected! That player only has " + turnToPlayer.get(getTurn()).getVictoryPoints() + " VP.");
+                    return; 
                 }
+                // ==================================
 
                 robberPoint.hasRobber = true;
                 robberResource = robberPoint.resourceType;
@@ -754,16 +801,16 @@ public class Board {
 
                 gameWindowController.showInitialRobberState(x, y);
                 eligiblePlayers = getEligiblePlayersToRob(robberPoint);
-                if (!eligiblePlayers.isEmpty()) {
+                if (eligiblePlayers.size() > 0) {
                     gameWindowController.showStealDialog(this, eligiblePlayers);
                 }
             }
-            else{
+            else {
                 robberPoint.hasRobber = false;
             }
         }
     }
-
+    
     public void robCardFromPlayer(Turn robbedTurn, Random random) {
         Turn currentTurn = turnStateMachine.getTurn();
         Player currentPlayer = turnToPlayer.get(currentTurn);
@@ -781,21 +828,27 @@ public class Board {
 
     Set<Player> getEligiblePlayersToRob(RobberPoint robberPoint) {
         Set<Player> players = new HashSet<>();
-        Turn activeTurn = turnStateMachine.getTurn();
-
+        Turn currentTurn = turnStateMachine.getTurn(); // Get the current turn color
+        
         for (CityPoint cityPoint : cityPoints) {
-            if(cityPoint.hasSettlement() && cityPoint.bordersHex(robberPoint.diceNumber, robberPoint.resourceType)){
-                Player owner = turnToPlayer.get(cityPoint.getOwner());
-                if (owner.getVictoryPoints() >= 2) {
-                    players.add(owner);
+            if (!cityPoint.hasSettlement) {
+                continue;
+            }
+            // Only consider settlements NOT owned by the current player
+            if (cityPoint.owner == currentTurn) {
+                continue;
+            }
+
+            for (Integer tileNum : cityPoint.tileValueToTerrain.keySet()) {
+                Terrain terrain = cityPoint.tileValueToTerrain.get(tileNum);
+                if (tileNum == robberPoint.diceNumber && terrain.getResourceType().equals(robberPoint.resourceType)) {
+                    players.add(turnToPlayer.get(cityPoint.owner));
                 }
             }
         }
-
-        players.remove(turnToPlayer.get(activeTurn));
+        // Remove the redundant players.remove line if you use the 'if' check above
         return players;
     }
-
 
     public void showResources() {
         Turn currentTurn = turnStateMachine.getTurn();
