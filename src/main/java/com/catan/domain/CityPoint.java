@@ -9,6 +9,7 @@ public class CityPoint extends GameComponent {
     ArrayList<RoadPoint> neighbors;
     boolean hasSettlement = false;
     public boolean isCity = false;
+    boolean isFishingGround = false;
     Turn owner = Turn.NONE;
 
     public CityPoint(int x, int y) {
@@ -83,6 +84,14 @@ public class CityPoint extends GameComponent {
         }
 
         return false;
+    }
+
+    public void setFishingGround(boolean fishingGround) {
+        this.isFishingGround = fishingGround;
+    }
+
+    public boolean isFishingGround() {
+        return isFishingGround;
     }
     
 }

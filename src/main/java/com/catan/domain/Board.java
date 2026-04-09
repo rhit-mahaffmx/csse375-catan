@@ -79,6 +79,7 @@ public class Board {
     HashMap<Turn, Player> turnToPlayer = new HashMap<>();
 
     Random rand = new Random();
+    FishTokenSupplier fishTokenSupplier;
 
     public Board(GameWindowController gameWindowController, TurnStateMachine turnStateMachine, NumberCardDeck deck){
         this.gameWindowController = gameWindowController;
@@ -629,6 +630,108 @@ public class Board {
             }
         }
         showResources();
+    }
+
+    // ==================== Fish Token (Barbarians Expansion) ====================
+
+    static final int FISH_COST_MOVE_ROBBER = 2;
+    static final int FISH_COST_STEAL_RESOURCE = 3;
+    static final int FISH_COST_FREE_RESOURCE = 4;
+    static final int FISH_COST_DEV_CARD = 5;
+    static final int FISH_COST_FREE_ROAD = 7;
+
+    protected HashMap<Turn, ArrayList<FishToken>> distributeFishTokens() {
+        HashMap<Turn, ArrayList<FishToken>> distributed = new HashMap<>();
+        int totalNeeded = 0;
+        for (CityPoint cityPoint : cityPoints) {
+            if (cityPoint.hasSettlement && cityPoint.isFishingGround()
+                    && cityPoint.getTileValues().contains(numRolled)) {
+                totalNeeded += cityPoint.isCity ? 2 : 1;
+            }
+        }
+        if (fishTokenSupplier != null && fishTokenSupplier.remaining() < totalNeeded) {
+            return distributed;
+        }
+        for (CityPoint cityPoint : cityPoints) {
+            if (cityPoint.hasSettlement && cityPoint.isFishingGround()
+                    && cityPoint.getTileValues().contains(numRolled)) {
+                Player owner = turnToPlayer.get(cityPoint.owner);
+                int amount = cityPoint.isCity ? 2 : 1;
+                ArrayList<FishToken> drawn = new ArrayList<>();
+                for (int i = 0; i < amount; i++) {
+                    FishToken token = (fishTokenSupplier != null)
+                            ? fishTokenSupplier.draw()
+                            : new FishToken(1);
+                    if (token != null) {
+                        owner.addFishToken(token);
+                        drawn.add(token);
+                    }
+                }
+                distributed.computeIfAbsent(cityPoint.owner, k -> new ArrayList<>()).addAll(drawn);
+            }
+        }
+        return distributed;
+    }
+
+    public boolean canPassOldShoe(Turn from, Turn to) {
+        Player giver = turnToPlayer.get(from);
+        Player receiver = turnToPlayer.get(to);
+        if (!giver.hasOldShoe()) return false;
+        if (from.equals(to)) return false;
+        int giverVP = giver.getVictoryPoints();
+        int receiverVP = receiver.getVictoryPoints();
+        if (receiverVP < giverVP) return false;
+        for (Turn t : new Turn[]{Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE}) {
+            if (!t.equals(from) && turnToPlayer.get(t).getVictoryPoints() > giverVP) {
+                return true;
+            }
+        }
+        return receiverVP >= giverVP;
+    }
+
+    public void passOldShoe(Turn from, Turn to) {
+        if (!canPassOldShoe(from, to)) return;
+        turnToPlayer.get(from).setOldShoe(false);
+        turnToPlayer.get(to).setOldShoe(true);
+    }
+
+    public boolean redeemFishTokens(Turn turn, FishRedemptionType redemption) {
+        Player player = turnToPlayer.get(turn);
+        int cost = getFishRedemptionCost(redemption);
+        if (!player.spendFishTokens(cost)) {
+            return false;
+        }
+        switch (redemption) {
+            case MOVE_ROBBER:
+                robberResource = INITIAL_ROBBER_RESOURCE_TYPE;
+                robberNumber = INITIAL_ROBBER_NUMBER;
+                robberMoved = true;
+                break;
+            case STEAL_RESOURCE:
+                // Handled by caller choosing victim via stealFromPlayer
+                break;
+            case FREE_RESOURCE:
+                // Handled by caller choosing resource type
+                break;
+            case DEVELOPMENT_CARD:
+                player.addDevelopmentCard(new DevelopmentCard(DevCards.KNIGHT));
+                break;
+            case FREE_ROAD:
+                player.addFreeRoads(1);
+                break;
+        }
+        return true;
+    }
+
+    int getFishRedemptionCost(FishRedemptionType type) {
+        switch (type) {
+            case MOVE_ROBBER: return FISH_COST_MOVE_ROBBER;
+            case STEAL_RESOURCE: return FISH_COST_STEAL_RESOURCE;
+            case FREE_RESOURCE: return FISH_COST_FREE_RESOURCE;
+            case DEVELOPMENT_CARD: return FISH_COST_DEV_CARD;
+            case FREE_ROAD: return FISH_COST_FREE_ROAD;
+            default: return Integer.MAX_VALUE;
+        }
     }
 
     public void addDiceRollButton() {
