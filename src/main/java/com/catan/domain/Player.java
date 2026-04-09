@@ -6,13 +6,14 @@ import java.util.HashMap;
 public class Player {
     public Turn color;
     public int numKnightsPlayed = 0;
-    public boolean hasLargestArmy = false;
     public final static int DISCARD_THRESHOLD = 7;
 
     public int settlements = Board.INITIAL_SETTLEMENTS;
     public int roads = Board.INITIAL_ROADS;
     private int victoryPoints = 0;
     private int freeRoads = 0;
+    private final ArrayList<FishToken> fishTokens = new ArrayList<>();
+    private boolean hasOldShoe = false;
     private final HashMap<ResourceType, Integer> resources = new HashMap<>();
     private final ArrayList<DevelopmentCard> developmentCards = new ArrayList<>();
 
@@ -193,6 +194,71 @@ public class Player {
 
     public void removeFreeRoads(int freeRoads) {
         this.freeRoads -= freeRoads;
+    }
+
+    public int getFishTokens() {
+        return getTotalFish();
+    }
+
+    public void addFishToken(FishToken token) {
+        if (token.isOldShoe()) {
+            hasOldShoe = true;
+        } else {
+            fishTokens.add(token);
+        }
+    }
+
+    public void addFishTokens(int amount) {
+        // Legacy convenience method - adds 1-fish tokens
+        for (int i = 0; i < amount; i++) {
+            fishTokens.add(new FishToken(1));
+        }
+    }
+
+    public int getTotalFish() {
+        int total = 0;
+        for (FishToken token : fishTokens) {
+            total += token.getFishCount();
+        }
+        return total;
+    }
+
+    public boolean spendFishTokens(int cost) {
+        if (getTotalFish() < cost) {
+            return false;
+        }
+        ArrayList<FishToken> spent = selectTokensForCost(cost);
+        fishTokens.removeAll(spent);
+        return true;
+    }
+
+    ArrayList<FishToken> selectTokensForCost(int cost) {
+        ArrayList<FishToken> sorted = new ArrayList<>(fishTokens);
+        sorted.sort((a, b) -> Integer.compare(a.getFishCount(), b.getFishCount()));
+        ArrayList<FishToken> selected = new ArrayList<>();
+        int sum = 0;
+        for (FishToken token : sorted) {
+            if (sum >= cost) break;
+            selected.add(token);
+            sum += token.getFishCount();
+        }
+        return selected;
+    }
+
+    public ArrayList<FishToken> getFishTokenList() {
+        return new ArrayList<>(fishTokens);
+    }
+
+    public boolean hasOldShoe() {
+        return hasOldShoe;
+    }
+
+    public void setOldShoe(boolean hasIt) {
+        this.hasOldShoe = hasIt;
+    }
+
+    public int getVictoryPointsNeededToWin() {
+        return Board.VP_WIN_AMOUNT + (hasOldShoe ? 1 : 0);
     }
 }
 

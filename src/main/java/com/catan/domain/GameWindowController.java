@@ -1,9 +1,9 @@
 package com.catan.domain;
-import com.catan.presentation.GameWindow;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
+import com.catan.presentation.GameWindow;
 
 public class GameWindowController {
     private final GameWindow gameWindow;
@@ -103,5 +103,9 @@ public class GameWindowController {
 
     public void openMonopolyMenu(Board board, Turn player) {
         gameWindow.openMonopolyDialogue(board,player);
+    }
+
+    public void showEventText(String message) {
+        gameWindow.showEventText(message);
     }
 }

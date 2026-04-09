@@ -9,6 +9,7 @@ public class CityPoint extends GameComponent {
     ArrayList<RoadPoint> neighbors;
     boolean hasSettlement = false;
     public boolean isCity = false;
+    boolean isFishingGround = false;
     Turn owner = Turn.NONE;
 
     public CityPoint(int x, int y) {
@@ -72,4 +73,25 @@ public class CityPoint extends GameComponent {
         }
         return 0;
     }
+
+    public boolean bordersHex(int diceNumber, ResourceType resourceType) {
+        for (Integer tileNum : tileValueToTerrain.keySet()) {
+            Terrain terrain = tileValueToTerrain.get(tileNum);
+
+            if (tileNum == diceNumber && terrain.getResourceType().equals(resourceType)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setFishingGround(boolean fishingGround) {
+        this.isFishingGround = fishingGround;
+    }
+
+    public boolean isFishingGround() {
+        return isFishingGround;
+    }
+    
 }

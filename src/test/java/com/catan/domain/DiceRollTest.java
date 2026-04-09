@@ -1,28 +1,18 @@
 package com.catan.domain;
-import org.easymock.EasyMock;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 public class DiceRollTest {
 
 
     @Test
-    public void testTwoDiceRollWithMockedRandom() {
-        // Create a mock for Random.
-        Random randomMock = EasyMock.createMock(Random.class);
+    public void testNumberCardDeckDrawReturnsValidNumber() {
+        NumberCardDeck deck = new NumberCardDeck(new Random(42));
 
-        EasyMock.expect(randomMock.nextInt(6)).andReturn(3).once();
-        EasyMock.expect(randomMock.nextInt(6)).andReturn(4).once();
+        int result = deck.drawNumber();
 
-
-        EasyMock.replay(randomMock);
-
-        Dice dice = new Dice(randomMock);
-
-
-
-        assertEquals(9, dice.roll());
-
-        EasyMock.verify(randomMock);
+        assertTrue(result >= 2 && result <= 12,
+                "Card draw " + result + " should be between 2 and 12");
     }
 }

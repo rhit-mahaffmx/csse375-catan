@@ -1,7 +1,16 @@
 package com.catan.presentation;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Random;
+
 import com.catan.datasource.BoardDataInputs;
-import com.catan.domain.*;
+import com.catan.domain.Board;
+import com.catan.domain.GameWindowController;
+import com.catan.domain.NumberCardDeck;
+import com.catan.domain.TurnStateMachine;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,12 +19,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Random;
 
 public class MainApp extends Application {
 
@@ -55,10 +58,10 @@ public class MainApp extends Application {
                 GameWindow gameWindow = new GameWindow(i18n);
                 GameWindowController gameWindowController = new GameWindowController(gameWindow);
                 TurnStateMachine turnStateMachine = new TurnStateMachine();
-                Dice dice = new Dice(new Random());
+                NumberCardDeck deck = new NumberCardDeck(new Random());
                 Board board;
                 try {
-                    board = new Board(gameWindowController, turnStateMachine, dice);
+                    board = new Board(gameWindowController, turnStateMachine, deck);
                     FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
                     FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
                     FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);

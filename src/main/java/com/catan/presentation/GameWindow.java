@@ -1,29 +1,59 @@
 package com.catan.presentation;
 
-import com.catan.domain.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import com.catan.domain.Board;
+import com.catan.domain.DevCards;
+import com.catan.domain.DevelopmentCard;
+import com.catan.domain.Player;
 import com.catan.domain.ResourceType;
-import javafx.application.Platform;
+import com.catan.domain.TradeInfo;
+import com.catan.domain.Turn;
+import com.catan.domain.TurnStateData;
+
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javafx.geometry.Insets;
-
-import java.util.*;
-
 public class GameWindow {
     VBox vbox;
     ImageView robberImageView = new ImageView();
 
     public final static int BUTTON_RADIUS = 10;
+
+    // private final Rectangle topTurnBar = new Rectangle();
+    private final HBox topTurnBar = new HBox(10); // The '10' adds a 10px gap between items inside the box
+    private final Circle turnColorIndicator = new Circle(8); // An 8px radius circle
+    private final Text turnText = new Text();
 
     private final Pane pane = new Pane();
     private final Stage primaryStage = new Stage();
@@ -58,6 +88,22 @@ public class GameWindow {
         realToDisplayText.put(i18n.getText("orange"), "ORANGE");
         realToDisplayText.put(i18n.getText("white"), "WHITE");
         realToDisplayText.put(i18n.getText("bank"), "BANK");
+
+        topTurnBar.setAlignment(Pos.CENTER);
+        topTurnBar.setPrefHeight(30);
+        topTurnBar.setLayoutX(0);
+        topTurnBar.setLayoutY(0);
+        topTurnBar.prefWidthProperty().bind(pane.widthProperty()); 
+        
+        // Give the bar a sleek, neutral background with a slight bottom border
+        topTurnBar.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;");
+
+        // Make the text bold
+        turnText.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+
+        // Add the circle and text into the HBox, then add the HBox to the screen
+        topTurnBar.getChildren().addAll(turnColorIndicator, turnText);
+        pane.getChildren().add(topTurnBar);
     }
 
     public void run() {
@@ -141,17 +187,22 @@ public class GameWindow {
     public void showCity(Turn turn, int x, int y) {
         ImageView image = new ImageView();
 
-        if(turn == Turn.RED){
-            image.setImage(new Image("/imgs/general/redCity.png"));
-        }
-        else if(turn == Turn.BLUE){
-            image.setImage(new Image("/imgs/general/blueCity.png"));
-        }
-        else if(turn == Turn.ORANGE){
-            image.setImage(new Image("/imgs/general/orangeCity.png"));
-        }
-        else if(turn == Turn.WHITE){
-            image.setImage(new Image("/imgs/general/whiteCity.png"));
+        if(null != turn)
+        switch (turn) {
+            case RED:
+                image.setImage(new Image("/imgs/general/redCity.png"));
+                break;
+            case BLUE:
+                image.setImage(new Image("/imgs/general/blueCity.png"));
+                break;
+            case ORANGE:
+                image.setImage(new Image("/imgs/general/orangeCity.png"));
+                break;
+            case WHITE:
+                image.setImage(new Image("/imgs/general/whiteCity.png"));
+                break;
+            default:
+                break;
         }
 
         image.setFitHeight(settlementImageSize);
@@ -166,17 +217,22 @@ public class GameWindow {
     public void showRoad(Turn turn, int x, int y) {
         ImageView image = new ImageView();
 
-        if(turn == Turn.RED){
-            image.setImage(new Image("/imgs/general/redRoad.png"));
-        }
-        else if(turn == Turn.BLUE){
-            image.setImage(new Image("/imgs/general/blueRoad.png"));
-        }
-        else if(turn == Turn.ORANGE){
-            image.setImage(new Image("/imgs/general/orangeRoad.png"));
-        }
-        else{
+        if(null == turn){
             image.setImage(new Image("/imgs/general/whiteRoad.png"));
+        }
+        else switch (turn) {
+            case RED:
+                image.setImage(new Image("/imgs/general/redRoad.png"));
+                break;
+            case BLUE:
+                image.setImage(new Image("/imgs/general/blueRoad.png"));
+                break;
+            case ORANGE:
+                image.setImage(new Image("/imgs/general/orangeRoad.png"));
+                break;
+            default:
+                image.setImage(new Image("/imgs/general/whiteRoad.png"));
+                break;
         }
 
         image.setFitHeight(30);
@@ -186,6 +242,27 @@ public class GameWindow {
         image.setY(y);
 
         pane.getChildren().add(image);
+    }
+
+    public static PlayerInfo getPlayerInfo(Turn turn) {
+        String playerName = "";
+        Color playerColor = Color.TRANSPARENT;
+
+        if (turn == Turn.RED) {
+            playerName = "Player 1 (Red)";
+            playerColor = Color.RED;
+        } else if (turn == Turn.BLUE) {
+            playerName = "Player 2 (Blue)";
+            playerColor = Color.BLUE;
+        } else if (turn == Turn.ORANGE) {
+            playerName = "Player 3 (Orange)";
+            playerColor = Color.ORANGE;
+        } else if (turn == Turn.WHITE) {
+            playerName = "Player 4 (White)";
+            playerColor = Color.WHITE;
+        }
+
+        return new PlayerInfo(playerName, playerColor);
     }
 
     public void showInitialTurnState(TurnStateData turnData) {
@@ -204,6 +281,19 @@ public class GameWindow {
         vbox.getChildren().add(new Text(i18n.getText("victoryPoints") + turnData.victoryPoints));
 
         pane.getChildren().add(vbox);
+
+        PlayerInfo playerInfo = getPlayerInfo(turnData.turn);
+
+        // Update the text variable
+        turnText.setText("Current Turn: " + playerInfo.name());
+        
+        // Update the circle variable
+        turnColorIndicator.setFill(playerInfo.color());
+        turnColorIndicator.setStroke(Color.BLACK); 
+
+        // Bring the HBox to the front
+        topTurnBar.toFront();
+
     }
 
     private HBox showSettlementsBox(int settlements) {
@@ -264,7 +354,7 @@ public class GameWindow {
             board.onRollDiceClick();
         });
 
-        button.setText(i18n.getText("rollDice"));
+        button.setText(i18n.getText("drawCard"));
 
         button.setLayoutX(pane.getWidth() - button.getShape().getBoundsInLocal().getWidth() * 5.25);
         button.setLayoutY(pane.getHeight() - button.getShape().getBoundsInLocal().getHeight() * 7);
@@ -291,6 +381,20 @@ public class GameWindow {
         pane.getChildren().add(diceImageView);
 
         currentDiceImageView = diceImageView;
+    }
+
+    private Text currentEventText;
+
+    public void showEventText(String message) {
+        if (currentEventText != null) {
+            pane.getChildren().remove(currentEventText);
+        }
+        currentEventText = new Text(message);
+        currentEventText.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        currentEventText.setFill(Color.DARKRED);
+        currentEventText.setLayoutX(450);
+        currentEventText.setLayoutY(680);
+        pane.getChildren().add(currentEventText);
     }
 
 
@@ -469,6 +573,11 @@ public class GameWindow {
 
     public void showInvalidInputAndPass(String message) {
         System.out.println(message);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Input");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
     }
 
     public void showResourceCards(HashMap<ResourceType, Integer> resourceMap) {
@@ -602,8 +711,11 @@ public class GameWindow {
         if(text.getText().isEmpty()){
             return 0;
         }
-        else{
-            return Integer.parseInt(text.getText());
+        try {
+            int value = Integer.parseInt(text.getText());
+            return Math.max(value, 0);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 
@@ -705,7 +817,6 @@ public class GameWindow {
                 allDiscards.put(turn, dm);
             }
             board.onSubmitDiscard(allDiscards);
-            pane.getChildren().remove(dialog);
         });
 
         dialog.add(submit, 0, 2, 2, 1);
@@ -717,7 +828,7 @@ public class GameWindow {
 
     public void removeDiscardDialog() {
         pane.getChildren().removeIf(node ->
-                "discardPrompt".equals(node.getId())
+                "discardDialog".equals(node.getId())
         );
     }
 
