@@ -9372,6 +9372,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(robberCoordsDataStr));
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(robberResourcesDataStr));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(robberNumbersDataStr));
+        EasyMock.expect(dataInputs.getFishingGroundsStream()).andReturn(null);
 
         EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
         testBoard.loadBoardData(dataInputs);
@@ -9472,6 +9473,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(emptyData));
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(emptyData));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(emptyData));
+        EasyMock.expect(dataInputs.getFishingGroundsStream()).andReturn(null);
 
         EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
@@ -9502,6 +9504,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(getActualRobberCoordsData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(getActualRobberResourceData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(getActualRobberNumberData())).anyTimes();
+        EasyMock.expect(dataInputs.getFishingGroundsStream()).andReturn(null).anyTimes();
 
         EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
@@ -9538,6 +9541,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(robberCoordsDataStr));
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(robberResourcesDataStr));
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(robberNumbersDataStr));
+        EasyMock.expect(dataInputs.getFishingGroundsStream()).andReturn(null);
         EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
         testBoard.loadBoardData(dataInputs);
@@ -9575,6 +9579,7 @@ public class BoardTest {
         EasyMock.expect(dataInputs.getRobberCoordsStream()).andReturn(createMockFileInputStreamFromString(getActualRobberCoordsData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberResourceStream()).andReturn(createMockFileInputStreamFromString(getActualRobberResourceData())).anyTimes();
         EasyMock.expect(dataInputs.getRobberNumberStream()).andReturn(createMockFileInputStreamFromString(getActualRobberNumberData())).anyTimes();
+        EasyMock.expect(dataInputs.getFishingGroundsStream()).andReturn(null).anyTimes();
         EasyMock.replay(controller, turnStateMachine, deck, dataInputs);
 
         assertThrows(RuntimeException.class, () -> testBoard.loadBoardData(dataInputs));

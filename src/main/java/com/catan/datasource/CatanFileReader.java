@@ -1,14 +1,18 @@
 package com.catan.datasource;
 
-import com.catan.domain.HarborPoint;
-import com.catan.domain.ResourceType;
-import com.catan.domain.Terrain;
-
-import java.awt.*;
-import java.io.*;
+import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.catan.domain.HarborPoint;
+import com.catan.domain.ResourceType;
+import com.catan.domain.Terrain;
 
 
 public class CatanFileReader {
@@ -137,5 +141,24 @@ public class CatanFileReader {
             throw new RuntimeException("I/O exception reading harbor line", e);
         }
         return harborPoints;
+    }
+
+    public static ArrayList<int[]> readFishingGroundsFromFile(BufferedReader bufferedReader) {
+        ArrayList<int[]> fishingGrounds = new ArrayList<>();
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split(",");
+                int x = Integer.parseInt(parts[0].trim());
+                int y = Integer.parseInt(parts[1].trim());
+                int diceNumber = Integer.parseInt(parts[2].trim());
+                fishingGrounds.add(new int[]{x, y, diceNumber});
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("I/O exception reading fishing grounds", e);
+        }
+        return fishingGrounds;
     }
 }

@@ -13,6 +13,7 @@ public class BoardDataInputs {
     private final FileInputStream robberCoordsStream;
     private final FileInputStream robberResourceStream;
     private final FileInputStream robberNumberStream;
+    private final FileInputStream fishingGroundsStream;
 
     public BoardDataInputs(
             FileInputStream cityCoordsStream,
@@ -25,6 +26,23 @@ public class BoardDataInputs {
             FileInputStream robberCoordsStream,
             FileInputStream robberResourceStream,
             FileInputStream robberNumberStream) {
+        this(cityCoordsStream, cityTerrainsStream, cityValuesStream, harborsStream,
+             roadCoordsStream, cityNeighborsStream, roadNeighborsStream,
+             robberCoordsStream, robberResourceStream, robberNumberStream, null);
+    }
+
+    public BoardDataInputs(
+            FileInputStream cityCoordsStream,
+            FileInputStream cityTerrainsStream,
+            FileInputStream cityValuesStream,
+            FileInputStream harborsStream,
+            FileInputStream roadCoordsStream,
+            FileInputStream cityNeighborsStream,
+            FileInputStream roadNeighborsStream,
+            FileInputStream robberCoordsStream,
+            FileInputStream robberResourceStream,
+            FileInputStream robberNumberStream,
+            FileInputStream fishingGroundsStream) {
         this.cityCoordsStream = cityCoordsStream;
         this.cityTerrainsStream = cityTerrainsStream;
         this.cityValuesStream = cityValuesStream;
@@ -35,6 +53,7 @@ public class BoardDataInputs {
         this.robberCoordsStream = robberCoordsStream;
         this.robberResourceStream = robberResourceStream;
         this.robberNumberStream = robberNumberStream;
+        this.fishingGroundsStream = fishingGroundsStream;
     }
 
 
@@ -48,4 +67,5 @@ public class BoardDataInputs {
     public FileInputStream getRobberCoordsStream() { return robberCoordsStream; }
     public FileInputStream getRobberResourceStream() { return robberResourceStream; }
     public FileInputStream getRobberNumberStream() { return robberNumberStream; }
+    public FileInputStream getFishingGroundsStream() { return fishingGroundsStream; }
 }

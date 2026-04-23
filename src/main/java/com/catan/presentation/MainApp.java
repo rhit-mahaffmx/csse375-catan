@@ -72,12 +72,13 @@ public class MainApp extends Application {
                     FileInputStream robberCoordsStream = new FileInputStream(Board.ROBBER_COORDINATES_FILE_PATH);
                     FileInputStream robberResourceStream = new FileInputStream(Board.ROBBER_RESOURCE_FILE_PATH);
                     FileInputStream robberNumberStream = new FileInputStream(Board.ROBBER_NUMBER_FILE_PATH);
+                    FileInputStream fishingGroundsStream = new FileInputStream(Board.FISHING_GROUNDS_FILE_PATH);
 
                     BoardDataInputs dataInputs = new BoardDataInputs(
                             cityCoordsStream, cityTerrainsStream, cityValuesStream,
                             harborsStream, roadCoordsStream, cityNeighborsStream,
                             roadNeighborsStream, robberCoordsStream, robberResourceStream,
-                            robberNumberStream
+                            robberNumberStream, fishingGroundsStream
                     );
                     board.loadBoardData(dataInputs);
 

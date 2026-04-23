@@ -24,7 +24,9 @@ public class Board {
     public static final String CITY_NEIGHBORS_FILEPATH = "src/main/resources/inputs/cityNeighbors";
     public static final String ROAD_NEIGHBORS_FILEPATH = "src/main/resources/inputs/roadNeighbors";
     public static final String HARBORS_FILE_PATH = "src/main/resources/inputs/harbors";
+    public static final String FISHING_GROUNDS_FILE_PATH = "src/main/resources/inputs/fishingGrounds";
 
+    static final int[] LAKE_NUMBERS = {2, 3, 11, 12};
 
     public final static int INITIAL_SETTLEMENTS = 5;
     public final static int INITIAL_ROADS = 15;
@@ -106,9 +108,11 @@ public class Board {
         robberNumber = INITIAL_ROBBER_NUMBER;
         robberMoved = NO_SEVEN_ROLLED;
 
+        fishTokenSupplier = new StandardFishTokenSupplier(rand);
     }
     public void loadBoardData(BoardDataInputs dataInputs) {
         initializeBoardFromStreams(dataInputs);
+        setupFishingGrounds(dataInputs);
     }
 
     public ArrayList<CityPoint> createCities(FileInputStream coordStream, FileInputStream terrainStream, FileInputStream tileStream) {
@@ -206,6 +210,50 @@ public class Board {
                 dataInputs.getRobberResourceStream(),
                 dataInputs.getRobberNumberStream()
         );
+    }
+
+    // ==================== Fishing Grounds Setup ====================
+
+    void setupFishingGrounds(BoardDataInputs dataInputs) {
+        convertDesertToLake();
+        if (dataInputs.getFishingGroundsStream() != null) {
+            loadEdgeFishingGrounds(dataInputs.getFishingGroundsStream());
+        }
+    }
+
+    void convertDesertToLake() {
+        for (CityPoint cityPoint : cityPoints) {
+            HashMap<Integer, Terrain> tileMap = cityPoint.tileValueToTerrain;
+            Integer desertKey = null;
+            for (Map.Entry<Integer, Terrain> entry : tileMap.entrySet()) {
+                if (entry.getValue() == Terrain.DESERT) {
+                    desertKey = entry.getKey();
+                    break;
+                }
+            }
+            if (desertKey != null) {
+                tileMap.remove(desertKey);
+                for (int lakeNum : LAKE_NUMBERS) {
+                    tileMap.put(lakeNum, Terrain.LAKE);
+                }
+                cityPoint.setFishingGround(true);
+            }
+        }
+    }
+
+    void loadEdgeFishingGrounds(FileInputStream fishingGroundsStream) {
+        BufferedReader reader = CatanFileReader.getBufferedReaderFromFileName(fishingGroundsStream);
+        ArrayList<int[]> grounds = CatanFileReader.readFishingGroundsFromFile(reader);
+        for (int[] entry : grounds) {
+            int x = entry[0];
+            int y = entry[1];
+            int diceNumber = entry[2];
+            CityPoint city = getCityAtCoords(x, y);
+            if (city != null) {
+                city.setFishingGround(true);
+                city.tileValueToTerrain.put(diceNumber, Terrain.FISHING_GROUND);
+            }
+        }
     }
 
     public void addAllCityNeighbors(ArrayList<CityPoint> cityPoints, ArrayList<RoadPoint> roadPoints, FileInputStream neighborsStream) {
@@ -596,6 +644,7 @@ public class Board {
             handleEvent(card.getEventType());
             if (numRolled != DISCARD_THRESHOLD) {
                 giveResourcesToBorderingSettlements();
+                distributeFishTokens();
             }
         }
     }
@@ -615,6 +664,9 @@ public class Board {
             if (cityPoint.hasSettlement && cityPoint.getTileValues().contains(numRolled)) {
                 Terrain terrain = cityPoint.tileValueToTerrain.get(numRolled);
                 ResourceType resourceType = terrain.getResourceType();
+                if (resourceType == ResourceType.NULL) {
+                    continue;
+                }
                 Player owner = turnToPlayer.get(cityPoint.owner);
                 if (numRolled == robberNumber && robberResource.equals(resourceType)) {
                     continue;

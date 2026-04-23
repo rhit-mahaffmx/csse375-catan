@@ -2,6 +2,8 @@ package com.catan.domain;
 
 public enum Terrain {
     DESERT(ResourceType.NULL),
+    LAKE(ResourceType.NULL),
+    FISHING_GROUND(ResourceType.NULL),
     FIELD(ResourceType.WHEAT),
     FOREST(ResourceType.WOOD),
     HILL(ResourceType.BRICK),

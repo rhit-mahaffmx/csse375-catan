@@ -38,6 +38,7 @@ public class CharacterizationTest {
         mockController = EasyMock.niceMock(GameWindowController.class);
         mockTSM = EasyMock.niceMock(TurnStateMachine.class);
         mockDeck = EasyMock.niceMock(NumberCardDeck.class);
+        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(mockController, mockTSM, mockDeck);
         board = new Board(mockController, mockTSM, mockDeck);
     }
@@ -570,7 +571,7 @@ public class CharacterizationTest {
     @Test
     public void characterize_bankTrade_defaultRate4to1() {
         EasyMock.reset(mockTSM);
-        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED);
+        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(mockTSM);
 
         board.cityPoints = new ArrayList<>(); // no harbors
@@ -592,7 +593,7 @@ public class CharacterizationTest {
     @Test
     public void characterize_bankTrade_genericHarbor3to1() {
         EasyMock.reset(mockTSM);
-        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED);
+        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(mockTSM);
 
         HarborPoint genericHarbor = new HarborPoint(10, 10, ResourceType.NULL);
@@ -617,7 +618,7 @@ public class CharacterizationTest {
     @Test
     public void characterize_bankTrade_specificHarbor2to1() {
         EasyMock.reset(mockTSM);
-        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED);
+        EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED).anyTimes();
         EasyMock.replay(mockTSM);
 
         HarborPoint woodHarbor = new HarborPoint(10, 10, ResourceType.WOOD);
@@ -704,5 +705,229 @@ public class CharacterizationTest {
         Player p = new Player(Turn.RED);
         p.addVictoryPoints(-1);
         assertEquals(-1, p.getVictoryPoints());
+    }
+
+    // =========================================================================
+    // SECTION: Fishermen of Catan — Lake & Fishing Ground Setup
+    //
+    // Effect Sketch:
+    //   convertDesertToLake() --> CityPoint.tileValueToTerrain (DESERT removed,
+    //       LAKE entries for 2,3,11,12 added), CityPoint.isFishingGround = true
+    //   loadEdgeFishingGrounds() --> CityPoint.isFishingGround = true,
+    //       CityPoint.tileValueToTerrain gets FISHING_GROUND entry
+    //   giveResourcesToBorderingSettlements() --> skips NULL resources
+    //   distributeFishTokens() --> player.fishTokens
+    //
+    // Why: The Fishermen scenario replaces the desert with a Lake (numbers
+    //      2,3,11,12) and adds edge Fishing Grounds (4,5,6,8,9,10).
+    //      Settlements/cities bordering these tiles earn fish tokens
+    //      instead of regular resources when their number is rolled.
+    // =========================================================================
+
+    @Test
+    public void characterize_convertDesertToLake_replacesDesertWithLakeEntries() {
+        // A city bordering DESERT should have DESERT removed and
+        // LAKE entries for 2, 3, 11, 12 added after conversion.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(10), List.of(Terrain.DESERT));
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+
+        assertFalse(cp.getTerrains().contains(Terrain.DESERT),
+                "DESERT terrain should be removed");
+        assertTrue(cp.getTileValues().containsAll(List.of(2, 3, 11, 12)),
+                "Lake numbers 2, 3, 11, 12 should be added");
+        for (int num : new int[]{2, 3, 11, 12}) {
+            assertEquals(Terrain.LAKE, cp.tileValueToTerrain.get(num),
+                    "Tile value " + num + " should map to LAKE terrain");
+        }
+        assertTrue(cp.isFishingGround(),
+                "Lake-bordering city should be flagged as fishing ground");
+    }
+
+    @Test
+    public void characterize_convertDesertToLake_multiTerrainCityPreservesOthers() {
+        // A city bordering DESERT + MOUNTAIN should keep MOUNTAIN
+        // and replace only DESERT with LAKE entries.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(10, 5), List.of(Terrain.DESERT, Terrain.MOUNTAIN));
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+
+        assertTrue(cp.getTerrains().contains(Terrain.MOUNTAIN),
+                "Non-desert terrains should be preserved");
+        assertEquals(ResourceType.ORE, cp.tileValueToTerrain.get(5).getResourceType(),
+                "MOUNTAIN on value 5 should still produce ORE");
+        assertTrue(cp.isFishingGround());
+    }
+
+    @Test
+    public void characterize_convertDesertToLake_nonDesertCityUnchanged() {
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(8), List.of(Terrain.HILL));
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+
+        assertFalse(cp.isFishingGround(),
+                "Non-desert city should NOT become fishing ground");
+        assertEquals(List.of(Terrain.HILL), cp.getTerrains());
+    }
+
+    @Test
+    public void characterize_lakeCityDoesNotProduceResources() {
+        // Lake terrain has ResourceType.NULL — giveResourcesToBorderingSettlements
+        // should skip it (no brick/ore/etc produced).
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(10), List.of(Terrain.DESERT));
+        cp.placeSettlement(Turn.RED);
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+        board.numRolled = 3; // one of the lake numbers
+
+        board.giveResourcesToBorderingSettlements();
+
+        Player red = board.turnToPlayer.get(Turn.RED);
+        // NULL resources should be skipped — player gets nothing from resources
+        assertEquals(0, red.getResource(ResourceType.WHEAT));
+        assertEquals(0, red.getResource(ResourceType.WOOD));
+        assertEquals(0, red.getResource(ResourceType.BRICK));
+        assertEquals(0, red.getResource(ResourceType.ORE));
+        assertEquals(0, red.getResource(ResourceType.SHEEP));
+    }
+
+    @Test
+    public void characterize_lakeCityProducesFishOnRoll() {
+        // When a lake number is rolled, settlements bordering the lake
+        // should receive fish tokens from the supplier.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(10), List.of(Terrain.DESERT));
+        cp.placeSettlement(Turn.RED);
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+        board.numRolled = 11; // lake number
+
+        FakeFishTokenSupplier fake = new FakeFishTokenSupplier();
+        fake.load(new FishToken(2));
+        board.fishTokenSupplier = fake;
+
+        HashMap<Turn, ArrayList<FishToken>> result = board.distributeFishTokens();
+
+        assertNotNull(result.get(Turn.RED));
+        assertEquals(1, result.get(Turn.RED).size());
+        assertEquals(2, board.turnToPlayer.get(Turn.RED).getTotalFish());
+    }
+
+    @Test
+    public void characterize_lakeCityWithCityDrawsTwoTokens() {
+        // Cities (upgraded settlements) on lake draw 2 tokens.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setTileValues(List.of(10), List.of(Terrain.DESERT));
+        cp.placeSettlement(Turn.BLUE);
+        cp.isCity = true;
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.convertDesertToLake();
+        board.numRolled = 2; // lake number
+
+        FakeFishTokenSupplier fake = new FakeFishTokenSupplier();
+        fake.load(new FishToken(1), new FishToken(3));
+        board.fishTokenSupplier = fake;
+
+        HashMap<Turn, ArrayList<FishToken>> result = board.distributeFishTokens();
+
+        assertEquals(2, result.get(Turn.BLUE).size(),
+                "City on lake should draw 2 tokens");
+        assertEquals(4, board.turnToPlayer.get(Turn.BLUE).getTotalFish(),
+                "Total fish should be 1 + 3 = 4");
+    }
+
+    @Test
+    public void characterize_fishingGroundCityEarnsFishOnMatchingRoll() {
+        // Edge fishing ground cities earn fish when their number is rolled.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setFishingGround(true);
+        cp.setTileValues(List.of(9), List.of(Terrain.FISHING_GROUND));
+        cp.placeSettlement(Turn.ORANGE);
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.numRolled = 9;
+
+        FakeFishTokenSupplier fake = new FakeFishTokenSupplier();
+        fake.load(new FishToken(1));
+        board.fishTokenSupplier = fake;
+
+        board.distributeFishTokens();
+
+        assertEquals(1, board.turnToPlayer.get(Turn.ORANGE).getTotalFish());
+    }
+
+    @Test
+    public void characterize_fishingGroundNoFishOnNonMatchingRoll() {
+        // Fishing ground number doesn't match roll — no fish.
+        CityPoint cp = new CityPoint(10, 10);
+        cp.setFishingGround(true);
+        cp.setTileValues(List.of(4), List.of(Terrain.FISHING_GROUND));
+        cp.placeSettlement(Turn.RED);
+
+        board.cityPoints = new ArrayList<>(List.of(cp));
+        board.numRolled = 8; // doesn't match 4
+
+        board.distributeFishTokens();
+
+        assertEquals(0, board.turnToPlayer.get(Turn.RED).getTotalFish());
+    }
+
+    @Test
+    public void characterize_fishTokensKeptFaceDown_valuesHidden() {
+        // Fish tokens have different values (1,2,3). The token list
+        // returned is a defensive copy — opponents can't inspect it.
+        Player p = new Player(Turn.RED);
+        p.addFishToken(new FishToken(3));
+        p.addFishToken(new FishToken(1));
+
+        ArrayList<FishToken> copy = p.getFishTokenList();
+        assertEquals(2, copy.size());
+
+        // Modifying the copy doesn't affect the player's tokens
+        copy.clear();
+        assertEquals(4, p.getTotalFish(),
+                "Clearing the returned list should not affect player's actual tokens");
+    }
+
+    @Test
+    public void characterize_standardSupplierHasCorrectDistribution() {
+        // 11 x 1-fish, 10 x 2-fish, 8 x 3-fish, 1 x old-shoe = 30 tokens
+        StandardFishTokenSupplier supplier = new StandardFishTokenSupplier(new java.util.Random(42));
+        assertEquals(30, supplier.remaining());
+
+        int ones = 0, twos = 0, threes = 0, shoes = 0;
+        for (int i = 0; i < 30; i++) {
+            FishToken t = supplier.draw();
+            assertNotNull(t);
+            if (t.isOldShoe()) shoes++;
+            else if (t.getFishCount() == 1) ones++;
+            else if (t.getFishCount() == 2) twos++;
+            else if (t.getFishCount() == 3) threes++;
+        }
+        assertEquals(11, ones);
+        assertEquals(10, twos);
+        assertEquals(8, threes);
+        assertEquals(1, shoes);
+        assertEquals(0, supplier.remaining());
+    }
+
+    @Test
+    public void characterize_fishRedemptionCosts() {
+        // Verify all redemption costs match the spec.
+        assertEquals(2, board.getFishRedemptionCost(FishRedemptionType.MOVE_ROBBER));
+        assertEquals(3, board.getFishRedemptionCost(FishRedemptionType.STEAL_RESOURCE));
+        assertEquals(4, board.getFishRedemptionCost(FishRedemptionType.FREE_RESOURCE));
+        assertEquals(5, board.getFishRedemptionCost(FishRedemptionType.DEVELOPMENT_CARD));
+        assertEquals(7, board.getFishRedemptionCost(FishRedemptionType.FREE_ROAD));
     }
 }
