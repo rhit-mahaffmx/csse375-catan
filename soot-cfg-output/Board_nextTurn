@@ -1,0 +1,11 @@
+digraph "void nextTurn()" {
+    label="void nextTurn()";
+    node [shape=box];
+    "0" [style=filled,fillcolor=gray,label="r0 := @this",];
+    "1" [label="$r1 = r0.turnStateMachine",];
+    "0"->"1";
+    "2" [label="virtualinvoke $r1.nextTurn()",];
+    "1"->"2";
+    "3" [style=filled,fillcolor=lightgray,label="return",];
+    "2"->"3";
+}

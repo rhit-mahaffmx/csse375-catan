@@ -46,9 +46,10 @@ public class CharacterizationTest {
     /** Fake supplier that returns tokens from a pre-loaded queue. */
     private static class FakeFishTokenSupplier implements FishTokenSupplier {
         private final Queue<FishToken> queue = new LinkedList<>();
+        final List<FishToken> returned = new ArrayList<>();
         void load(FishToken... tokens) { for (FishToken t : tokens) queue.add(t); }
         @Override public FishToken draw() { return queue.poll(); }
-        @Override public void returnTokens(List<FishToken> tokens) { }
+        @Override public void returnTokens(List<FishToken> tokens) { returned.addAll(tokens); }
         @Override public int remaining() { return queue.size(); }
     }
 
@@ -418,29 +419,29 @@ public class CharacterizationTest {
         assertEquals(2, board.getFishRedemptionCost(FishRedemptionType.MOVE_ROBBER));
         assertEquals(3, board.getFishRedemptionCost(FishRedemptionType.STEAL_RESOURCE));
         assertEquals(4, board.getFishRedemptionCost(FishRedemptionType.FREE_RESOURCE));
-        assertEquals(5, board.getFishRedemptionCost(FishRedemptionType.DEVELOPMENT_CARD));
-        assertEquals(7, board.getFishRedemptionCost(FishRedemptionType.FREE_ROAD));
+        assertEquals(7, board.getFishRedemptionCost(FishRedemptionType.DEVELOPMENT_CARD));
+        assertEquals(5, board.getFishRedemptionCost(FishRedemptionType.FREE_ROAD));
     }
 
     @Test
-    public void characterize_redeemFish_devCardAddsKnight() {
-        // SURPRISING: Spending 5 fish for a dev card always gives a KNIGHT,
-        // not a random card like buyDevCard() does.
+    public void characterize_redeemFish_devCardDrawsRandomCard() {
+        // Spending 7 fish for a dev card draws a random card (same logic as buyDevCard).
         Player red = board.turnToPlayer.get(Turn.RED);
         red.addFishToken(new FishToken(3));
-        red.addFishToken(new FishToken(2));
+        red.addFishToken(new FishToken(3));
+        red.addFishToken(new FishToken(1));
 
         assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.DEVELOPMENT_CARD));
         assertEquals(1, red.getDevCards().size());
-        assertEquals(DevCards.KNIGHT, red.getDevCards().get(0).getType());
+        // Card type is random — just verify one was added
+        assertNotNull(red.getDevCards().get(0).getType());
     }
 
     @Test
     public void characterize_redeemFish_freeRoadAddsFreeRoad() {
         Player red = board.turnToPlayer.get(Turn.RED);
         red.addFishToken(new FishToken(3));
-        red.addFishToken(new FishToken(3));
-        red.addFishToken(new FishToken(1));
+        red.addFishToken(new FishToken(2));
 
         assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.FREE_ROAD));
         assertEquals(1, red.getFreeRoads());
@@ -921,13 +922,165 @@ public class CharacterizationTest {
         assertEquals(0, supplier.remaining());
     }
 
+    // =========================================================================
+    // SECTION: Fish Spending — Token Return to Pool
+    // =========================================================================
+
     @Test
-    public void characterize_fishRedemptionCosts() {
-        // Verify all redemption costs match the spec.
-        assertEquals(2, board.getFishRedemptionCost(FishRedemptionType.MOVE_ROBBER));
-        assertEquals(3, board.getFishRedemptionCost(FishRedemptionType.STEAL_RESOURCE));
-        assertEquals(4, board.getFishRedemptionCost(FishRedemptionType.FREE_RESOURCE));
-        assertEquals(5, board.getFishRedemptionCost(FishRedemptionType.DEVELOPMENT_CARD));
-        assertEquals(7, board.getFishRedemptionCost(FishRedemptionType.FREE_ROAD));
+    public void characterize_spentTokensReturnedToSupplierFaceUpPile() {
+        FakeFishTokenSupplier fake = new FakeFishTokenSupplier();
+        board.fishTokenSupplier = fake;
+
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(2));
+        red.addFishToken(new FishToken(1));
+        red.addFishToken(new FishToken(1));
+
+        // Spend 3 fish to steal a resource — should return spent tokens to supplier
+        board.redeemFishTokens(Turn.RED, FishRedemptionType.STEAL_RESOURCE);
+
+        // Tokens should be in supplier's returned list (face-up pile)
+        assertFalse(fake.returned.isEmpty(),
+                "Spent tokens must be returned to supplier face-up pile");
+        int returnedFish = fake.returned.stream().mapToInt(FishToken::getFishCount).sum();
+        assertTrue(returnedFish >= 3,
+                "Returned tokens should cover at least the cost");
     }
+
+    @Test
+    public void characterize_moveRobber_costsExactly2Fish() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(1));
+        red.addFishToken(new FishToken(1));
+
+        assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.MOVE_ROBBER));
+        assertEquals(0, red.getTotalFish());
+        assertTrue(board.robberMoved);
+    }
+
+    @Test
+    public void characterize_moveRobber_failsWithOnly1Fish() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(1));
+
+        assertFalse(board.redeemFishTokens(Turn.RED, FishRedemptionType.MOVE_ROBBER));
+        assertEquals(1, red.getTotalFish(), "Fish should not be consumed on failure");
+    }
+
+    @Test
+    public void characterize_freeResource_costs4Fish() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(2));
+        red.addFishToken(new FishToken(2));
+
+        assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.FREE_RESOURCE));
+        assertEquals(0, red.getTotalFish());
+    }
+
+    @Test
+    public void characterize_freeRoad_costs5Fish() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(3));
+        red.addFishToken(new FishToken(2));
+
+        assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.FREE_ROAD));
+        assertEquals(1, red.getFreeRoads());
+    }
+
+    @Test
+    public void characterize_devCard_costs7Fish() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(3));
+        red.addFishToken(new FishToken(3));
+        red.addFishToken(new FishToken(1));
+
+        assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.DEVELOPMENT_CARD));
+        assertEquals(1, red.getDevCards().size());
+    }
+
+    // =========================================================================
+    // SECTION: Old Boot — VP Penalty and Passing
+    // =========================================================================
+
+    @Test
+    public void characterize_oldBootIncreasesVPRequirement() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        assertEquals(10, red.getVictoryPointsNeededToWin());
+
+        red.setOldShoe(true);
+        assertEquals(11, red.getVictoryPointsNeededToWin(),
+                "Old Boot holder needs 11 VP to win");
+    }
+
+    @Test
+    public void characterize_drawingOldBootSetsFlag() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(FishToken.oldShoe());
+
+        assertTrue(red.hasOldShoe());
+        assertEquals(0, red.getTotalFish(),
+                "Old Boot should not add fish count");
+    }
+
+    @Test
+    public void characterize_passOldBoot_toPlayerWithMoreVPs() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        Player blue = board.turnToPlayer.get(Turn.BLUE);
+
+        red.setOldShoe(true);
+        red.addVictoryPoints(4);
+        blue.addVictoryPoints(6);
+
+        assertTrue(board.canPassOldShoe(Turn.RED, Turn.BLUE));
+        board.passOldShoe(Turn.RED, Turn.BLUE);
+
+        assertFalse(red.hasOldShoe());
+        assertTrue(blue.hasOldShoe());
+    }
+
+    @Test
+    public void characterize_cannotPassOldBoot_toPlayerWithFewerVPs() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        Player blue = board.turnToPlayer.get(Turn.BLUE);
+
+        red.setOldShoe(true);
+        red.addVictoryPoints(6);
+        blue.addVictoryPoints(3);
+
+        assertFalse(board.canPassOldShoe(Turn.RED, Turn.BLUE),
+                "Cannot pass boot to player with fewer VPs");
+    }
+
+    @Test
+    public void characterize_cannotPassOldBoot_toSelf() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.setOldShoe(true);
+        red.addVictoryPoints(5);
+
+        assertFalse(board.canPassOldShoe(Turn.RED, Turn.RED));
+    }
+
+    @Test
+    public void characterize_passOldBoot_doesNothingIfNotHolder() {
+        Player red = board.turnToPlayer.get(Turn.RED);
+        Player blue = board.turnToPlayer.get(Turn.BLUE);
+        blue.addVictoryPoints(5);
+
+        // RED doesn't have the boot
+        assertFalse(board.canPassOldShoe(Turn.RED, Turn.BLUE));
+        board.passOldShoe(Turn.RED, Turn.BLUE);
+        assertFalse(blue.hasOldShoe());
+    }
+
+    @Test
+    public void characterize_noChangeRule_excessFishLost() {
+        // Player has a 3-fish token but only needs 2 — the extra fish is lost
+        Player red = board.turnToPlayer.get(Turn.RED);
+        red.addFishToken(new FishToken(3));
+
+        assertTrue(board.redeemFishTokens(Turn.RED, FishRedemptionType.MOVE_ROBBER));
+        assertEquals(0, red.getTotalFish(),
+                "Excess fish are lost (no change rule)");
+    }
+
 }

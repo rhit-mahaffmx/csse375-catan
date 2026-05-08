@@ -9,11 +9,17 @@ import java.util.Set;
 import com.catan.domain.Board;
 import com.catan.domain.DevCards;
 import com.catan.domain.DevelopmentCard;
+import com.catan.domain.FishRedemptionType;
 import com.catan.domain.Player;
 import com.catan.domain.ResourceType;
 import com.catan.domain.TradeInfo;
 import com.catan.domain.Turn;
 import com.catan.domain.TurnStateData;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -65,6 +72,8 @@ public class GameWindow {
     private final ArrayList<ImageView> lastImages = new ArrayList<>();
     private final ArrayList<Button> lastButtons = new ArrayList<>();
     private final HashMap<String, String> realToDisplayText = new HashMap<>();
+    private VBox aiLogContent;
+    private ScrollPane aiLogScroll;
 
     public GameWindow(Internationalization i18n) {
         BackgroundSize backgroundPos = new BackgroundSize(800, 700, false, false, false, false);
@@ -73,7 +82,7 @@ public class GameWindow {
         BackgroundImage backgroundImage = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, imagePos, backgroundPos);
         pane.setBackground(new Background(backgroundImage));
 
-        Scene scene = new Scene(pane, 1300, 800);
+        Scene scene = new Scene(pane, 1500, 800);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
 
@@ -103,7 +112,36 @@ public class GameWindow {
 
         // Add the circle and text into the HBox, then add the HBox to the screen
         topTurnBar.getChildren().addAll(turnColorIndicator, turnText);
+
+        // Rulebook button
+        Button rulebookButton = new Button("\uD83D\uDCD6 Rules");
+        rulebookButton.setStyle("-fx-font-size: 12px; -fx-padding: 2 8 2 8; -fx-cursor: hand;");
+        rulebookButton.setOnAction(e -> openRulebook());
+        HBox spacer = new HBox();
+        spacer.setPrefWidth(20);
+        topTurnBar.getChildren().addAll(spacer, rulebookButton);
+
         pane.getChildren().add(topTurnBar);
+    }
+
+    private void openRulebook() {
+        try {
+            InputStream pdfStream = getClass().getResourceAsStream(
+                    "/imgs/rulebook/CN3081 CATAN–The Game Rulebook secure (1).pdf");
+            if (pdfStream == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Rulebook file not found.");
+                alert.showAndWait();
+                return;
+            }
+            File tempFile = File.createTempFile("CatanRulebook", ".pdf");
+            tempFile.deleteOnExit();
+            Files.copy(pdfStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            pdfStream.close();
+            java.awt.Desktop.getDesktop().open(tempFile);
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not open rulebook: " + ex.getMessage());
+            alert.showAndWait();
+        }
     }
 
     public void run() {
@@ -181,7 +219,7 @@ public class GameWindow {
         image.setY(y - settlementImageOffset);
 
         pane.getChildren().add(image);
-        pane.getChildren().get(pane.getChildren().indexOf(image)).toBack();
+        image.toFront();
     }
 
     public void showCity(Turn turn, int x, int y) {
@@ -212,9 +250,10 @@ public class GameWindow {
         image.setY(y - settlementImageOffset);
 
         pane.getChildren().add(image);
+        image.toFront();
     }
 
-    public void showRoad(Turn turn, int x, int y) {
+    public void showRoad(Turn turn, int x, int y, double angle) {
         ImageView image = new ImageView();
 
         if(null == turn){
@@ -235,13 +274,57 @@ public class GameWindow {
                 break;
         }
 
-        image.setFitHeight(30);
-        image.setFitWidth(30);
+        image.setFitHeight(16);
+        image.setFitWidth(55);
 
-        image.setX(x);
-        image.setY(y);
+        // Snap near-vertical angles to exactly 90
+        double snappedAngle = angle;
+        if (Math.abs(Math.abs(angle) - 90) < 15) {
+            snappedAngle = angle > 0 ? 90 : -90;
+        }
+
+        // Shift vertical roads right to center on hex edge
+        boolean isVertical = Math.abs(snappedAngle) == 90;
+        int xOffset = isVertical ? -20 : -27;
+        int yOffset = isVertical ? -7 : -8;
+
+        image.setX(x + xOffset);
+        image.setY(y + yOffset);
+        image.setRotate(snappedAngle);
 
         pane.getChildren().add(image);
+        image.toBack();
+    }
+
+    public void showSidewaysRoad(Turn turn, int x, int y) {
+        ImageView image = new ImageView();
+
+        if (null == turn) {
+            image.setImage(new Image("/imgs/general/whiteRoad.png"));
+        } else switch (turn) {
+            case RED:
+                image.setImage(new Image("/imgs/general/redRoad.png"));
+                break;
+            case BLUE:
+                image.setImage(new Image("/imgs/general/blueRoad.png"));
+                break;
+            case ORANGE:
+                image.setImage(new Image("/imgs/general/orangeRoad.png"));
+                break;
+            default:
+                image.setImage(new Image("/imgs/general/whiteRoad.png"));
+                break;
+        }
+
+        image.setFitHeight(16);
+        image.setFitWidth(55);
+        image.setX(x - 27);
+        image.setY(y - 8);
+        image.setRotate(0);
+        image.setOpacity(0.4);
+
+        pane.getChildren().add(image);
+        image.toBack();
     }
 
     public static PlayerInfo getPlayerInfo(Turn turn) {
@@ -580,7 +663,7 @@ public class GameWindow {
         alert.show();
     }
 
-    public void showResourceCards(HashMap<ResourceType, Integer> resourceMap) {
+    public void showResourceCards(HashMap<ResourceType, Integer> resourceMap, java.util.ArrayList<Integer> fishTokenDenoms, int tradeTokenCount) {
         pane.getChildren().removeIf(node -> node.getId() != null && node.getId().equals("resourceDisplay"));
 
         HBox resourceBox = new HBox(10);
@@ -610,6 +693,40 @@ public class GameWindow {
 
             resourceBox.getChildren().add(cardBox);
         }
+
+        // Fish tokens display with denomination breakdown
+        Text fishLabel = new Text("\uD83D\uDC1F");
+        fishLabel.setStyle("-fx-font-size: 36;");
+        int fishTotal = 0;
+        for (int d : fishTokenDenoms) { fishTotal += d; }
+        String fishText;
+        if (fishTokenDenoms.isEmpty()) {
+            fishText = "X 0";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            java.util.Collections.sort(fishTokenDenoms, java.util.Collections.reverseOrder());
+            for (int i = 0; i < fishTokenDenoms.size(); i++) {
+                if (i > 0) sb.append("+");
+                sb.append(fishTokenDenoms.get(i));
+            }
+            fishText = sb.toString() + " = " + fishTotal;
+        }
+        Text fishCountText = new Text(fishText);
+        fishCountText.setStyle("-fx-font-size: 16; -fx-fill: black;");
+        Text fishTokenLabel = new Text(fishTokenDenoms.size() + " token" + (fishTokenDenoms.size() != 1 ? "s" : ""));
+        fishTokenLabel.setStyle("-fx-font-size: 11; -fx-fill: gray;");
+        VBox fishBox = new VBox(3, fishLabel, fishCountText, fishTokenLabel);
+        fishBox.setAlignment(Pos.CENTER);
+        resourceBox.getChildren().add(fishBox);
+
+        // Trade tokens display
+        Text tradeLabel = new Text("\uD83D\uDCB0");
+        tradeLabel.setStyle("-fx-font-size: 36;");
+        Text tradeCountText = new Text("X " + tradeTokenCount);
+        tradeCountText.setStyle("-fx-font-size: 20; -fx-fill: black;");
+        VBox tradeBox = new VBox(5, tradeLabel, tradeCountText);
+        tradeBox.setAlignment(Pos.CENTER);
+        resourceBox.getChildren().add(tradeBox);
 
         pane.getChildren().add(resourceBox);
     }
@@ -959,6 +1076,231 @@ public class GameWindow {
         root.setLayoutY(550);
 
         pane.getChildren().add(root);
+    }
+
+    public void addFishMarketButton(Board board) {
+        Button button = new Button();
+        button.setShape(new Rectangle(20, 10));
+        button.setText(i18n.getText("fishMarket"));
+        button.setOnAction(e -> toggleFishMarketPanel(board));
+
+        button.setLayoutX(pane.getWidth() - button.getShape().getBoundsInLocal().getWidth() * 9);
+        button.setLayoutY(pane.getHeight() - button.getShape().getBoundsInLocal().getHeight() * 13);
+
+        pane.getChildren().add(button);
+    }
+
+    private void toggleFishMarketPanel(Board board) {
+        boolean wasOpen = pane.getChildren().stream()
+                .anyMatch(node -> "fishMarketPanel".equals(node.getId()));
+        removeFishMarketPanel();
+        if (wasOpen) return;
+        showFishMarketPanel(board);
+    }
+
+    private void showFishMarketPanel(Board board) {
+
+        VBox panel = new VBox(8);
+        panel.setId("fishMarketPanel");
+        panel.setPadding(new Insets(10));
+        panel.setStyle("-fx-background-color: #f0e6c8; -fx-border-color: #8B4513; -fx-border-width: 2;");
+
+        Text title = new Text(i18n.getText("fishMarket"));
+        title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        panel.getChildren().add(title);
+
+        Button moveRobberBtn = new Button(i18n.getText("fishMoveRobber"));
+        moveRobberBtn.setMaxWidth(Double.MAX_VALUE);
+        moveRobberBtn.setOnAction(e -> {
+            board.onFishRedeem(FishRedemptionType.MOVE_ROBBER);
+        });
+
+        Button stealBtn = new Button(i18n.getText("fishStealResource"));
+        stealBtn.setMaxWidth(Double.MAX_VALUE);
+        stealBtn.setOnAction(e -> {
+            board.onFishStealResource();
+        });
+
+        Button freeResourceBtn = new Button(i18n.getText("fishFreeResource"));
+        freeResourceBtn.setMaxWidth(Double.MAX_VALUE);
+        freeResourceBtn.setOnAction(e -> {
+            showFishFreeResourceDialog(board);
+        });
+
+        Button freeRoadBtn = new Button(i18n.getText("fishFreeRoad"));
+        freeRoadBtn.setMaxWidth(Double.MAX_VALUE);
+        freeRoadBtn.setOnAction(e -> {
+            board.onFishRedeem(FishRedemptionType.FREE_ROAD);
+        });
+
+        Button devCardBtn = new Button(i18n.getText("fishDevCard"));
+        devCardBtn.setMaxWidth(Double.MAX_VALUE);
+        devCardBtn.setOnAction(e -> {
+            board.onFishRedeem(FishRedemptionType.DEVELOPMENT_CARD);
+        });
+
+        panel.getChildren().addAll(moveRobberBtn, stealBtn, freeResourceBtn, freeRoadBtn, devCardBtn);
+
+        Button passShoeBtn = new Button(i18n.getText("passOldShoe"));
+        passShoeBtn.setMaxWidth(Double.MAX_VALUE);
+        passShoeBtn.setOnAction(e -> {
+            showPassOldShoeDialog(board);
+        });
+        panel.getChildren().add(passShoeBtn);
+
+        panel.setLayoutX(1100);
+        panel.setLayoutY(300);
+
+        pane.getChildren().add(panel);
+    }
+
+    private void showFishFreeResourceDialog(Board board) {
+        removeFishMarketPanel();
+
+        VBox dialog = new VBox(8);
+        dialog.setId("fishMarketPanel");
+        dialog.setPadding(new Insets(10));
+        dialog.setStyle("-fx-background-color: #f0e6c8; -fx-border-color: #8B4513; -fx-border-width: 2;");
+
+        Text label = new Text(i18n.getText("chooseResource"));
+        label.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
+        dialog.getChildren().add(label);
+
+        ToggleGroup group = new ToggleGroup();
+        for (ResourceType type : List.of(
+                ResourceType.WOOD, ResourceType.BRICK,
+                ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.ORE)) {
+            RadioButton rb = new RadioButton(type.toString());
+            rb.setToggleGroup(group);
+            dialog.getChildren().add(rb);
+        }
+
+        Button submit = new Button(i18n.getText("submit"));
+        submit.setOnAction(e -> {
+            RadioButton sel = (RadioButton) group.getSelectedToggle();
+            if (sel != null) {
+                board.onFishFreeResource(ResourceType.valueOf(sel.getText()));
+                removeFishMarketPanel();
+            }
+        });
+        dialog.getChildren().add(submit);
+
+        dialog.setLayoutX(1100);
+        dialog.setLayoutY(300);
+        pane.getChildren().add(dialog);
+    }
+
+    private void showPassOldShoeDialog(Board board) {
+        removeFishMarketPanel();
+
+        VBox dialog = new VBox(8);
+        dialog.setId("fishMarketPanel");
+        dialog.setPadding(new Insets(10));
+        dialog.setStyle("-fx-background-color: #f0e6c8; -fx-border-color: #8B4513; -fx-border-width: 2;");
+
+        Text label = new Text(i18n.getText("chooseVictim"));
+        label.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
+        dialog.getChildren().add(label);
+
+        ComboBox<String> playerDropdown = new ComboBox<>();
+        for (Turn t : new Turn[]{Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE}) {
+            playerDropdown.getItems().add(t.toString());
+        }
+        playerDropdown.setValue(Turn.RED.toString());
+        dialog.getChildren().add(playerDropdown);
+
+        Button submit = new Button(i18n.getText("submit"));
+        submit.setOnAction(e -> {
+            Turn target = Turn.valueOf(playerDropdown.getValue());
+            board.onPassOldShoe(target);
+            removeFishMarketPanel();
+        });
+        dialog.getChildren().add(submit);
+
+        dialog.setLayoutX(1100);
+        dialog.setLayoutY(300);
+        pane.getChildren().add(dialog);
+    }
+
+    public void removeFishMarketPanel() {
+        pane.getChildren().removeIf(node ->
+                "fishMarketPanel".equals(node.getId())
+        );
+    }
+
+    public void showFishMarketError(String message) {
+        removeFishMarketPanel();
+
+        VBox errorBox = new VBox(8);
+        errorBox.setId("fishMarketPanel");
+        errorBox.setPadding(new Insets(10));
+        errorBox.setStyle("-fx-background-color: #ffe0e0; -fx-border-color: red; -fx-border-width: 2;");
+
+        Text errorText = new Text(message);
+        errorText.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-fill: red;");
+        errorBox.getChildren().add(errorText);
+
+        errorBox.setLayoutX(1100);
+        errorBox.setLayoutY(300);
+        pane.getChildren().add(errorBox);
+    }
+
+    public void addAILog() {
+        aiLogContent = new VBox(2);
+        aiLogContent.setPadding(new Insets(5));
+
+        aiLogScroll = new ScrollPane(aiLogContent);
+        aiLogScroll.setId("aiLogPanel");
+        aiLogScroll.setPrefWidth(280);
+        aiLogScroll.setPrefHeight(150);
+        aiLogScroll.setLayoutX(800);
+        aiLogScroll.setLayoutY(440);
+        aiLogScroll.setFitToWidth(true);
+        aiLogScroll.setStyle("-fx-background: #1a1a2e; -fx-border-color: #16213e; -fx-border-width: 2;");
+
+        Text title = new Text("AI Action Log");
+        title.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-fill: #e0e0e0;");
+        aiLogContent.getChildren().add(title);
+        aiLogContent.setStyle("-fx-background-color: #1a1a2e;");
+
+        pane.getChildren().add(aiLogScroll);
+    }
+
+    public void appendAILog(String message) {
+        if (aiLogContent == null) return;
+        Text entry = new Text(message);
+        entry.setStyle("-fx-font-size: 12; -fx-fill: #c8d6e5;");
+        entry.setWrappingWidth(250);
+        aiLogContent.getChildren().add(entry);
+        aiLogScroll.setVvalue(1.0);
+    }
+
+    public void addBuildCostReference() {
+        VBox panel = new VBox(3);
+        panel.setId("buildCostRef");
+        panel.setPadding(new Insets(6));
+        panel.setStyle("-fx-background-color: #faf3e0; -fx-border-color: #8B4513; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;");
+        panel.setLayoutX(1085);
+        panel.setLayoutY(440);
+
+        Text title = new Text("Build Costs");
+        title.setStyle("-fx-font-size: 13; -fx-font-weight: bold;");
+        panel.getChildren().add(title);
+
+        String[] lines = {
+            "Road: 1 Wood, 1 Brick",
+            "Settlement: 1 Wood, 1 Brick, 1 Sheep, 1 Wheat",
+            "City: 3 Ore, 2 Wheat",
+            "Dev Card: 1 Ore, 1 Wheat, 1 Sheep"
+        };
+
+        for (String line : lines) {
+            Text t = new Text(line);
+            t.setStyle("-fx-font-size: 11;");
+            panel.getChildren().add(t);
+        }
+
+        pane.getChildren().add(panel);
     }
 
 }

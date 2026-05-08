@@ -132,11 +132,11 @@ public class GameWindowControllerTest {
         GameWindow testWindow = EasyMock.createMock(GameWindow.class);
         GameWindowController testController = new GameWindowController(testWindow);
 
-        testWindow.showRoad(TurnStateMachine.FIRST_TURN, 1, 1);
+        testWindow.showRoad(TurnStateMachine.FIRST_TURN, 1, 1, 0.0);
 
         EasyMock.replay(testWindow);
 
-        testController.showRoad(TurnStateMachine.FIRST_TURN, 1, 1);
+        testController.showRoad(TurnStateMachine.FIRST_TURN, 1, 1, 0.0);
 
         EasyMock.verify(testWindow);
     }
@@ -242,7 +242,7 @@ public class GameWindowControllerTest {
     expectedResources.put(ResourceType.SHEEP, 1);
     expectedResources.put(ResourceType.ORE, 1);
 
-    testWindow.showResourceCards(EasyMock.anyObject());
+    testWindow.showResourceCards(EasyMock.anyObject(), EasyMock.anyObject(), EasyMock.anyInt());
     EasyMock.replay(testWindow);
 
     testController.showResourceCards(testBoard, expectedResources);

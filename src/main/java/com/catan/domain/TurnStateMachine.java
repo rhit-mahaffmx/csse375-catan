@@ -8,10 +8,19 @@ public class TurnStateMachine {
     private Turn turn;
     private int round = 1;
     private boolean forward = true;
+    private boolean twoPlayerMode = false;
 
     public TurnStateMachine() {
         this.turn = FIRST_TURN;
         this.hasRolled = INITIAL_DICE_ROLLED;
+    }
+
+    public void setTwoPlayerMode(boolean twoPlayerMode) {
+        this.twoPlayerMode = twoPlayerMode;
+    }
+
+    public boolean isTwoPlayerMode() {
+        return twoPlayerMode;
     }
 
     public Turn getTurn() {
@@ -26,8 +35,39 @@ public class TurnStateMachine {
         return this.forward;
     }
     public void nextTurn() {
-        boolean direction = this.forward;
+        if (twoPlayerMode) {
+            nextTurnTwoPlayer();
+        } else {
+            nextTurnStandard();
+        }
+        this.hasRolled = false;
+    }
 
+    private void nextTurnTwoPlayer() {
+        if (this.round == 1 && this.turn == Turn.BLUE && this.forward) {
+            this.round = 2;
+            this.forward = false;
+        } else if (this.round == 2 && this.turn == Turn.RED && !this.forward) {
+            this.round = 3;
+            this.forward = true;
+        } else {
+            if (this.forward) {
+                if (this.turn == Turn.RED) {
+                    this.turn = Turn.BLUE;
+                } else if (this.turn == Turn.BLUE) {
+                    this.round++;
+                    this.turn = Turn.RED;
+                }
+            } else {
+                if (this.turn == Turn.BLUE) {
+                    this.turn = Turn.RED;
+                }
+            }
+        }
+    }
+
+    private void nextTurnStandard() {
+        boolean direction = this.forward;
 
         if (this.round == 1 && this.turn == Turn.WHITE && direction) {
             this.round = 2;
@@ -59,7 +99,6 @@ public class TurnStateMachine {
                 }
             }
         }
-        this.hasRolled = false;
     }
 
     public int getRound(){

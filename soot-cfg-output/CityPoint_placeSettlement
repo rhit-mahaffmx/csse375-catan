@@ -1,0 +1,13 @@
+digraph "void placeSettlement(com.catan.domain.Turn)" {
+    label="void placeSettlement(com.catan.domain.Turn)";
+    node [shape=box];
+    "0" [style=filled,fillcolor=gray,label="r0 := @this",];
+    "1" [label="r1 := @parameter0",];
+    "0"->"1";
+    "2" [label="r0.owner = r1",];
+    "1"->"2";
+    "3" [label="r0.hasSettlement = 1",];
+    "2"->"3";
+    "4" [style=filled,fillcolor=lightgray,label="return",];
+    "3"->"4";
+}

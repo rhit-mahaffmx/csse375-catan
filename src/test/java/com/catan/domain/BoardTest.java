@@ -819,7 +819,7 @@ public class BoardTest {
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showSettlement(TurnStateMachine.FIRST_TURN, 391, 320);
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
-        controllerTest.showRoad(TurnStateMachine.FIRST_TURN, 421, 338);
+        controllerTest.showRoad(EasyMock.eq(TurnStateMachine.FIRST_TURN), EasyMock.eq(421), EasyMock.eq(338), EasyMock.anyDouble());
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.replay(controllerTest);
 
@@ -1464,7 +1464,7 @@ public class BoardTest {
         controllerTest.showSettlement(testBoard.getTurn(), testCity1.getX(), testCity1.getY());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
-        controllerTest.showRoad(testBoard.getTurn(), testRoad1.getX(), testRoad1.getY());
+        controllerTest.showRoad(EasyMock.eq(testBoard.getTurn()), EasyMock.eq(testRoad1.getX()), EasyMock.eq(testRoad1.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.replay(controllerTest);
@@ -1518,7 +1518,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -1530,7 +1530,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         turnStateMachine.nextTurn();
@@ -1542,7 +1542,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         turnStateMachine.nextTurn();
@@ -1555,7 +1555,7 @@ public class BoardTest {
 
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         turnStateMachine.nextTurn();
@@ -1644,7 +1644,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -1656,7 +1656,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         turnStateMachine.nextTurn();
@@ -1668,7 +1668,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         turnStateMachine.nextTurn();
@@ -1680,7 +1680,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         turnStateMachine.nextTurn();
@@ -1701,7 +1701,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, expectedResources);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
-        controllerTest.showRoad(Turn.RED, testRedSecondRoad.getX(), testRedSecondRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedSecondRoad.getX()), EasyMock.eq(testRedSecondRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, expectedResources);
 
@@ -1783,7 +1783,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(testBoard.turnToPlayer.get(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(testBoard.turnToPlayer.get(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -1795,7 +1795,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         turnStateMachine.nextTurn();
@@ -1807,7 +1807,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         turnStateMachine.nextTurn();
@@ -1819,7 +1819,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         turnStateMachine.nextTurn();
@@ -1836,7 +1836,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, expectedResources);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
-        controllerTest.showRoad(Turn.RED, testRedSecondRoad.getX(), testRedSecondRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedSecondRoad.getX()), EasyMock.eq(testRedSecondRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(playerForResources));
 
@@ -1915,7 +1915,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(testBoard.turnToPlayer.get(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(testBoard.turnToPlayer.get(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -1927,7 +1927,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.BLUE)));
         turnStateMachine.nextTurn();
@@ -1939,7 +1939,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.ORANGE)));
         turnStateMachine.nextTurn();
@@ -1951,7 +1951,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.WHITE)));
         turnStateMachine.nextTurn();
@@ -1972,7 +1972,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, expectedResources);
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
-        controllerTest.showRoad(Turn.RED, testRedSecondRoad.getX(), testRedSecondRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedSecondRoad.getX()), EasyMock.eq(testRedSecondRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, expectedResources);
 
@@ -2045,7 +2045,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2057,7 +2057,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2069,7 +2069,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2081,7 +2081,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2168,7 +2168,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2180,7 +2180,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2192,7 +2192,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2204,7 +2204,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -2229,7 +2229,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(player));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED).times(2);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(2);
-        controllerTest.showRoad(Turn.RED, testRedSecondRoad.getX(), testRedSecondRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedSecondRoad.getX()), EasyMock.eq(testRedSecondRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(player));
 
@@ -2881,7 +2881,7 @@ public class BoardTest {
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         turnStateMachine.nextTurn();
 
@@ -2891,7 +2891,7 @@ public class BoardTest {
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         turnStateMachine.nextTurn();
 
@@ -2901,7 +2901,7 @@ public class BoardTest {
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         turnStateMachine.nextTurn();
 
@@ -2911,7 +2911,7 @@ public class BoardTest {
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         turnStateMachine.nextTurn();
 
@@ -2992,7 +2992,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -3004,7 +3004,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.BLUE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.BLUE, testBlueRoad.getX(), testBlueRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.BLUE), EasyMock.eq(testBlueRoad.getX()), EasyMock.eq(testBlueRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -3016,7 +3016,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.ORANGE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.ORANGE, testOrangeRoad.getX(), testOrangeRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.ORANGE), EasyMock.eq(testOrangeRoad.getX()), EasyMock.eq(testOrangeRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -3028,7 +3028,7 @@ public class BoardTest {
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.WHITE);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(1);
-        controllerTest.showRoad(Turn.WHITE, testWhiteRoad.getX(), testWhiteRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.WHITE), EasyMock.eq(testWhiteRoad.getX()), EasyMock.eq(testWhiteRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
         turnStateMachine.nextTurn();
@@ -3764,7 +3764,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
 
@@ -3911,7 +3911,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(emptyResourcePlayer));
 
@@ -3964,7 +3964,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
 
@@ -4015,7 +4015,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(new Player(Turn.RED)));
 
@@ -4079,7 +4079,7 @@ public class BoardTest {
         EasyMock.expect(turnStateMachine.getTurn()).andReturn(Turn.RED);
         EasyMock.expect(turnStateMachine.getRound()).andReturn(3);
         EasyMock.expect(turnStateMachine.getHasRolled()).andReturn(true);
-        controllerTest.showRoad(Turn.RED, testRedRoad.getX(), testRedRoad.getY());
+        controllerTest.showRoad(EasyMock.eq(Turn.RED), EasyMock.eq(testRedRoad.getX()), EasyMock.eq(testRedRoad.getY()), EasyMock.anyDouble());
         controllerTest.showInitialTurnState(EasyMock.anyObject(TurnStateData.class));
         controllerTest.showResourceCards(testBoard, testBoard.playerResourcesMap(afterPaymentPlayer));
 
@@ -10413,7 +10413,7 @@ public class BoardTest {
         }
 
         @Override
-        public void showRoad(Turn turn, int x, int y) {
+        public void showRoad(Turn turn, int x, int y, double angle) {
             // No-op for testing
         }
 

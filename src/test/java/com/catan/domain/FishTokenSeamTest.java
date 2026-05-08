@@ -114,22 +114,20 @@ public class FishTokenSeamTest {
     // =========================================================================
 
     @Test
-    public void seam2_selectTokensForCostPicksSmallestTokensFirst() {
+    public void seam2_selectTokensForCostPicksOptimalTokens() {
         Player player = new Player(Turn.RED);
         player.addFishToken(new FishToken(3));
         player.addFishToken(new FishToken(1));
         player.addFishToken(new FishToken(2));
 
-        // Cost = 3: should pick the 1 + 2 tokens (total exactly 3)
-        // rather than the single 3-token, because it sorts ascending
-        // and greedily selects until sum >= cost
+        // Cost = 3: should pick the single 3-token (exact match, fewest tokens)
         ArrayList<FishToken> selected = player.selectTokensForCost(3);
         int selectedTotal = selected.stream().mapToInt(FishToken::getFishCount).sum();
 
         assertEquals(3, selectedTotal,
                 "Should pick tokens summing to exactly the cost when possible");
-        assertEquals(2, selected.size(),
-                "Should use the 1-fish and 2-fish tokens");
+        assertEquals(1, selected.size(),
+                "Should use the single 3-fish token for optimal selection");
     }
 
     @Test
@@ -148,7 +146,7 @@ public class FishTokenSeamTest {
                 "With only 3-fish tokens, must overshoot — excess is lost per rules");
 
         // Actually spend them
-        assertTrue(player.spendFishTokens(4));
+        assertFalse(player.spendFishTokens(4).isEmpty());
         assertEquals(0, player.getTotalFish(),
                 "Both tokens consumed; no change given back");
     }
@@ -275,9 +273,10 @@ public class FishTokenSeamTest {
         assertTrue(board.robberMoved, "Robber should be flagged as moved");
 
         // Capture: the fake recorded the spent tokens returned to the pool
-        // (Player spent them; Board should return them to supplier)
-        assertEquals(0, red.getTotalFish(),
-                "All of RED's tokens used since smallest-first picks 1+2 for cost 2");
+        assertEquals(1, fake.returned.size(),
+                "Optimal selection picks the 2-fish token exactly for cost 2");
+        assertEquals(1, red.getTotalFish(),
+                "RED should have the 1-fish token remaining");
     }
 
     @Test
@@ -285,7 +284,7 @@ public class FishTokenSeamTest {
         Player red = board.turnToPlayer.get(Turn.RED);
         red.addFishToken(new FishToken(1));
 
-        // 7 fish needed for dev card — only have 1
+        // 5 fish needed for free road — only have 1
         boolean success = board.redeemFishTokens(Turn.RED, FishRedemptionType.FREE_ROAD);
 
         assertFalse(success, "Should fail when fish total < cost");

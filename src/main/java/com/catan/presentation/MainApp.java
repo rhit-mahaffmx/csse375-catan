@@ -6,9 +6,11 @@ import java.util.Locale;
 import java.util.Random;
 
 import com.catan.datasource.BoardDataInputs;
+import com.catan.domain.AIPlayerStrategy;
 import com.catan.domain.Board;
 import com.catan.domain.GameWindowController;
 import com.catan.domain.NumberCardDeck;
+import com.catan.domain.Turn;
 import com.catan.domain.TurnStateMachine;
 
 import javafx.application.Application;
@@ -16,6 +18,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -55,53 +60,115 @@ public class MainApp extends Application {
                 } else if (selected.equals("Espanol")) {
                     i18n.setLocale(new Locale("es", "MX"));
                 }
-                GameWindow gameWindow = new GameWindow(i18n);
-                GameWindowController gameWindowController = new GameWindowController(gameWindow);
-                TurnStateMachine turnStateMachine = new TurnStateMachine();
-                NumberCardDeck deck = new NumberCardDeck(new Random());
-                Board board;
-                try {
-                    board = new Board(gameWindowController, turnStateMachine, deck);
-                    FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
-                    FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
-                    FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
-                    FileInputStream harborsStream = new FileInputStream(Board.HARBORS_FILE_PATH);
-                    FileInputStream roadCoordsStream = new FileInputStream(Board.ROAD_COORDINATES_FILE_PATH);
-                    FileInputStream cityNeighborsStream = new FileInputStream(Board.CITY_NEIGHBORS_FILEPATH);
-                    FileInputStream roadNeighborsStream = new FileInputStream(Board.ROAD_NEIGHBORS_FILEPATH);
-                    FileInputStream robberCoordsStream = new FileInputStream(Board.ROBBER_COORDINATES_FILE_PATH);
-                    FileInputStream robberResourceStream = new FileInputStream(Board.ROBBER_RESOURCE_FILE_PATH);
-                    FileInputStream robberNumberStream = new FileInputStream(Board.ROBBER_NUMBER_FILE_PATH);
-                    FileInputStream fishingGroundsStream = new FileInputStream(Board.FISHING_GROUNDS_FILE_PATH);
-
-                    BoardDataInputs dataInputs = new BoardDataInputs(
-                            cityCoordsStream, cityTerrainsStream, cityValuesStream,
-                            harborsStream, roadCoordsStream, cityNeighborsStream,
-                            roadNeighborsStream, robberCoordsStream, robberResourceStream,
-                            robberNumberStream, fishingGroundsStream
-                    );
-                    board.loadBoardData(dataInputs);
-
-                } catch (IOException excep) {
-
-                    throw new RuntimeException("Failed to load essential game data, application cannot start.", excep);
-                }
-                board.addAllCities(board.cityPoints);
-                board.addAllRoadPoints(board.roadPoints);
-                board.addAllRobberPoints(board.robberPoints);
-                board.addNextTurnButton();
-                board.addDiceRollButton();
-                board.addBuyDevCardButton();
-                board.showInitialTurnState();
-                board.showInitialRobberState();
-                board.showResources();
-                board.showDevCards();
-                board.showTradeDialogue();
-                board.showDiscardDialog();
-                board.startGame();
+                showGameModeScreen(stage, i18n);
             }
         });
         stage.show();
+    }
+
+    private void showGameModeScreen(Stage stage, Internationalization i18n) {
+        Pane modePane = new Pane();
+        Scene modeScene = new Scene(modePane, 300, 300);
+
+        Label titleLabel = new Label(i18n.getText("gameMode"));
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        ToggleGroup modeGroup = new ToggleGroup();
+
+        RadioButton standard = new RadioButton(i18n.getText("standard4Player"));
+        standard.setToggleGroup(modeGroup);
+        standard.setSelected(true);
+        standard.setUserData("STANDARD");
+
+        RadioButton twoPlayer = new RadioButton(i18n.getText("twoPlayer"));
+        twoPlayer.setToggleGroup(modeGroup);
+        twoPlayer.setUserData("TWO_PLAYER");
+
+        RadioButton vsAI = new RadioButton(i18n.getText("vsAI"));
+        vsAI.setToggleGroup(modeGroup);
+        vsAI.setUserData("VS_AI");
+
+        RadioButton twoPlayerAI = new RadioButton(i18n.getText("twoPlayerAI"));
+        twoPlayerAI.setToggleGroup(modeGroup);
+        twoPlayerAI.setUserData("TWO_PLAYER_AI");
+
+        Button startButton = new Button(i18n.getText("startGame"));
+        startButton.setOnAction(ev -> {
+            String mode = modeGroup.getSelectedToggle().getUserData().toString();
+            launchGame(stage, i18n, mode);
+        });
+
+        VBox box = new VBox(15, titleLabel, standard, twoPlayer, vsAI, twoPlayerAI, startButton);
+        box.setAlignment(Pos.CENTER);
+        box.setLayoutX(50);
+        box.setLayoutY(40);
+
+        modePane.getChildren().add(box);
+        stage.setScene(modeScene);
+    }
+
+    private void launchGame(Stage stage, Internationalization i18n, String mode) {
+        GameWindow gameWindow = new GameWindow(i18n);
+        GameWindowController gameWindowController = new GameWindowController(gameWindow);
+        TurnStateMachine turnStateMachine = new TurnStateMachine();
+        NumberCardDeck deck = new NumberCardDeck(new Random());
+        Board board;
+        try {
+            board = new Board(gameWindowController, turnStateMachine, deck);
+            FileInputStream cityCoordsStream = new FileInputStream(Board.CITY_COORDINATES_FILE_PATH);
+            FileInputStream cityTerrainsStream = new FileInputStream(Board.TERRAIN_COORDINATES_FILE_PATH);
+            FileInputStream cityValuesStream = new FileInputStream(Board.TILE_VALUE_COORDINATES_FILE_PATH);
+            FileInputStream harborsStream = new FileInputStream(Board.HARBORS_FILE_PATH);
+            FileInputStream roadCoordsStream = new FileInputStream(Board.ROAD_COORDINATES_FILE_PATH);
+            FileInputStream cityNeighborsStream = new FileInputStream(Board.CITY_NEIGHBORS_FILEPATH);
+            FileInputStream roadNeighborsStream = new FileInputStream(Board.ROAD_NEIGHBORS_FILEPATH);
+            FileInputStream robberCoordsStream = new FileInputStream(Board.ROBBER_COORDINATES_FILE_PATH);
+            FileInputStream robberResourceStream = new FileInputStream(Board.ROBBER_RESOURCE_FILE_PATH);
+            FileInputStream robberNumberStream = new FileInputStream(Board.ROBBER_NUMBER_FILE_PATH);
+            FileInputStream fishingGroundsStream = new FileInputStream(Board.FISHING_GROUNDS_FILE_PATH);
+
+            BoardDataInputs dataInputs = new BoardDataInputs(
+                    cityCoordsStream, cityTerrainsStream, cityValuesStream,
+                    harborsStream, roadCoordsStream, cityNeighborsStream,
+                    roadNeighborsStream, robberCoordsStream, robberResourceStream,
+                    robberNumberStream, fishingGroundsStream
+            );
+            board.loadBoardData(dataInputs);
+
+        } catch (IOException excep) {
+            throw new RuntimeException("Failed to load essential game data, application cannot start.", excep);
+        }
+
+        if (mode.equals("TWO_PLAYER")) {
+            board.enableTwoPlayerMode(Turn.ORANGE, Turn.WHITE);
+            turnStateMachine.setTwoPlayerMode(true);
+        } else if (mode.equals("VS_AI")) {
+            board.setPlayerStrategy(Turn.BLUE, new AIPlayerStrategy());
+            board.setPlayerStrategy(Turn.ORANGE, new AIPlayerStrategy());
+            board.setPlayerStrategy(Turn.WHITE, new AIPlayerStrategy());
+            board.enableAILog();
+        } else if (mode.equals("TWO_PLAYER_AI")) {
+            board.enableTwoPlayerMode(Turn.ORANGE, Turn.WHITE);
+            turnStateMachine.setTwoPlayerMode(true);
+            board.setPlayerStrategy(Turn.BLUE, new AIPlayerStrategy());
+            board.enableAILog();
+        }
+
+        board.addAllCities(board.cityPoints);
+        board.addAllRoadPoints(board.roadPoints);
+        board.addAllRobberPoints(board.robberPoints);
+        board.addNextTurnButton();
+        board.addDiceRollButton();
+        board.addBuyDevCardButton();
+        board.addFishMarketButton();
+        board.addBuildCostReference();
+        board.showInitialTurnState();
+        board.showInitialRobberState();
+        board.showResources();
+        board.showDevCards();
+        board.showTradeDialogue();
+        board.showDiscardDialog();
+        board.startGame();
     }
 
 

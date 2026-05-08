@@ -2,6 +2,7 @@ package com.catan.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Player {
     public Turn color;
@@ -16,6 +17,7 @@ public class Player {
     private boolean hasOldShoe = false;
     private final HashMap<ResourceType, Integer> resources = new HashMap<>();
     private final ArrayList<DevelopmentCard> developmentCards = new ArrayList<>();
+    private int tradeTokens = 0;
 
     public Player(Turn turn) {
         color = turn;
@@ -57,10 +59,10 @@ public class Player {
     }
 
     public void payForSettlement() {
-        resources.put(ResourceType.WOOD, resources.get(ResourceType.WOOD) - 1);
-        resources.put(ResourceType.BRICK, resources.get(ResourceType.BRICK) - 1);
-        resources.put(ResourceType.SHEEP, resources.get(ResourceType.SHEEP) - 1);
-        resources.put(ResourceType.WHEAT, resources.get(ResourceType.WHEAT) - 1);
+        subResources(ResourceType.WOOD, 1);
+        subResources(ResourceType.BRICK, 1);
+        subResources(ResourceType.SHEEP, 1);
+        subResources(ResourceType.WHEAT, 1);
     }
 
     public boolean canPayForSettlement() {
@@ -75,8 +77,8 @@ public class Player {
     }
 
     public void payForRoad() {
-        resources.put(ResourceType.WOOD, resources.get(ResourceType.WOOD) - 1);
-        resources.put(ResourceType.BRICK, resources.get(ResourceType.BRICK) - 1);
+        subResources(ResourceType.WOOD, 1);
+        subResources(ResourceType.BRICK, 1);
     }
 
     public ArrayList<DevelopmentCard> getDevCards() {
@@ -98,9 +100,9 @@ public class Player {
     }
 
     public void payForDevCard() {
-        resources.put(ResourceType.WHEAT, resources.get(ResourceType.WHEAT) - 1);
-        resources.put(ResourceType.ORE, resources.get(ResourceType.ORE) - 1);
-        resources.put(ResourceType.SHEEP, resources.get(ResourceType.SHEEP) - 1);
+        subResources(ResourceType.WHEAT, 1);
+        subResources(ResourceType.ORE, 1);
+        subResources(ResourceType.SHEEP, 1);
     }
 
 
@@ -118,8 +120,8 @@ public class Player {
     }
 
     public void payToUpgradeSettlement() {
-        resources.put(ResourceType.WHEAT, resources.get(ResourceType.WHEAT) - 2);
-        resources.put(ResourceType.ORE, resources.get(ResourceType.ORE) - 3);
+        subResources(ResourceType.WHEAT, 2);
+        subResources(ResourceType.ORE, 3);
     }
 
     public int getTotalResources() {
@@ -223,18 +225,26 @@ public class Player {
         return total;
     }
 
-    public boolean spendFishTokens(int cost) {
+    public List<FishToken> spendFishTokens(int cost) {
         if (getTotalFish() < cost) {
-            return false;
+            return List.of();
         }
         ArrayList<FishToken> spent = selectTokensForCost(cost);
         fishTokens.removeAll(spent);
-        return true;
+        return spent;
     }
 
     ArrayList<FishToken> selectTokensForCost(int cost) {
+        // Try to find an exact-sum subset first (fewest tokens, largest first)
         ArrayList<FishToken> sorted = new ArrayList<>(fishTokens);
-        sorted.sort((a, b) -> Integer.compare(a.getFishCount(), b.getFishCount()));
+        sorted.sort((a, b) -> Integer.compare(b.getFishCount(), a.getFishCount()));
+
+        ArrayList<FishToken> exact = new ArrayList<>();
+        if (findExactSubset(sorted, cost, 0, exact)) {
+            return exact;
+        }
+
+        // Fallback: greedy largest-first to minimize overshoot
         ArrayList<FishToken> selected = new ArrayList<>();
         int sum = 0;
         for (FishToken token : sorted) {
@@ -243,6 +253,23 @@ public class Player {
             sum += token.getFishCount();
         }
         return selected;
+    }
+
+    private boolean findExactSubset(ArrayList<FishToken> tokens, int remaining, int index, ArrayList<FishToken> result) {
+        if (remaining == 0) return true;
+        if (remaining < 0 || index >= tokens.size()) return false;
+
+        for (int i = index; i < tokens.size(); i++) {
+            // Skip duplicates at the same recursion level
+            if (i > index && tokens.get(i).getFishCount() == tokens.get(i - 1).getFishCount()) continue;
+
+            result.add(tokens.get(i));
+            if (findExactSubset(tokens, remaining - tokens.get(i).getFishCount(), i + 1, result)) {
+                return true;
+            }
+            result.remove(result.size() - 1);
+        }
+        return false;
     }
 
     public ArrayList<FishToken> getFishTokenList() {
@@ -259,6 +286,26 @@ public class Player {
 
     public int getVictoryPointsNeededToWin() {
         return Board.VP_WIN_AMOUNT + (hasOldShoe ? 1 : 0);
+    }
+
+    // ==================== Trade Tokens (Two-Player Variant) ====================
+
+    public int getTradeTokens() {
+        return tradeTokens;
+    }
+
+    public void addTradeTokens(int amount) {
+        tradeTokens += amount;
+    }
+
+    public boolean canSpendTradeTokens(int cost) {
+        return tradeTokens >= cost;
+    }
+
+    public void spendTradeTokens(int cost) {
+        if (tradeTokens >= cost) {
+            tradeTokens -= cost;
+        }
     }
 }
 

@@ -1,0 +1,634 @@
+375 Final Project Milestone Journal
+
+Milestone 1:
+	AI Journal:
+“Staring with Board.java, I can tell that there are code smells such as god class, long methods, and primitive obsession. What other one's have I missed?”
+Board.java
+	God Class: The Board class seems to handle all the logic for the game.
+Long Methods: The initializeBoardFromStreams method is a very long method containing array lists and maps and multiple for loops, making this a long and complex method.
+	Duplicate Code: repeated patterns for DevelopmentCards
+	Primitive Obsession: Lots of public variables used throughout the file
+Feature Envy: Uses a lot of information from the player class and does the math itself.
+
+“For the CityPoint.java file, I can possibly see primitive obsession but what else is here?”
+CityPoint.java
+	Primitive Obsession: modeling tiles/hexes with hashmapping
+Data Clumps: Silent game break for assumption between tileNumbers and tileTerrains
+
+“For GameWindowController, I believe that this has data clumps and middle man code smells. What other smells could there be in this file?”
+GameWindowController.java
+	Lazy Class: Class only passes messages w/o any state or control flow logic. 
+Middle Man: Every method delegates the call to GameWindow w/o any real behaviors
+Shotgun Surgery: small modifications need to be made across many classes 
+Data Clumps: variables should be put into a separate object
+
+“For Player.java, I noticed that there could be primitive obsession and long method code smells. What other smells did I miss?”
+Player.java
+	Primitive Obsession: relies on a lot of raw primitives
+	Divergent Change: Changes for the game are made through here
+
+“For TurnStateData.java, I can tell that there are smells of data class and primitive obsession. Are there any other missing code smells?”
+TurnStateData.java
+	Data Class: Just exists to hold data
+	Primitive Obsession: Most stored as raw primitives
+	Shotgun Surgery: tightly coupled to UI and board
+	Lazy Class: does no work other than holding variables
+	
+“In TurnStateMachine, I see that there are smells of primitive data and long methods. What other smells are there?”
+TurnStateMachine.java
+	Primitive Obsession: relies on raw primitives to control complex phases
+	Shotgun Surgery: single change requires scattered edits from this class
+	Long Method: nextTurn is considered long with nestedness 
+Overall:
+	For the most part our LLM (Gemini) was able to detect most of the code smells that were throughout the files. For every smell that was found there were summaries and recommendations on how to refactor the file(s) to ensure that the program would produce the same results while still fixing the structure and organization of the file. Any files that were not listed were because us and Gemini found either only 1 small code smell or none at all. 
+
+Problem solving:
+
+	The main issue we ran into was having our environments properly set up to build the java project and run the maven test suit with the coverage tool. It took a good bit of debugging, updating dependencies, looking up maven documentation, asking gemini about errors and reconfiguration but by doing this together each time we met up we were able to work everything out on both of our machines over the past week. 
+
+Milestone 2: 
+Listed Features
+The following tasks are currently in progress and nearing completion:
+•	The Friendly Robber: Logic is close to finalized; prevents the robber from being placed on players with 2 or fewer Victory Points. - DONE
+•	The Harbormaster: Implementing the victory point condition for the player with the most harbor settlements.
+•	Dynamic UI Background: Updating the game window's background or top indicator to match the current active player's color for better UX. – DONE
+•	Dice Cards: These are to replace the dice function
+Planned Feature Design: The Event Card Deck
+We are completely replacing the standard 2D6 dice roll with the official Catan Event Cards system (from the Traders & Barbarians expansion). This introduces a mathematically perfect 36-card deck, ensuring smooth resource distribution while adding dynamic events.
+Card Distribution (36 Number Cards)
+The deck perfectly mirrors dice probabilities:
+•	2: 1 card | 3: 2 cards | 4: 3 cards | 5: 4 cards | 6: 5 cards
+•	7: 6 cards (Activates Robber)
+•	8: 5 cards | 9: 4 cards | 10: 3 cards | 11: 2 cards | 12: 1 card
+The Events
+Each card drawn triggers a specific board event before resource production:
+•	Robber Attack (x6): Found on all "7" cards. Standard robber rules apply (discard half if >7 cards, move robber, steal).
+•	Earthquake (x1): All players with at least one road must turn one sideways (no longer counts toward Longest Road). Costs 1 Lumber + 1 Brick to repair.
+•	Epidemic (x1): Cities produce only 1 resource instead of 2 for the turn.
+•	Good Neighbors (x1): Every player must pass 1 resource card to the player on their left.
+•	Calm Seas (x1): Player(s) with the most harbor settlements/cities receives 1 free resource of their choice.
+•	Tournament (x1): Player(s) with the most revealed Knight cards receives 1 free resource of their choice.
+•	Trade Advantage (x1): The Longest Road holder may steal 1 resource from any player.
+•	Conflict (x1): The Largest Army holder may steal 1 resource from any player.
+•	No Event (x16): Peaceful turns where players simply collect resources based on the number.
+The 37th Card: "New Year" (Anti-Card Counting)
+To prevent players from mathematically calculating the exact remaining rolls in the late game, a New Year card is utilized.
+•	Mechanic: During setup, 5 cards are dealt face-down. The New Year card is placed on top of them, followed by the remaining 31 cards. When the New Year card is drawn, the entire 36-card deck is immediately reshuffled. The bottom 5 cards are never seen.
+Refactoring
+To improve the maintainability and scalability of the codebase, we are targeting the following structural improvements:
+•	Deconstruct the God Class (Board.java): Split the board into multiple classes to adhere to the Single Responsibility Principle (SRP).
+•	Cure Feature Envy: Extract methods from the Board class and move the logic directly into the associated domain classes (e.g., Player, CityPoint).
+•	Overhaul File Streams: Replace the coordinate file stream system to eliminate heavy Primitive Obsession and magic numbers.
+•	Eliminate Message Chains: Refactor methods like getEligiblePlayersToRob() using the "Tell, Don't Ask" principle, so classes return results rather than having Board micromanage their internal data.
+•	Encapsulate State: Audit the massive list of public fields across the domain and restrict access using private modifiers and getter/setter methods.
+•	Dice to Cards Transition: Refactor the core Dice rolling logic into the new, randomly selected Event Card set.
+Added Testing
+•	Performance & Load Tooling: Integrating new tools to monitor game state performance.
+•	Manual User Scripts: Writing standardized testing scripts to ensure manual test paths (like trading, event triggers, and UI updates) are consistently verifiable.
+
+AI Journal:  **Bold = Prompt being asked
+I realized I would rather have a dev server set up on the github so that we arent breaking main anytime were adding features or refactoring. 
+how do i pull back a committed and pushed commit such that I can throw it into a different branch
+1.	Save the commit to a new branch First, create the new branch where you actually want this commit to live. This saves your work so it isn't lost when we rewind the original branch.
+Bash git branch (Note: Use git branch instead of git checkout -b so you stay on your current, incorrect branch for the next step).
+2.	Remove the commit from your current branch Now, rewind your current branch back by exactly one commit. Using the --hard flag tells Git to completely wipe the commit from this branch's history. (Don't worry, your work is safe on the new branch).
+Bash git reset --hard HEAD1 If you need to undo more than one commit, change the 1 to the number of commits you want to pull back (e.g., HEAD2).
+3.	Overwrite the remote branch Because you already pushed the commit to the remote repository (like GitHub or GitLab), your local branch is now "behind" the remote. You need to force push to tell the remote to accept your rewound history.
+Bash git push origin --force-with-lease Tip: --force-with-lease is a safer version of --force. It double-checks that nobody else has pushed to this branch in the meantime, preventing you from accidentally deleting a teammate's work.
+4.	Switch to your new branch and push Now that the original branch is cleaned up, switch over to your new branch and push it up to the remote.
+Bash git checkout git push -u origin A quick warning: If other developers have already pulled your mistaken commit from the original branch before you force-pushed, they might run into sync issues. If it's a shared branch like main, just give your team a quick heads-up!
+Would you like me to walk through how to handle this if you have uncommitted changes in your working directory as well?
+
+On Claude Opus 4.6 agent VScode. “I would like to expand the ci/di on github to include not just building the porject but running the testing suits thorugh maven, included a code coverage report that can be downloaded as an artifact as well as a mutation coverage report to be downloadded as an artifact, they should each stay above at least 90% to count as passing for all coverage/ mutation categories. Before you begin, please plan out what you intend to do to complete this, why it is the best way to do this, and if there is any other pipeliens that should be inlcuded on this ci/di for a robust continuous integration development. Utilize context 7 for checking up to date documentation about github ci/di and maven.”
+
+   
+Static analysis (SpotBugs/PMD/Checkstyle) as a 4th parallel job
+Dependabot or ossf/scorecard-action for dependency vulnerability scanning
+Branch protection rules requiring all CI jobs to pass before merging to main
+please move foward with these additions
+
+   
+
+
+Installed distributions
+  Trying to resolve the latest version from remote
+  Resolved latest version as 22.0.2+9
+  Trying to download...
+  Downloading Java 22.0.2+9 (Temurin-Hotspot) from https://github.com/adoptium/temurin22-binaries/releases/download/jdk-22.0.2%2B9/OpenJDK22U-jdk_x64_linux_hotspot_22.0.2_9.tar.gz ...
+  Unexpected HTTP response: 500
+  Waiting 10 seconds before trying again
+  Unexpected HTTP response: 500
+  Waiting 17 seconds before trying again
+  Error: Unexpected HTTP response: 500INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:23 min
+[INFO] Finished at: 2026-03-20T15:12:32Z
+[INFO] ------------------------------------------------------------------------
+Error:  Failed to execute goal org.jacoco:jacoco-maven-plugin:0.8.12:check (default-cli) on project S1G4-Catan: The parameters 'rules' for goal org.jacoco:jacoco-maven-plugin:0.8.12:check are missing or invalid -> [Help 1]
+Error:  
+Error:  To see the full stack trace of the errors, re-run Maven with the -e switch.
+Error:  Re-run Maven using the -X switch to enable full debug logging.
+Error:  
+Error:  For more information about the errors and possible solutions, please read the following articles:
+Error:  [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginParameterException
+Error: Process completed with exit code 1.
+
+Problem 1: Temurin JDK 22 binaries are returning HTTP 500 — JDK 22 is not an LTS release and its binaries are being removed. Switch to JDK 21 (current LTS).
+ 
+Problem 2: mvn test jacoco:check invokes jacoco:check as a CLI goal (execution id default-cli), which does not inherit the <rules> config from the named <execution id="check">. The rules are only applied when the check runs as part of the test phase via the declared execution. Fix: just run mvn -B verify which will trigger all the bound executions (prepare-agent → test → report → check) in order.
+ 
+But there's also a subtlety — the check execution is currently bound to test phase, and mvn test does run it, but the separate jacoco:check CLI invocation runs a second time without rules. Let me simplify: remove the explicit jacoco:check from the workflow command, and change the check execution to the verify phase so it runs after reporting. The workflow will call mvn -B verify.
+
+The AI claude opus 4.6 set up and debugged the CI/DI completely
+
+
+
+The Friendly Robber:
+	This feature just updates the current robber logic where a robber can only rob players who have 3 or more VictoryPoints. If they have 2 or less the player is safe from being robbed.
+
+Adding Friendly Robber Feature
+	This feature adds a rule to the already existing robber logic. In this case, the friendly robber only applies to those who have less than 2 victory points. They will not be affected by the robber.
+Refactoring
+	There was a lot of refactoring to do when it came to the robber as a lot of logic needed to be added / changed for this feature to work. The process was started by adding the condition of the 2 victory points. From there we added tests to ensure this rule applied to the gamestate. However the game did not consider the placement of the robber in the hex locations that would allow robbers to be placed in any hex. So this had to be refactored and fixed in the code logic and more test cases needed to be made. This was able to fix most of the problems with this feature. There were some small bugs that came up that needed to be fixed with refactoring.
+“I would like to implement a feature where we add more logic to the robber by creating a friendly robber. Define what the Friendly Robber is in the expansion pack of Settlers of Catan”
+The Friendly Robber Variant
+The Friendly Robber is an official variant introduced in the Catan: Traders & Barbarians expansion. It was designed to prevent players from being aggressively targeted or crippled by bad luck at the very beginning of the game, allowing everyone a chance to get their initial engine running.
+Here is the exact definition and the mechanical rules of the Friendly Robber:
+The Core Rule: When a 7 is rolled or a Knight development card is played, the active player cannot move the robber to any terrain hex that is adjacent to a settlement owned by a player who has exactly 2 Victory Points (their starting score).
+Mechanical Breakdown: To implement this correctly in a digital format, here are the specific nuances of the rule:
+•	The Discard Phase Remains Unchanged: If a 7 is rolled, all players with more than 7 cards in their hand must still discard half, regardless of their Victory Point score. The "friendly" protection only applies to where the robber physically lands.
+•	Knight Cards are Included: The protection applies whether the robber is being moved by a dice roll of 7 or by a player activating a Knight card.
+•	Hidden Victory Points: Victory Point Development Cards (which are kept hidden face-down) do not count toward this threshold until they are revealed. If a player visibly has 2 VP on the board but secretly holds a VP card, the game still treats them as having 2 VP, meaning they are protected.
+•	The Desert Fallback: In the highly unusual scenario where a 7 is rolled and every single non-desert hex on the board is protected by a 2-VP player, the robber is simply moved back to the Desert hex, and no resources are blocked or stolen.
+Once a player builds their first new settlement or upgrades to a city (bringing their visible score to 3 VP), they lose their "friendly" protection for the rest of the game and become a valid target for the robber.
+“Lets start with finding the best way to add this to our current code. Where should we add this logic and what methods should we consider refactoring before and after these changes?”
+To implement the Friendly Robber smoothly, we need to be careful not to create a "God Class" out of Board.java by stuffing even more complex logic into it.
+Based on your current architecture, here is the best step-by-step plan for where to add the logic and what to refactor.
+1. Pre-Refactoring: Encapsulate CityPoint.java
+Before we even touch the Robber logic, we need to fix a "Feature Envy" code smell. Currently, if Board.java wants to know what hexes a city touches, it reaches into CityPoint and digs through its public HashMap (cityPoint.tileValueToTerrain.keySet()).
+The Refactor: We should apply the "Tell, Don't Ask" principle. We need to add a new helper method directly inside CityPoint.java so the city does its own math.
+•	Create public boolean bordersHex(int targetDiceNumber, ResourceType targetResource) in CityPoint.java.
+•	This method will loop through the city's internal tileValueToTerrain map and return true if it touches the target hex.
+2. The Implementation: Board.onRobberPointClick()
+Now that CityPoint can cleanly tell us what it borders, we can implement the core rule. The logic must go inside the onRobberPointClick(int x, int y) method in Board.java.
+Currently, this method looks like this:
+1.	Validates if a 7 was rolled.
+2.	Updates the board state immediately (robberPoint.hasRobber = true).
+3.	Updates the UI and asks who you want to steal from.
+The Addition: We must insert the Friendly Robber check between Step 1 and Step 2.
+•	When a hex is clicked, we will loop through all cityPoints.
+•	If city.bordersHex(...) is true, we grab the owner's score using player.getVictoryPoints().
+•	If any owner on that hex has <= 2 Victory Points, we trigger an early return; to exit the method and reject the click entirely before the game state updates.
+3. Post-Refactoring: Clean up Board.getEligiblePlayersToRob()
+Once the Friendly Robber is working, we can use our new bordersHex method to clean up existing technical debt!
+Look at the getEligiblePlayersToRob(RobberPoint robberPoint) method in Board.java. It currently contains a nasty nested loop:
+ 
+Summary of Action Items:
+1.	Refactor: Add bordersHex() to CityPoint.java.
+2.	Feature: Add the early-return validation logic to the top of onRobberPointClick() in Board.java.
+3.	Refactor: Simplify getEligiblePlayersToRob() in Board.java using the new helper method.
+Test Cases:
+	From here we were able to implement regular test cases that covered any edge cases for this new feature. From here we could use AI to enhance these test cases while still maintaining the code and results we were expecting.
+Planned Feature – Dynamic Player UI:
+For this extra feature we wanted to make it easier to identify which player was currently it. So we started with just defining a color bar at the top of the game screen to indicate the players. The white however was hard to see with the background, so we refactored the code so that it not only displayed the color but also displayed the current player number (1-4). Once we had this figured out along with the necessary test cases needed, we were able to use AI to simply clean up the layout to make it look neater.
+
+Implementation – Event Card Actions 
+ 
+Before building the full card deck, all 10 event types were implemented as game logic in Board.java with supporting domain classes: 
+ 
+New Files Created: 
+ 
+EventType.java: Enum defining all 10 event types (ROBBER_ATTACK, EARTHQUAKE, EPIDEMIC, GOOD_NEIGHBORS, CALM_SEAS, TOURNAMENT, TRADE_ADVANTAGE, CONFLICT, NO_EVENT, NEW_YEAR). 
+ 
+EventCard.java: Card class holding an EventType and a diceNumber (the number printed on the card for resource production). 
+ 
+BoardEventTest.java: 33 dedicated tests covering every event handler, edge case, and interaction. 
+ 
+EventCardTest.java: 4 tests for the EventCard class itself. 
+ 
+Modified Files: 
+ 
+RoadPoint.java: Added isSideways boolean field with getter/setter to support the Earthquake mechanic (sideways roads no longer count toward Longest Road). 
+ 
+Board.java: Added epidemicActive flag, modified giveResourcesToBorderingSettlements() so cities produce 1 resource instead of 2 during Epidemic, modified calculateRoadLenHelper() to skip sideways roads, added handleEvent(EventType) dispatcher and all individual event handler methods (handleRobberAttackEvent, handleEarthquakeEvent, handleEpidemicEvent, executeGoodNeighbors, getCalmSeasWinners, getTournamentWinners, handleTradeAdvantageEvent, handleConflictEvent, stealFromPlayer, repairRoad, giveResourceToPlayer). 
+ 
+Event Handler Details: 
+ 
+Robber Attack: Reuses existing discard/robber logic. 
+ 
+Earthquake: Finds each player's first non-sideways road and marks it sideways. Sideways roads return 0 in longest road calculation. repairRoad() lets a player pay 1 Lumber + 1 Brick to restore a road. 
+ 
+Epidemic: Sets epidemicActive flag so cities produce 1 resource instead of 2 for the current turn. Flag resets on next turn. 
+ 
+Good Neighbors: Each player passes 1 resource card to the player on their left (circular order: RED→BLUE→ORANGE→WHITE→RED). 
+ 
+Calm Seas: Player(s) with the most harbor settlements receives 1 free resource. 
+ 
+Tournament: Player(s) with the most played Knight cards receives 1 free resource. 
+ 
+Trade Advantage: Longest Road holder may steal 1 random resource from any player. 
+ 
+Conflict: Largest Army holder may steal 1 random resource from any player. 
+ 
+Implementation – Dice to Cards Refactoring 
+ 
+The core Dice class (2D6 random roll) was completely replaced by the NumberCardDeck system: 
+ 
+New File Created: 
+ 
+NumberCardDeck.java: A 36-card deck that perfectly mirrors 2D6 dice probabilities. Each card is an EventCard with a number (2-12) and event type. The deck shuffles on creation and auto-reshuffles when exhausted. Key methods: drawNumber() (returns the card's number, drop-in replacement for dice.roll()), drawCard() (returns the full EventCard for event processing), reshuffle(), cardsRemaining(), deckSize(). 
+ 
+NumberCardDeckTest.java: 8 tests verifying deck size (36 cards), exact distribution (1/2/3/4/5/6/5/4/3/2/1 for numbers 2-12), draw behavior, auto-reshuffle, and multi-cycle distribution integrity. 
+ 
+Refactored Files: 
+ 
+Board.java: Constructor parameter changed from Dice to NumberCardDeck. Field changed from Dice dice to NumberCardDeck deck. onRollDiceClick() now calls deck.drawNumber() instead of dice.roll(). 
+ 
+MainApp.java: Production instantiation changed from new Dice(new Random()) to new NumberCardDeck(new Random()). 
+ 
+BoardTest.java: All 240 instances of EasyMock.mock(Dice.class) replaced with EasyMock.mock(NumberCardDeck.class). All 17 dice.roll() mock expectations replaced with deck.drawNumber(). 
+ 
+BoardEventTest.java, IlityTest.java, SecurityTest.java, PerformanceAndLoadTest.java, CatanFileReaderTest.java, DiceRollTest.java: All Dice references updated to NumberCardDeck. Dice-specific tests (distribution fairness, dependency injection, performance) rewritten to test NumberCardDeck instead. 
+ 
+The original Dice.java file remains in the codebase but is no longer referenced by any production or test code. 
+ 
+Test Results: 546 tests, 0 failures, 0 errors after the full refactoring.
+
+AI Journal – Event Card Implementation 
+"implement the event actions for the game, not the dice card system as a whole yet. If it makes sense to start refactoring the card class, dev cards, or whatever then go ahead." 
+The AI (Claude Opus 4.6) explored the full codebase structure using a subagent, then designed and implemented the complete event card action system. It created EventType.java (10 event types), EventCard.java (card class with event + number), modified RoadPoint.java (added isSideways for Earthquake), and added all event handler methods to Board.java including epidemic resource reduction and sideways road longest-road integration. It also created 33 event tests in BoardEventTest.java and 4 tests in EventCardTest.java. 
+During testing, the AI encountered and fixed a mock configuration issue where showResources() called getTurn() on a niceMock that returned null. It fixed this by configuring the mock to return Turn.RED. The test file also got corrupted by external edits (duplicate content appended), which the AI resolved by deleting and recreating the file cleanly. All 39 new event tests passed. 
+AI Response Excerpt – Event Card Design Approach: 
+"I'll design an event card system that integrates with the existing Board class. The approach: 1) Create an EventType enum for all 10 event types, 2) Create an EventCard class that pairs an EventType with a dice number, 3) Add event handler methods to Board.java, 4) Modify existing resource/road logic to support Epidemic and Earthquake mechanics. I'll add an epidemicActive flag to Board so cities produce 1 resource instead of 2, and add an isSideways field to RoadPoint so Earthquake can disable roads from Longest Road calculation." 
+AI Response Excerpt – Earthquake Implementation: 
+"For the Earthquake event, each player's first non-sideways road gets marked sideways. The key change is in calculateRoadLenHelper() — instead of always returning maxLen + 1, it now returns maxLen + (road.isSideways() ? 0 : 1). This means sideways roads are traversed but contribute 0 length, naturally excluding them from Longest Road without breaking path connectivity. Players can repair with repairRoad() by paying 1 Lumber + 1 Brick." 
+AI Response Excerpt – Fixing Mock Configuration: 
+"The test failures are caused by showResources() calling getTurn() on the TurnStateMachine niceMock. A niceMock returns null for unmocked methods, and getTurn() returns null, which then causes a NullPointerException when used as a key in turnToPlayer.get(). Fix: add EasyMock.expect(tsm.getTurn()).andReturn(Turn.RED).anyTimes() before replay." 
+AI Journal – Friendly Robber Test Fixes 
+After the event card implementation, running the full test suite revealed 22 failures in BoardTest.java caused by a combination of our event card changes and the user's parallel friendly robber code. 
+User ran the full test suite and pasted the output showing 16 Failures + 6 Errors across BoardTest. 
+Root Cause Analysis (AI Response): 
+"I identified two root causes for the 22 test failures: (1) You added Turn currentTurn = turnStateMachine.getTurn() at the top of onRobberPointClick() — this call is unused but adds an unexpected mock invocation that breaks strict mock call counts. (2) You rewrote getEligiblePlayersToRob() to use bordersHex() but without the VP >= 2 filter, so all settlement owners get returned regardless of victory points." 
+AI Response Excerpt – Fixing the VP Threshold Contradiction: 
+"testFriendlyRobberLowVp gives the player 2 VP and asserts assertFalse(eligiblePlayers.contains(bluePlayer)) — but testFriendlyRobberExactly2VP also gives 2 VP and asserts assertTrue. These directly contradict each other. Since the friendly robber rule protects players with VP < 2 (i.e., 0 or 1 VP), and 2 VP players should be robbable, I'm changing testFriendlyRobberLowVp to use addVictoryPoints(1) instead of addVictoryPoints(2). This matches the test's name ('LowVp') and resolves the contradiction." 
+AI Response Excerpt – Fixing Old Rob Eligibility Tests: 
+"The 3 getEligiblePlayersToRob tests (OneEligible, NoDuplicates, MultiplePlayers) and testCurrentTurnDoesNotShowAsRobOption all fail with 'expected: <1> but was: <0>'. The VP >= 2 filter in getEligiblePlayersToRob() now excludes all players because the tests never give players any victory points. Fix: add testBoard.turnToPlayer.get(Turn.RED).addVictoryPoints(2) so the test players pass the friendly robber threshold." 
+AI Journal – Dice to Cards Refactoring 
+"We are completely replacing the standard 2D6 dice roll with the official Catan Event Cards system. It is now time to add the dice cards through refactoring out the dice mechanic." 
+"Card Distribution (36 Number Cards) — The deck perfectly mirrors dice probabilities: 2: 1 card | 3: 2 cards | 4: 3 cards | 5: 4 cards | 6: 5 cards | 7: 6 cards (Activates Robber) | 8: 5 cards | 9: 4 cards | 10: 3 cards | 11: 2 cards | 12: 1 card" 
+AI Response Excerpt – Exploration and Plan: 
+"I explored every reference to the Dice class across the entire codebase using a subagent. Found: Dice.java (constructor takes Random, roll() returns sum of two d6), Board.java (field Dice dice, constructor param, and dice.roll() in onRollDiceClick), MainApp.java (new Dice(new Random())), and 6 test files with 240 mock declarations and 17 dice.roll() expectations. The plan: create NumberCardDeck as a drop-in replacement, change Board's constructor from Dice to NumberCardDeck, replace dice.roll() with deck.drawNumber(), then mass-update all test files." 
+AI Response Excerpt – NumberCardDeck Design: 
+"NumberCardDeck uses a static CARD_COUNTS array {0,0,1,2,3,4,5,6,5,4,3,2,1} indexed by number (2-12). On creation, it builds a fullDeck of 36 EventCards, then copies them into a drawPile and shuffles. drawNumber() removes from the end of the draw pile and returns the number. When the pile is empty, reshuffle() copies fullDeck back and reshuffles. This guarantees every 36-card cycle has mathematically perfect distribution — unlike random dice which can streak." 
+AI Response Excerpt – Mass Test Refactoring: 
+"BoardTest.java has 240 instances of Dice dice = EasyMock.mock(Dice.class). Rather than editing each one manually, I used PowerShell regex replacements to mass-update: $content -replace '\bDice dice\b', 'NumberCardDeck deck' and $content -replace '\bdice.roll()', 'deck.drawNumber()' plus 5 more patterns for constructor arguments and mock class references. Then I manually fixed edge cases: IlityTest's testDiceAcceptsDependencyInjection was testing Dice's internal Random injection which no longer applies — rewrote it to test NumberCardDeck with a seeded Random. SecurityTest's testDiceDistributionIsWithinExpectedRange was rewritten to draw 10000 cards and verify distribution. Final result: 546 tests, 0 failures, 0 errors." 
+Agile Testing Quadrants – Q4 Testing (Performance, Security, and "ility" Testing)
+"please determine how we can do 'performance & load testing, security testings, and ility testing' then add them"
+AI Response Excerpt – Exploration and Analysis:
+"I explored every domain class (Board, Player, Dice, TurnStateMachine, TitleBonus, CityPoint, RoadPoint, etc.) and existing test patterns using a subagent. Key performance concerns identified: (1) Longest Road Algorithm — DFS in updateLongestRoad() runs for every road placement, O(V×E) per placement with 72 road points and 54 city points, (2) Harbor Detection — Board iterates all 54 cities for each bank trade, (3) Resource Distribution — giveResourcesToBorderingSettlements() loops all 54 cities on every dice roll, (4) File Loading — 10 separate file streams on game init. Security concerns: Bank player initialized with Integer.MAX_VALUE for all resources (potential overflow), subResources() silently returns if insufficient (no exception), no upper bounds check on victory points, development cards ArrayList allows removal during iteration (potential ConcurrentModificationException), TradeInfo has no validation on negative trade amounts."
+New Q4 Test Files Created:
+PerformanceAndLoadTest.java (12 tests):
+•	Board initialization completes within 2000ms time limit
+•	Repeated board initialization does not degrade (10 consecutive inits)
+•	Longest road calculation with 15 roads for one player under 1000ms
+•	Longest road calculation with all 4 players' max roads under 2000ms
+•	Resource distribution with full board settlements under 500ms
+•	Resource distribution over 100+ simulated dice rolls under 2000ms
+•	City lookup performance: 1000 lookups under 1000ms
+•	Road lookup performance: 1000 lookups under 1000ms
+•	Dice roll throughput: 10,000 rolls under 500ms
+•	Player resource operation churn: 10,000 add/sub/check cycles under 1000ms
+•	500 trades executed under 2000ms
+•	Proximity check (withinTwoRoads) performance: 1000 checks under 2000ms
+SecurityTest.java (21 tests):
+•	Cannot subtract more resources than owned (silent refusal)
+•	Resources cannot go negative after trade (trade rejected)
+•	Payment validation: settlement, road, dev card, upgrade all require sufficient resources
+•	Bank initialized with MAX_VALUE resources
+•	Bank total resources overflow detection
+•	Cannot trade before rolling dice
+•	Cannot trade while robber has not been moved
+•	Bank trade rejects uneven ratio (3:1 when rate is 4:1)
+•	Bank trade rejects mismatched value (4 wood for 2 brick at 4:1)
+•	Discard half rejects wrong amount, accepts correct amount
+•	Victory points start at zero; negative additions documented
+•	Robber cannot be moved without rolling 7 or playing knight
+•	Monopoly does not steal from bank
+•	Monopoly steals from all other players correctly
+•	Stealing: thief gains exactly 1 resource, victim loses exactly 1
+•	Dice distribution fairness: 7 appears most frequently over 10,000 rolls
+IlityTest.java (29 tests):
+•	Reliability: Dice rolls always in [2,12] over 5000 rolls; turn state machine progresses RED→BLUE→ORANGE→WHITE reliably; resource totals consistent after operations; correct number of city/road points created
+•	Robustness: Non-existent city/road lookups return safe defaults (-1,-1) instead of null; resource list size matches total count; subtracting zero has no effect; settlement/road placement updates ownership correctly; TradeInfo defaults to zero
+•	Recoverability: Earthquake event with no placed roads does not crash; epidemic can be set and cleared; robber attack with no discardable players still sets robberMoved to false; road sideways state toggles correctly
+•	Scalability/State Consistency: All 4 players + bank initialized correctly; longest road tracker initialized for all players; TitleBonus starts with BANK as holder; TitleBonus awards VP correctly and transfers on higher count
+•	Testability/Maintainability: Dice accepts dependency injection (injectable Random); Board constructable with all mocked dependencies; ResourceType enum has 6 types including NULL; Terrain maps to correct ResourceType; EventType enum covers all 10 events; DevelopmentCard stores type and turnBought; GameComponent stores coordinates
+AI Response Excerpt – Fixing Test Failures:
+"During the first test run, 4 of 62 tests failed with NullPointerException. The root cause: giveResourcesToBorderingSettlements() and executeMonopoly() both call showResources(), which calls turnStateMachine.getTurn() on a niceMock that returns null by default. The null Turn is then used as a key in turnToPlayer.get(), which returns null for the Player, causing the NPE. Fix: configure the mock with EasyMock.expect(mockTurnStateMachine.getTurn()).andReturn(Turn.RED).anyTimes() before EasyMock.replay() in the 4 affected tests."
+Test Results:
+Tests run: 62, Failures: 0, Errors: 0 — PerformanceAndLoadTest (12 passed, 0.416s), SecurityTest (21 passed, 0.213s), IlityTest (29 passed, 1.633s).
+AI Journal – Q4 Testing
+"Someone on the agile-testing Yahoogroup mailing list posted a link to a blog post in which he proceeded to misuse, maul and maim the Agile Testing Quadrants... I'd like you to show how you can test your system using tests in all four quadrants of Lisa Crispin's Agile Testing process... the unit tests you've been creating are in Q1, at the lower left. The system tests you've been building are in Q2 at upper left. But there are also two more quadrants of tests to do! please determine how we can do 'performance & load testing, security testings, and ility testing' then add them"
+The AI (Claude Opus 4.6) used an Explore subagent to read all 24 domain source files and 3 existing test files for full context. It analyzed every class for performance bottlenecks (DFS longest road algorithm, O(n) harbor detection, resource distribution loops), security vulnerabilities (Integer.MAX_VALUE overflow risk, silent resource subtraction failure, missing trade/discard validation), and non-functional quality attributes (reliability of turn progression, robustness of coordinate lookups, recoverability from events, testability via dependency injection).
+It then created three comprehensive test files covering all three Q4 testing categories. During the initial run, 4 tests failed due to NullPointerException from niceMock getTurn() returning null — the AI diagnosed the root cause (showResources() → getTurn() → null Turn used as HashMap key → null Player) and fixed all 4 tests by adding mock expectations. Final result: 62 tests, 0 failures, 0 errors across all three Q4 test files.
+
+
+Bad Code Smells:
+The following is a list of bad code smells that our AI detected as we were refactoring our code:
+o	Feature envy & inappropriate intimacy
+o	Data Clump
+o	Message Chains
+o	God Class
+o	Large Methods
+Milestone 3:  
+	List of planned features:
+•	 Catan for Two Players w/ "Commercial Tokens."
+•	Computer to Computer gameplay
+•	The Fishermen of Catan Scenario
+o	Fishing Ground tiles
+o	Fish resources
+o	“Old Boot” -1 VP
+o	New actions based on # of fish
+
+🎣 The Fishermen of Catan
+This scenario adds a new "flexible" resource: Fish. Unlike bricks or wool, fish aren't traded; they are spent to perform immediate special actions.
+1. Setup & Fishing Grounds
+•	Fishing Grounds: These are the triangular tiles placed alongside the frame (usually replacing some harbors). They are numbered 4, 5, 6, 8, 9, and 10.
+•	The Lake: A central lake tile replaces the desert. It features the numbers 2, 3, 11, and 12.
+•	Catching Fish: When the number on a Fishing Ground or the Lake is rolled, any player with a settlement/city bordering it draws one Fish Token at random.
+2. The Fish Tokens
+Tokens are kept face-down so opponents don’t know your "wealth." They come in values of 1, 2, or 3 fish.
+3. Spending Fish (The Actions)
+You may spend fish during your turn to perform these specific actions:
+•	2 Fish: Move the Robber back to the Desert/Lake.
+•	3 Fish: Steal 1 resource card from an opponent.
+•	4 Fish: Take 1 resource of your choice from the bank.
+•	5 Fish: Build a Road for free.
+•	7 Fish: Take a Development Card for free.
+4. The "Old Boot"
+Hidden among the fish tokens is one Old Boot.
+•	The Penalty: If you draw it, you must play with +1 Victory Point required to win (e.g., you need 11 VP instead of 10).
+•	Passing the Boot: On your turn, if you have more Victory Points than another player, you can give them the Boot for free. It’s the only "fish" you’ll want to get rid of immediately![Mahaffey,1.1]
+Implementation – The Fishermen of Catan
+
+Before  building the fish spending actions, the entire fishing infrastructure had to be laid out across the domain layer, data layer, and board initialization pipeline. The AI explored the full codebase first, discovering that partial fish infrastructure already existed (FishToken.java, FishTokenSupplier.java, StandardFishTokenSupplier.java, FishRedemptionType.java) but none of it was wired into the game loop.
+
+Pre-Existing Files (Already in Codebase):
+
+FishToken.java: Token class with FishValue enum (ONE_FISH, TWO_FISH, THREE_FISH, OLD_SHOE). Each token has a fish value and a face-down flag. The OLD_SHOE variant represents the Old Boot penalty token.
+
+FishTokenSupplier.java: Interface defining drawToken() and returnTokens(). This serves as an object seam (Feathers Ch 4) — production code uses StandardFishTokenSupplier while tests inject a FakeFishTokenSupplier.
+
+StandardFishTokenSupplier.java: Production implementation with a 20-token pool (8 one-fish, 8 two-fish, 2 three-fish, 1 old-shoe, plus a null sentinel). Tokens are drawn randomly and returned to a face-up pile after spending.
+
+FishRedemptionType.java: Enum of 5 spending actions: MOVE_ROBBER (2 fish), STEAL_RESOURCE (3 fish), FREE_RESOURCE (4 fish), FREE_ROAD (5 fish), DEVELOPMENT_CARD (7 fish).
+
+New Files Created:
+
+src/main/resources/inputs/fishingGrounds: Data file containing 6 edge fishing ground entries with x-coordinate, y-coordinate, and dice number (275,113,4 | 515,113,10 | 95,352,6 | 688,352,8 | 273,664,9 | 520,664,5).
+
+CharacterizationTest.java: 63 characterization tests (Feathers Ch 13) covering the entire fish subsystem — lake conversion, resource skip for NULL terrain, lake/fishing ground production, fish token distribution, spending at each cost level, Old Boot VP penalty and passing rules, token return to supplier, and dev card random draw.
+
+FishTokenSeamTest.java: 10 seam-focused tests exercising the FishTokenSupplier object seam, FakeFishTokenSupplier injection, Player.spendFishTokens() return type contract, token return flow, and Old Boot detection.
+
+Modified Files:
+
+Terrain.java: Added LAKE(ResourceType.NULL) and FISHING_GROUND(ResourceType.NULL) after DESERT in the enum. Both map to ResourceType.NULL so they don't produce normal resources.
+
+BoardDataInputs.java: Added fishingGroundsStream field (FileInputStream). Created an 11-argument constructor that accepts the fishing grounds stream. The original 10-argument constructor delegates to the new one with null for backward compatibility.
+
+CatanFileReader.java: Added readFishingGroundsFromFile(BufferedReader) returning ArrayList<int[]> with (x, y, diceNumber) entries parsed from the fishingGrounds data file.
+
+MainApp.java: Added FileInputStream for the fishingGrounds resource file. Passes it as the 11th argument to the BoardDataInputs constructor.
+
+Board.java (Major Changes):
+•	Added constants: FISHING_GROUNDS_FILE_PATH, LAKE_NUMBERS = {2, 3, 11, 12}, and fish cost constants (FISH_COST_MOVE_ROBBER=2, FISH_COST_STEAL_RESOURCE=3, FISH_COST_FREE_RESOURCE=4, FISH_COST_FREE_ROAD=5, FISH_COST_DEV_CARD=7).
+•	Constructor initializes fishTokenSupplier = new StandardFishTokenSupplier(rand).
+•	loadBoardData() now calls setupFishingGrounds(dataInputs) after loading hex data.
+•	New methods: setupFishingGrounds(), convertDesertToLake(), loadEdgeFishingGrounds().
+•	onRollDiceClick() calls distributeFishTokens() after giveResourcesToBorderingSettlements() when the roll is not 7.
+•	giveResourcesToBorderingSettlements() adds an early continue when resourceType == ResourceType.NULL so lake/fishing ground hexes don't produce normal resources.
+•	Extracted drawDevCardForPlayer(Player) from buyDevCard() to reuse the random card draw logic for fish spending (method seam, Feathers Ch 4).
+•	redeemFishTokens() collects spent tokens from player.spendFishTokens() (which returns List<FishToken>) and calls fishTokenSupplier.returnTokens(spent) to return them to the face-up pile. Uses drawDevCardForPlayer() for the DEVELOPMENT_CARD redemption type so players get a random card, not always a Knight.
+
+Player.java: spendFishTokens(int cost) return type changed from boolean to List<FishToken>. Returns the list of spent tokens on success (enabling the caller to return them to the supplier), or an empty list on failure. This refactoring was necessary to support the token return flow — a classic example of changing a method signature to expose a seam (Feathers Ch 25).
+
+Refactoring – Feathers Principles Applied
+
+Object Seam (Ch 4): FishTokenSupplier is an interface with StandardFishTokenSupplier as the production implementation. Tests inject FakeFishTokenSupplier which has a controlled token queue and a returned field that captures tokens returned to the supplier. This lets tests verify the full draw-spend-return lifecycle without randomness.
+
+Extracted Method Seam (Ch 4): drawDevCardForPlayer(Player) was extracted from buyDevCard() so that both the normal dev card purchase and fish spending redemption share the same random card draw logic. This eliminates duplication and creates a testable seam.
+
+Characterization Tests (Ch 13): Before modifying any fish-related behavior, I wrote 63 characterization tests that pin down the current behavior of the system. These tests document what the code actually does — including edge cases like "what happens when a city borders a lake hex?" and "does the Old Boot VP penalty stack?" — so that future refactoring has a safety net.
+
+Preprocessing Seam (Ch 4): The fishing grounds data is loaded from an external file (src/main/resources/inputs/fishingGrounds) rather than being hardcoded. The BoardDataInputs constructor accepts null for the fishing grounds stream, which causes setupFishingGrounds() to skip initialization entirely. This data-driven configuration acts as a preprocessing seam — changing the input file changes the board layout without modifying code.
+
+Signature Change for Testability (Ch 25): Changed spendFishTokens from returning boolean to returning List<FishToken>. The old signature discarded the spent tokens, making it impossible to verify the return-to-supplier flow. The new signature exposes the spent tokens so Board.redeemFishTokens() can pass them to fishTokenSupplier.returnTokens().
+
+Test Results: 630 tests, 0 failures, 0 errors after all Fishermen of Catan changes.
+👥 Catan for Two Players
+Since Catan is usually a game of trading, playing with only two people requires a "buffer" to keep the board competitive. This is handled by Neutral Players and Trade Tokens.
+1. The Neutral Players
+•	Two sets of pieces (e.g., White and Blue) are placed on the board as "Neutral Players."
+•	When you build: Whenever you build a settlement or a road, you must also build one for a Neutral Player (for free).
+•	Blocking: Neutral settlements do not produce resources, but they do take up space, settle on harbors, and count toward the Longest Road.
+2. Commercial Tokens (Trade Tokens)
+Each player starts with 5 Tokens (or 2 if you are the starting player). You earn more by:
+•	Building a settlement adjacent to the Desert (2 Tokens).
+•	Building a settlement adjacent to the Coast (1 Token).
+•	Discarding a Knight card (2 Tokens).
+3. Spending Tokens
+On your turn, you can spend tokens to force an action:
+•	The Forced Trade (1 Token): You take 2 random cards from your opponent's hand; they choose 2 cards from yours to take back.
+•	The Robber Move (2 Tokens): Move the Robber to the Desert/Lake immediately.
+	AI Journal:
+		The AI that we used was able to detect that we were starting to use Feather’s principles of seams and suggested seams to use on top of how and where to refactor and implement code to ensure our features were added to the game.
+**example of using seam
+AI Journal – Fishermen of Catan Implementation
+
+"Implement the Fishermen of Catan scenario. Here are the rules..." (full scenario rules provided including fishing grounds, lake, fish tokens, spending actions, and Old Boot)
+
+The AI (Claude Opus 4.6) began by exploring the full codebase using a subagent, reading every domain class, data layer file, and existing test. It discovered that partial fish infrastructure already existed — FishToken.java, FishTokenSupplier.java, StandardFishTokenSupplier.java, and FishRedemptionType.java were all present but completely disconnected from the game loop. No code initialized the supplier, no code distributed fish tokens on dice rolls, and no code handled spending actions.
+
+AI Response Excerpt – Initial Codebase Analysis:
+"I found existing fish infrastructure that's never wired in: FishTokenSupplier is an interface with StandardFishTokenSupplier as the production impl, but Board.java never creates one. FishRedemptionType has the 5 spending actions but the costs are wrong — FREE_ROAD is 7 and DEV_CARD is 5, which contradicts the Fishermen spec (FREE_ROAD should be 5, DEV_CARD should be 7). Player.spendFishTokens() exists but returns boolean, discarding the spent tokens so they can never be returned to the supplier pool."
+
+Phase 1 – Setup, Fishing Grounds, and Distribution:
+"I need to: (1) Add LAKE and FISHING_GROUND terrain types mapping to ResourceType.NULL, (2) Create a fishingGrounds data file with coordinates and dice numbers, (3) Add setupFishingGrounds() to Board that converts the desert to a lake and loads edge fishing grounds, (4) Wire distributeFishTokens() into onRollDiceClick(), (5) Guard giveResourcesToBorderingSettlements() against NULL resources so lake/fishing ground hexes don't produce lumber or wheat."
+
+The AI created the fishingGrounds data file (6 entries: 275,113,4 | 515,113,10 | 95,352,6 | 688,352,8 | 273,664,9 | 520,664,5), added LAKE and FISHING_GROUND to Terrain.java, extended BoardDataInputs with an 11th constructor parameter, added readFishingGroundsFromFile() to CatanFileReader.java, and implemented convertDesertToLake() + loadEdgeFishingGrounds() + setupFishingGrounds() in Board.java. It also added the fishTokenSupplier initialization to Board's constructor and wired distributeFishTokens() into onRollDiceClick() for non-7 rolls.
+
+AI Response Excerpt – Fixing Test Failures After Phase 1:
+"Running the full test suite revealed 2 categories of failures: (1) BoardTest strict mocks did not expect getFishingGroundsStream() — since BoardDataInputs now has a new field, all strict-mocked tests need the expectation added. Fix: add EasyMock.expect(mockDataInputs.getFishingGroundsStream()).andReturn(null) to 5 tests. (2) CharacterizationTest niceMocks return null for getTurn(), causing NPE in showResources(). Fix: add EasyMock.expect(tsm.getTurn()).andReturn(Turn.RED).anyTimes() before replay."
+
+All 617 tests passed after Phase 1 fixes.
+
+Phase 2 – Spending Actions, Cost Corrections, and Token Flow:
+"Looking at the FishRedemptionType costs, they're swapped: the code has DEV_CARD at cost 5 and FREE_ROAD at cost 7, but the Fishermen scenario specifies FREE_ROAD costs 5 fish and DEV_CARD costs 7 fish. I'll fix the constants. Also, spendFishTokens() returns boolean which means spent tokens vanish from the game entirely — they should be returned face-up to the supplier. I'll change the return type to List<FishToken> so Board.redeemFishTokens() can pass them to fishTokenSupplier.returnTokens(). Finally, the DEV_CARD redemption always gives a Knight — I'll extract drawDevCardForPlayer() from buyDevCard() and reuse it for fish spending so players get a random card."
+
+AI Response Excerpt – Signature Change Rationale (Feathers Ch 25):
+"Changing spendFishTokens from boolean to List<FishToken> is a textbook example of Feathers' 'Change Signature' technique (Ch 25). The old signature hid the spent tokens inside the method, making it impossible for the caller to return them to the supplier pool. The new signature exposes the spent tokens as a return value, creating a seam that lets Board.redeemFishTokens() control the token lifecycle. Tests verify this by checking that FakeFishTokenSupplier.returned contains the exact tokens that were spent."
+
+AI Response Excerpt – Extracted Method Seam:
+"buyDevCard() contains the logic for randomly drawing a development card and assigning it to a player. Rather than duplicating this logic in redeemFishTokens() for the DEVELOPMENT_CARD case, I'll extract it into drawDevCardForPlayer(Player). This creates a method seam (Feathers Ch 4) — both the normal purchase path and the fish spending path call the same method, and tests can verify card draw behavior through either entry point."
+
+Phase 2 added 23 new characterization tests covering lake conversion, fishing ground production, fish spending at each cost level (2/3/4/5/7), Old Boot VP penalty mechanics, Old Boot passing rules, token return to supplier pool, and random dev card draw. All 630 tests passed.
+
+AI Journal – Fishermen Testing Strategy (Feathers Ch 13)
+
+"As you implement, the goal is to also do any smart refactorings, or add any new tests or seams from Michael Feathers' coding book."
+
+The AI structured the test suite around Feathers' Characterization Test approach (Ch 13). Rather than writing tests that assert what the code should do, the characterization tests pin down what the code actually does — including edge cases that weren't in the original spec.
+
+AI Response Excerpt – Characterization Test Design:
+"I'm writing characterization tests that document the system's actual behavior before and after our changes. For example: testLakeConversion verifies that after setupFishingGrounds(), the desert hex entries are replaced with LAKE entries keyed on {2, 3, 11, 12}. testFishingGroundSkipsNormalResources verifies that giveResourcesToBorderingSettlements() does NOT give wood/brick/etc when the terrain is FISHING_GROUND — it hits the continue guard on ResourceType.NULL. testOldBootIncrementsVPRequirement verifies that drawing the OLD_SHOE token adds 1 to the player's VP requirement. These tests serve as a safety net for future refactoring."
+
+FakeFishTokenSupplier was used as the test double, injected via the FishTokenSupplier interface seam. It has a controlled token queue (tests push specific tokens in order) and a returned list that captures all tokens passed to returnTokens(). This enabled precise verification of the full draw-spend-return lifecycle without any randomness.
+
+Five Feathers Seams Used:
+1. Object Seam (Ch 4): FishTokenSupplier interface → StandardFishTokenSupplier (prod) vs FakeFishTokenSupplier (test)
+2. Extracted Method Seam (Ch 4): drawDevCardForPlayer() extracted from buyDevCard() for reuse
+3. Preprocessing Seam (Ch 4): fishingGrounds data file — changing the file changes the board without code changes
+4. Signature Change (Ch 25): spendFishTokens boolean→List<FishToken> to expose spent tokens
+5. I/O Capture Seam: FakeFishTokenSupplier.returned field captures tokens returned to supplier for test verification
+
+AI Journal – GUI Mock Test Harness for Fishermen of Catan
+
+"I need a driver that sits beneath the presentation layer so I can exercise the Fishermen of Catan features systematically as if a user were clicking buttons, but in a repeatable automated way."
+
+The AI helped me design the CharacterizationTest class as a mock test harness that exercises the full Board domain layer without launching the JavaFX GUI. The key insight was that Board.java's constructor accepts all its dependencies through parameters — TurnStateMachine, NumberCardDeck, BoardDataInputs, GameWindow — which means we can inject mocked versions of everything using EasyMock.
+
+AI Response Excerpt – Harness Design:
+"Board's constructor is already designed for dependency injection (Feathers Ch 4 — Dependency Injection). I'll create the harness by mocking GameWindow and TurnStateMachine with EasyMock niceMocks, and using a real Board instance with real domain objects (Player, CityPoint, RoadPoint). The FakeFishTokenSupplier replaces the production StandardFishTokenSupplier via the FishTokenSupplier interface seam. This lets tests simulate exact game scenarios: roll a number, verify fish tokens are distributed, spend fish, verify the action fires."
+
+The FakeFishTokenSupplier inner class was designed specifically as the "mock GUI" test double. It has a Queue<FishToken> that tests load with specific tokens in a deterministic order, and a List<FishToken> returned field that captures every token passed back to the supplier. This gives complete control and observability over the fish token lifecycle without any randomness.
+
+Use Cases Tested Through the Harness:
+•	UC1 – Fish Distribution: Set up a city bordering a fishing ground with dice number 8. Simulate rolling 8. Assert the player received exactly 1 fish token from the FakeFishTokenSupplier queue.
+•	UC2 – Lake Production: Convert desert to lake. Roll 2/3/11/12. Verify settlements draw 1 token, cities draw 2 tokens.
+•	UC3 – Spend 2 Fish to Move Robber: Give player 2 fish tokens. Call redeemFishTokens(MOVE_ROBBER). Verify robber moved and tokens returned to supplier.
+•	UC4 – Spend 7 Fish for Dev Card: Give player enough fish. Call redeemFishTokens(DEVELOPMENT_CARD). Verify a random dev card (not always Knight) was drawn using drawDevCardForPlayer().
+•	UC5 – Old Boot Draw and Pass: Load OLD_SHOE into the fake supplier. Distribute fish. Verify player's VP requirement increases. Then verify passOldShoe() only works when giver has more VP than receiver.
+•	UC6 – No Change Rule: Give player a 3-fish token, spend 2 fish. Verify the entire 3-fish token is consumed (excess lost).
+
+AI Response Excerpt – Why FakeFishTokenSupplier is Superior to Mocking:
+"Using EasyMock.mock(FishTokenSupplier.class) would require configuring expect().andReturn() for every draw call, which gets brittle as test complexity grows. The FakeFishTokenSupplier is a hand-rolled fake (Feathers Ch 4) that is simpler to use — just load the tokens you want in order and the fake returns them. The returned list gives you sensing (Feathers Ch 11) — you can assert exactly which tokens were returned to the pool after spending."
+
+AI Journal – Applying Feathers' Chapters to the Fishermen Feature
+
+"Pick the problem Feathers solves in any 6 of his chapters and apply his techniques to resolve those problems."
+
+I worked through the Fishermen of Catan implementation by deliberately identifying problems from Feathers' chapters in our codebase and applying his techniques. Here's exactly what I did in each area:
+
+Chapter 4 — The Seam Model (Object Seam):
+Problem: Board.java directly instantiated StandardFishTokenSupplier in the constructor, making it impossible to test fish distribution with controlled token values.
+Technique Applied: Introduced the FishTokenSupplier interface as an object seam. The production code uses StandardFishTokenSupplier (shuffled random pool of 30 tokens), while tests inject FakeFishTokenSupplier (queue-based, deterministic).
+AI's Role: The AI identified that the existing FishTokenSupplier interface was already in the codebase but never actually used as a seam — Board.java was hardcoding new StandardFishTokenSupplier(rand). The AI suggested making the supplier field accessible for test injection.
+Evaluation: This worked perfectly. Every fish-related test uses the fake supplier, giving complete control over which tokens are drawn and the ability to verify tokens are returned to the pool.
+
+Chapter 13 — I Need to Make a Change. What Tests Do I Write? (Characterization Tests):
+Problem: The fish infrastructure existed (FishToken, FishTokenSupplier, Player.spendFishTokens) but had zero tests. Before modifying spendFishTokens' return type or fixing the redemption costs, I needed a safety net.
+Technique Applied: Wrote 63 characterization tests that pin down what the system actually does. Tests like characterize_standardSupplier_initialPoolSize verify the pool has exactly 30 tokens, characterize_fishRedemptionCosts verifies the cost mapping, and characterize_spentTokensReturnedToSupplierFaceUpPile verifies the return flow.
+AI's Role: The AI generated the full suite of characterization tests by reading every fish-related class and extracting testable behaviors. It organized them into 15 sections covering every subsystem (player fish state, supplier mechanics, city resource gathering, distribution edge cases, redemption actions, Old Boot rules, bank trading rates, event handling, lake setup, token storage, and the no-change rule).
+Evaluation: This was the most valuable application of Feathers' ideas. The characterization tests caught a subtle bug: the original FishRedemptionType had FREE_ROAD at cost 7 and DEV_CARD at cost 5, which contradicted the official Fishermen scenario. Without the characterization test pinning down the costs, this swap might have gone unnoticed.
+
+Chapter 25 — Dependency-Breaking Techniques (Change Signature):
+Problem: Player.spendFishTokens(int cost) returned boolean. When true, the spent tokens had already been removed from the player's list but were not returned to the supplier — they vanished from the game.
+Technique Applied: Changed the return type from boolean to List<FishToken>. On success, returns the list of consumed tokens so the caller (Board.redeemFishTokens) can pass them to fishTokenSupplier.returnTokens(). On failure, returns an empty list.
+AI's Role: The AI identified the information loss in the boolean return type and proposed the signature change. It also updated all call sites in Board.java and all test assertions that checked the boolean return value.
+Evaluation: This was a textbook application of Feathers' technique. The new signature exposes previously hidden data and enables the full token lifecycle (draw → spend → return to face-up pile → reshuffle when face-down empty).
+
+Chapter 4 — The Seam Model (Preprocessing Seam):
+Problem: Fishing ground coordinates and dice numbers were needed for the board layout, but hardcoding them in Board.java would make the layout impossible to change without recompiling.
+Technique Applied: Created an external data file (src/main/resources/inputs/fishingGrounds) with CSV-formatted coordinates and dice numbers. Board.setupFishingGrounds() reads this file through BoardDataInputs.getFishingGroundsStream(). When the stream is null (as in most existing tests), the entire fish setup is skipped.
+AI's Role: The AI designed the data file format, created the readFishingGroundsFromFile() parser in CatanFileReader, and extended BoardDataInputs with the 11th constructor parameter while maintaining backward compatibility through the 10-parameter constructor delegation.
+Evaluation: The null-skipping behavior was critical — it meant all 500+ existing tests continued to pass without modification because they use the 10-parameter constructor that passes null for the fishing grounds stream.
+
+Chapter 4 — The Seam Model (Method/Extract Method Seam):
+Problem: buyDevCard() in Board.java contained the logic for randomly selecting a development card and assigning it to a player. The DEVELOPMENT_CARD fish redemption needed the same logic, but duplicating it would create a maintenance burden.
+Technique Applied: Extracted drawDevCardForPlayer(Player) from buyDevCard(). Both the normal purchase path and the fish redemption path now call the same method. This creates a method seam that can be overridden or intercepted in tests.
+AI's Role: The AI identified the duplication risk when implementing the DEVELOPMENT_CARD case in redeemFishTokens() and proactively extracted the method before writing the redemption logic.
+Evaluation: Clean application of Extract Method. The characterization test characterize_redeemFish_devCardDrawsRandomCard verifies that fish spending gives a random card (not always Knight), confirming the method is reused correctly.
+
+Chapter 11 — I Need to Make a Change. What Methods Should I Test? (Sensing Through Fakes):
+Problem: After spending fish tokens, how do we verify that the tokens were actually returned to the supplier pool? The StandardFishTokenSupplier's internal state (faceDown and faceUp lists) is private.
+Technique Applied: Created FakeFishTokenSupplier with a public returned field (ArrayList<FishToken>). When returnTokens() is called, the tokens are added to this list. Tests can assert returned.size() and returned.get(0).getFishCount() to verify the exact tokens that were returned.
+AI's Role: The AI designed the FakeFishTokenSupplier with the I/O capture pattern, including both the queue-based draw control and the returned list sensing. The seam5_redeemCapturesReturnedTokensForAnalysis test verifies the full flow.
+Evaluation: This is a powerful testing technique. Without the sensing variable, we would have had to make the supplier's internal lists public or add getter methods just for testing — which Feathers warns against. The fake provides sensing without modifying production code.
+
+AI Journal – Fixing Test Failures After Fishermen Implementation
+
+Problem: After implementing the full Fishermen feature, 5 tests in BoardTest.java failed with "Unexpected method call getFishingGroundsStream()".
+
+AI Response Excerpt – Root Cause Diagnosis:
+"BoardTest uses strict mocks for BoardDataInputs. Strict mocks fail on any unexpected method call. Since we added the fishingGroundsStream field and setupFishingGrounds() calls getFishingGroundsStream(), every test that creates a strict-mocked BoardDataInputs now gets an unexpected call. Fix: add EasyMock.expect(mockDataInputs.getFishingGroundsStream()).andReturn(null) to the 5 affected tests. Returning null causes setupFishingGrounds() to skip initialization, so the test behavior is unchanged."
+
+The AI also fixed 2 CharacterizationTest failures where showResources() was calling getTurn() on a niceMock that returned null, causing a NullPointerException when the null Turn was used as a HashMap key. Fix: EasyMock.expect(mockTSM.getTurn()).andReturn(Turn.RED).anyTimes() before replay.
+
+After all fixes: 630 tests, 0 failures, 0 errors.
+
+Milestone 3 – Refactoring Summary
+
+Refactoring 1 – Extract Method (drawDevCardForPlayer):
+Before: buyDevCard() contained inline logic to randomly select a dev card, remove it from the deck, and assign it to the current player. The fish redemption DEVELOPMENT_CARD case would have duplicated this logic.
+After: Extracted drawDevCardForPlayer(Player) that encapsulates the random card selection and assignment. Both buyDevCard() and redeemFishTokens() call this method.
+Test: characterize_redeemFish_devCardDrawsRandomCard verifies the method draws a random card (not always Knight).
+
+Refactoring 2 – Change Method Signature (spendFishTokens):
+Before: Player.spendFishTokens(int cost) returned boolean (true = success, false = insufficient fish). Spent tokens were removed from the player but never returned to the supplier pool.
+After: Returns List<FishToken> (list of spent tokens on success, empty list on failure). Board.redeemFishTokens() passes the returned list to fishTokenSupplier.returnTokens().
+Test: seam5_redeemCapturesReturnedTokensForAnalysis verifies the spent tokens appear in the FakeFishTokenSupplier.returned list.
+
+Refactoring 3 – Introduce Interface Seam (FishTokenSupplier):
+Before: Board.java would have directly constructed StandardFishTokenSupplier, coupling it to the random token pool. Tests would have had no way to control which tokens are drawn.
+After: Board holds a FishTokenSupplier reference. Tests inject FakeFishTokenSupplier via the interface seam. Production code uses StandardFishTokenSupplier.
+Test: seam1_fakeSupplierControlsDrawnTokenValues demonstrates controlled token injection.
+
+Refactoring 4 – Backward-Compatible Constructor Delegation (BoardDataInputs):
+Before: BoardDataInputs had a 10-parameter constructor. Adding the fishing grounds stream as a required parameter would have broken all 500+ existing tests.
+After: Added an 11-parameter constructor with the fishingGroundsStream. The original 10-parameter constructor delegates to the new one with null. The null propagates through to setupFishingGrounds(), which skips initialization when the stream is null.
+Test: All 500+ pre-existing tests pass unchanged because they use the 10-parameter constructor.
+
+Milestone 3 – Agile Testing Quadrants Coverage
+
+Q1 (Technology-Facing, Supporting the Team – Unit Tests):
+•	FishTokenSeamTest.java: 10 unit tests focused on individual seams — FakeFishTokenSupplier injection, selectTokensForCost behavior, distribution result visibility, canPassOldShoe state logic, and I/O capture through fakes.
+•	BoardTest.java: Updated 5 existing strict-mock tests to expect getFishingGroundsStream().
+
+Q2 (Business-Facing, Supporting the Team – Functional/Acceptance Tests):
+•	CharacterizationTest.java: 63 characterization tests covering full use-case scenarios — lake conversion, fishing ground production, fish spending at each cost level, Old Boot draw and passing, dev card random draw, token return to supplier, and the no-change rule. These tests exercise the system from the domain boundary, simulating what a user would experience through the GUI.
+
+Q3 (Business-Facing, Critiquing the Product – Exploratory/Manual Tests):
+•	Manual playtesting of fish token distribution: verified visually that settlements bordering fishing grounds receive tokens on matching rolls, and that lake hexes produce fish on rolls of 2, 3, 11, 12.
+•	Manual verification of Old Boot passing: played games where the boot was drawn and verified the +1 VP requirement and passing rules work as expected.
+
+Q4 (Technology-Facing, Critiquing the Product – Performance/Security/ility):
+•	The existing PerformanceAndLoadTest, SecurityTest, and IlityTest suites (62 tests total from Milestone 2) continue to pass and cover the fish subsystem implicitly through Board initialization and resource distribution tests.
+•	The fish distribution loop in distributeFishTokens() iterates all city points (O(54)) per roll, which falls within the existing performance constraints validated by the resource distribution tests.
+
+Milestone 3 – Lessons Learned
+
+1. Existing infrastructure matters: Before diving into implementation, the AI explored the entire codebase and found that 4 of the 8 fish-related classes already existed but were never connected to the game loop. This saved significant time — instead of designing the token system from scratch, we wired up the existing classes and focused on the missing pieces (terrain types, fishing grounds data, distribution logic, spending actions).
+
+2. Characterization tests are the safety net: Writing 63 characterization tests before changing spendFishTokens' return type and fixing the cost values gave me confidence that the changes were correct. The tests caught the cost swap (FREE_ROAD was 7 instead of 5, DEV_CARD was 5 instead of 7) that would have gone unnoticed in manual testing.
+
+3. Backward compatibility through constructor delegation: The pattern of adding an N+1 parameter constructor that the N-parameter constructor delegates to (with null for the new parameter) is invaluable. It let us add the fishing grounds stream without touching 500+ existing tests.
+
+4. Fakes beat mocks for complex state: EasyMock strict mocks require configuring every expected method call in order, which becomes brittle for complex interactions. The hand-rolled FakeFishTokenSupplier with its queue and returned list was simpler to write, easier to read, and more powerful for sensing.
+
+5. AI tool evaluation: Claude Opus 4.6 was highly effective at codebase exploration (finding the pre-existing fish classes), identifying Feathers patterns to apply, and generating comprehensive test suites. It was particularly good at diagnosing test failures — the strict mock and niceMock issues were identified and fixed in a single pass. The main area where I needed to guide the AI was on the domain rules (exact fish costs, Old Boot mechanics) where the spec needed to be provided explicitly.
+
+The 1 Hour Feature:
+	The feature we chose to try to implement within an hour timespan was [Yee, Sama2.1]the player vs AI game. When prompting our AI we were able to get two different plans to implement this feature. One way was the direct way which was faster but had more hardcoding. The other plan was the Michael Feathers Plan. After prompting some buzzwords of Michael Feathers it was easily able to understand that it could use the knowledge of Michael Feathers and the exact book. This other plan it created was the Michael Feathers Plan which was more thorough in its implementation and applied better coding logic.
+ 
+ 
+Milestone 4:
+	AI Journal:
+
+
+
+
+
+
+
+
+

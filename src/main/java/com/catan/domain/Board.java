@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class Board {
 
     public final static int VP_WIN_AMOUNT = 10;
     public final static int MINIMUM_ARMY = 3;
-    private static final Integer ARMY_VP = 3;
+    private static final Integer ARMY_VP = 2;
     public final static int GENERIC_TRADE_VALUE = 3;
     public final static int BANK_TRADE_VALUE = 4;
     public final static int HARBOR_TRADE_VALUE = 2;
@@ -82,6 +83,7 @@ public class Board {
 
     Random rand = new Random();
     FishTokenSupplier fishTokenSupplier;
+    HashMap<Turn, PlayerStrategy> playerStrategies = new HashMap<>();
 
     public Board(GameWindowController gameWindowController, TurnStateMachine turnStateMachine, NumberCardDeck deck){
         this.gameWindowController = gameWindowController;
@@ -358,6 +360,10 @@ public class Board {
             return;
         }
 
+        if (!player.canPayToUpgradeSettlement()) {
+            return;
+        }
+
         player.payToUpgradeSettlement();
 
         currentCity.isCity = true;
@@ -485,7 +491,8 @@ public class Board {
 
         player.roads--;
 
-        gameWindowController.showRoad(player.color, roadPoint.getX(), roadPoint.getY());
+        double angle = computeRoadAngle(roadPoint);
+        gameWindowController.showRoad(player.color, roadPoint.getX(), roadPoint.getY(), angle);
         TurnStateData updatedTurnData = new TurnStateData(player.color, player.settlements, player.roads,player.getVictoryPoints());
         gameWindowController.showInitialTurnState(updatedTurnData);
         gameWindowController.showResourceCards(this, playerResourcesMap(player));
@@ -526,6 +533,17 @@ public class Board {
             }
         }
         return maxLen + (road.isSideways() ? 0 : 1);
+    }
+
+    double computeRoadAngle(RoadPoint road) {
+        if (road.neighbors.size() >= 2) {
+            CityPoint a = road.neighbors.get(0);
+            CityPoint b = road.neighbors.get(1);
+            double dx = b.getX() - a.getX();
+            double dy = b.getY() - a.getY();
+            return Math.toDegrees(Math.atan2(dy, dx));
+        }
+        return 0;
     }
 
     public RoadPoint getRoadAtCoords(int x, int y) {
@@ -573,6 +591,27 @@ public class Board {
         showResources();
         TurnStateData turnData = new TurnStateData(player.color, player.settlements, player.roads, player.getVictoryPoints());
         this.gameWindowController.showInitialTurnState(turnData);
+
+        // Auto-play AI turns
+        PlayerStrategy nextStrategy = playerStrategies.get(turn);
+        while (nextStrategy != null && nextStrategy.isAI()) {
+            executeAITurn();
+            if (player.getVictoryPoints() >= VP_WIN_AMOUNT) {
+                gameWindowController.gameOver(player);
+                return;
+            }
+            this.gameWindowController.clearDevCards();
+            player.removeFreeRoads(player.getFreeRoads());
+            epidemicActive = false;
+            turnStateMachine.nextTurn();
+            turn = turnStateMachine.getTurn();
+            player = turnToPlayer.get(turn);
+            showDevCards();
+            showResources();
+            turnData = new TurnStateData(player.color, player.settlements, player.roads, player.getVictoryPoints());
+            this.gameWindowController.showInitialTurnState(turnData);
+            nextStrategy = playerStrategies.get(turn);
+        }
     }
 
     private boolean isInvalidNextTurnClick(int round, Player player) {
@@ -689,8 +728,8 @@ public class Board {
     static final int FISH_COST_MOVE_ROBBER = 2;
     static final int FISH_COST_STEAL_RESOURCE = 3;
     static final int FISH_COST_FREE_RESOURCE = 4;
-    static final int FISH_COST_DEV_CARD = 5;
-    static final int FISH_COST_FREE_ROAD = 7;
+    static final int FISH_COST_FREE_ROAD = 5;
+    static final int FISH_COST_DEV_CARD = 7;
 
     protected HashMap<Turn, ArrayList<FishToken>> distributeFishTokens() {
         HashMap<Turn, ArrayList<FishToken>> distributed = new HashMap<>();
@@ -750,8 +789,12 @@ public class Board {
     public boolean redeemFishTokens(Turn turn, FishRedemptionType redemption) {
         Player player = turnToPlayer.get(turn);
         int cost = getFishRedemptionCost(redemption);
-        if (!player.spendFishTokens(cost)) {
+        List<FishToken> spent = player.spendFishTokens(cost);
+        if (spent.isEmpty()) {
             return false;
+        }
+        if (fishTokenSupplier != null) {
+            fishTokenSupplier.returnTokens(spent);
         }
         switch (redemption) {
             case MOVE_ROBBER:
@@ -766,7 +809,7 @@ public class Board {
                 // Handled by caller choosing resource type
                 break;
             case DEVELOPMENT_CARD:
-                player.addDevelopmentCard(new DevelopmentCard(DevCards.KNIGHT));
+                drawDevCardForPlayer(player);
                 break;
             case FREE_ROAD:
                 player.addFreeRoads(1);
@@ -803,6 +846,70 @@ public class Board {
         gameWindowController.showTradeDialogue(this);
     }
 
+    public void addFishMarketButton() {
+        gameWindowController.addFishMarketButton(this);
+    }
+
+    public void addBuildCostReference() {
+        gameWindowController.addBuildCostReference();
+    }
+
+    public void onFishRedeem(FishRedemptionType type) {
+        Turn turn = turnStateMachine.getTurn();
+        boolean success = redeemFishTokens(turn, type);
+        if (!success) {
+            gameWindowController.showFishMarketError("Not enough fish!");
+            return;
+        }
+        gameWindowController.removeFishMarketPanel();
+        showResources();
+        if (type == FishRedemptionType.DEVELOPMENT_CARD) {
+            showDevCards();
+        }
+    }
+
+    public void onFishStealResource() {
+        Turn turn = turnStateMachine.getTurn();
+        boolean success = redeemFishTokens(turn, FishRedemptionType.STEAL_RESOURCE);
+        if (!success) {
+            gameWindowController.showFishMarketError("Not enough fish!");
+            return;
+        }
+        gameWindowController.removeFishMarketPanel();
+        Set<Player> victims = new HashSet<>();
+        for (Turn t : new Turn[]{Turn.RED, Turn.BLUE, Turn.ORANGE, Turn.WHITE}) {
+            if (!t.equals(turn)) {
+                Player p = turnToPlayer.get(t);
+                if (p.getTotalResources() > 0) {
+                    victims.add(p);
+                }
+            }
+        }
+        if (!victims.isEmpty()) {
+            gameWindowController.showStealDialog(this, victims);
+        }
+        showResources();
+    }
+
+    public void onFishFreeResource(ResourceType resourceType) {
+        Turn turn = turnStateMachine.getTurn();
+        boolean success = redeemFishTokens(turn, FishRedemptionType.FREE_RESOURCE);
+        if (!success) {
+            gameWindowController.showFishMarketError("Not enough fish!");
+            return;
+        }
+        Player player = turnToPlayer.get(turn);
+        player.addResources(resourceType, 1);
+        showResources();
+    }
+
+    public void onPassOldShoe(Turn target) {
+        Turn from = turnStateMachine.getTurn();
+        if (canPassOldShoe(from, target)) {
+            passOldShoe(from, target);
+        }
+    }
+
     public ArrayList<RobberPoint> createRobberPoints(FileInputStream coordsStream, FileInputStream resourceStream, FileInputStream numberStream) {
         BufferedReader coordinateReader = CatanFileReader.getBufferedReaderFromFileName(coordsStream);
         ArrayList<Point> coordinatePoints = CatanFileReader.readCoordinatesFromFile(coordinateReader);
@@ -832,30 +939,34 @@ public class Board {
     public void buyDevCard() {
         Turn currentTurn = turnStateMachine.getTurn();
         Player player = turnToPlayer.get(currentTurn);
-        int drawnType = rand.nextInt(DEV_CARD_AMT);
         if (player.canPayForDevCard()) {
             player.payForDevCard();
             gameWindowController.showResourceCards(this, playerResourcesMap(player));
-            if(drawnType == KNIGHT){
-                DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.KNIGHT);
-                cardToAdd.setTurnBought(turnStateMachine.getRound());
-                player.addDevelopmentCard(cardToAdd);
-            } else if (drawnType == VICTORY_POINT) {
-                player.addDevelopmentCard(new DevelopmentCard(DevCards.VICTORY_POINT));
-                player.addVictoryPoints(1);
-            } else if (drawnType == YEAR_OF_PLENTY) {
-                DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.YEAR_OF_PLENTY);
-                cardToAdd.setTurnBought(turnStateMachine.getRound());
-                player.addDevelopmentCard(cardToAdd);
-            } else if (drawnType == ROAD_BUILDING) {
-                DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.ROAD_BUILDING);
-                cardToAdd.setTurnBought(turnStateMachine.getRound());
-                player.addDevelopmentCard(cardToAdd);
-            } else {
-                DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.MONOPOLY);
-                cardToAdd.setTurnBought(turnStateMachine.getRound());
-                player.addDevelopmentCard(cardToAdd);
-            }
+            drawDevCardForPlayer(player);
+        }
+    }
+
+    void drawDevCardForPlayer(Player player) {
+        int drawnType = rand.nextInt(DEV_CARD_AMT);
+        if(drawnType == KNIGHT){
+            DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.KNIGHT);
+            cardToAdd.setTurnBought(turnStateMachine.getRound());
+            player.addDevelopmentCard(cardToAdd);
+        } else if (drawnType == VICTORY_POINT) {
+            player.addDevelopmentCard(new DevelopmentCard(DevCards.VICTORY_POINT));
+            player.addVictoryPoints(1);
+        } else if (drawnType == YEAR_OF_PLENTY) {
+            DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.YEAR_OF_PLENTY);
+            cardToAdd.setTurnBought(turnStateMachine.getRound());
+            player.addDevelopmentCard(cardToAdd);
+        } else if (drawnType == ROAD_BUILDING) {
+            DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.ROAD_BUILDING);
+            cardToAdd.setTurnBought(turnStateMachine.getRound());
+            player.addDevelopmentCard(cardToAdd);
+        } else {
+            DevelopmentCard cardToAdd = new DevelopmentCard(DevCards.MONOPOLY);
+            cardToAdd.setTurnBought(turnStateMachine.getRound());
+            player.addDevelopmentCard(cardToAdd);
         }
     }
 
@@ -1314,7 +1425,9 @@ public class Board {
             }
             if (!ownedRoads.isEmpty()) {
                 int index = rand.nextInt(ownedRoads.size());
-                ownedRoads.get(index).setSideways(true);
+                RoadPoint affected = ownedRoads.get(index);
+                affected.setSideways(true);
+                gameWindowController.showSidewaysRoad(turn, affected.getX(), affected.getY());
             }
         }
         updateLongestRoad();
@@ -1449,6 +1562,347 @@ public class Board {
                 }
                 return;
             }
+        }
+    }
+
+    // ==================== Two-Player Variant ====================
+
+    static final int FORCED_TRADE_COST = 1;
+    static final int ROBBER_MOVE_COST = 2;
+    static final int TOKENS_FOR_DESERT_ADJACENT = 2;
+    static final int TOKENS_FOR_COAST_ADJACENT = 1;
+    static final int TOKENS_FOR_KNIGHT_DISCARD = 2;
+    static final int STARTING_TOKENS_FIRST_PLAYER = 2;
+    static final int STARTING_TOKENS_SECOND_PLAYER = 5;
+    static final int FORCED_TRADE_CARDS = 2;
+
+    boolean twoPlayerMode = false;
+    NeutralPlayer neutralPlayer1;
+    NeutralPlayer neutralPlayer2;
+
+    public void enableTwoPlayerMode(Turn neutral1Color, Turn neutral2Color) {
+        this.twoPlayerMode = true;
+        this.neutralPlayer1 = new NeutralPlayer(neutral1Color);
+        this.neutralPlayer2 = new NeutralPlayer(neutral2Color);
+
+        Player firstPlayer = turnToPlayer.get(Turn.RED);
+        Player secondPlayer = turnToPlayer.get(Turn.BLUE);
+        firstPlayer.addTradeTokens(STARTING_TOKENS_FIRST_PLAYER);
+        secondPlayer.addTradeTokens(STARTING_TOKENS_SECOND_PLAYER);
+    }
+
+    public boolean isTwoPlayerMode() {
+        return twoPlayerMode;
+    }
+
+    public NeutralPlayer getNeutralPlayer1() {
+        return neutralPlayer1;
+    }
+
+    public NeutralPlayer getNeutralPlayer2() {
+        return neutralPlayer2;
+    }
+
+    /**
+     * Places a settlement for a neutral player at the given coordinates.
+     * Neutral settlements do not produce resources but block the space.
+     */
+    public boolean placeNeutralSettlement(NeutralPlayer neutral, int x, int y) {
+        if (!twoPlayerMode || !neutral.hasSettlementsRemaining()) {
+            return false;
+        }
+        CityPoint cityPoint = getCityAtCoords(x, y);
+        if (cityPoint.hasSettlement() || pointTooCloseToSettlement(cityPoint)) {
+            return false;
+        }
+        cityPoint.placeSettlement(neutral.color);
+        neutral.useSettlement();
+        if (cityPoint instanceof HarborPoint) {
+            harborSettlements.put(neutral.color, harborSettlements.getOrDefault(neutral.color, 0) + 1);
+        }
+        gameWindowController.showSettlement(neutral.color, x, y);
+        return true;
+    }
+
+    /**
+     * Places a road for a neutral player at the given coordinates.
+     * Neutral roads count toward longest road calculation.
+     */
+    public boolean placeNeutralRoad(NeutralPlayer neutral, int x, int y) {
+        if (!twoPlayerMode || !neutral.hasRoadsRemaining()) {
+            return false;
+        }
+        RoadPoint roadPoint = getRoadAtCoords(x, y);
+        if (roadPoint.hasRoad) {
+            return false;
+        }
+        roadPoint.placeRoad(neutral.color);
+        neutral.useRoad();
+        updateLongestRoad();
+        double angle = computeRoadAngle(roadPoint);
+        gameWindowController.showRoad(neutral.color, x, y, angle);
+        return true;
+    }
+
+    /**
+     * Awards trade tokens to a player based on settlement adjacency.
+     * - Adjacent to Desert/Lake: 2 tokens
+     * - Adjacent to Coast (has fewer than 3 terrain hexes): 1 token
+     */
+    public int awardTradeTokensForSettlement(Player player, CityPoint cityPoint) {
+        if (!twoPlayerMode) {
+            return 0;
+        }
+        int tokensEarned = 0;
+        for (Terrain terrain : cityPoint.getTerrains()) {
+            if (terrain == Terrain.DESERT || terrain == Terrain.LAKE) {
+                tokensEarned += TOKENS_FOR_DESERT_ADJACENT;
+                break;
+            }
+        }
+        if (cityPoint.getTerrains().size() < 3) {
+            tokensEarned += TOKENS_FOR_COAST_ADJACENT;
+        }
+        player.addTradeTokens(tokensEarned);
+        return tokensEarned;
+    }
+
+    /**
+     * Discards a knight card to earn 2 trade tokens (two-player variant).
+     */
+    public boolean discardKnightForTokens(Turn turn) {
+        if (!twoPlayerMode) {
+            return false;
+        }
+        Player player = turnToPlayer.get(turn);
+        for (DevelopmentCard devCard : player.getDevCards()) {
+            if (devCard.getType() == DevCards.KNIGHT) {
+                player.removeDevelopmentCard(devCard);
+                player.addTradeTokens(TOKENS_FOR_KNIGHT_DISCARD);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Forced Trade (costs 1 token): Take 2 random cards from opponent,
+     * opponent chooses 2 cards from your hand to take back.
+     * Returns the 2 resource types taken from the opponent, or empty list if invalid.
+     */
+    public ArrayList<ResourceType> executeForcedTrade(Turn actingTurn, Turn opponentTurn, ArrayList<ResourceType> cardsToGiveBack) {
+        if (!twoPlayerMode) {
+            return new ArrayList<>();
+        }
+        Player actor = turnToPlayer.get(actingTurn);
+        Player opponent = turnToPlayer.get(opponentTurn);
+
+        if (!actor.canSpendTradeTokens(FORCED_TRADE_COST)) {
+            return new ArrayList<>();
+        }
+        if (opponent.getTotalResources() < FORCED_TRADE_CARDS) {
+            return new ArrayList<>();
+        }
+        if (cardsToGiveBack.size() != FORCED_TRADE_CARDS) {
+            return new ArrayList<>();
+        }
+
+        actor.spendTradeTokens(FORCED_TRADE_COST);
+
+        // Take 2 random cards from opponent
+        ArrayList<ResourceType> opponentCards = opponent.getResourcesAsList();
+        ArrayList<ResourceType> stolenCards = new ArrayList<>();
+        for (int i = 0; i < FORCED_TRADE_CARDS; i++) {
+            int index = rand.nextInt(opponentCards.size());
+            ResourceType stolen = opponentCards.remove(index);
+            stolenCards.add(stolen);
+            opponent.subResources(stolen, 1);
+            actor.addResources(stolen, 1);
+        }
+
+        // Opponent takes 2 chosen cards back from actor
+        for (ResourceType giveBack : cardsToGiveBack) {
+            if (actor.getResource(giveBack) > 0) {
+                actor.subResources(giveBack, 1);
+                opponent.addResources(giveBack, 1);
+            }
+        }
+
+        showResources();
+        return stolenCards;
+    }
+
+    /**
+     * Robber Move (costs 2 tokens): Immediately move the robber to the desert/lake.
+     */
+    public boolean executeRobberMoveWithTokens(Turn turn) {
+        if (!twoPlayerMode) {
+            return false;
+        }
+        Player player = turnToPlayer.get(turn);
+        if (!player.canSpendTradeTokens(ROBBER_MOVE_COST)) {
+            return false;
+        }
+        player.spendTradeTokens(ROBBER_MOVE_COST);
+
+        // Reset robber to desert/lake (no active blocking)
+        robberResource = INITIAL_ROBBER_RESOURCE_TYPE;
+        robberNumber = INITIAL_ROBBER_NUMBER;
+        robberMoved = true;
+
+        showResources();
+        return true;
+    }
+
+    // ==================== Player vs AI (Michael Feathers Seam) ====================
+
+    private boolean aiLogEnabled = false;
+
+    public void enableAILog() {
+        aiLogEnabled = true;
+        gameWindowController.addAILog();
+    }
+
+    private void logAIAction(String message) {
+        if (aiLogEnabled) {
+            gameWindowController.appendAILog(message);
+        }
+    }
+
+    public void setPlayerStrategy(Turn turn, PlayerStrategy strategy) {
+        playerStrategies.put(turn, strategy);
+    }
+
+    public PlayerStrategy getPlayerStrategy(Turn turn) {
+        return playerStrategies.getOrDefault(turn, new HumanPlayerStrategy());
+    }
+
+    public boolean isAITurn() {
+        Turn current = turnStateMachine.getTurn();
+        PlayerStrategy strategy = playerStrategies.get(current);
+        return strategy != null && strategy.isAI();
+    }
+
+    /**
+     * Executes a full AI turn: roll dice, place settlement/road or upgrade,
+     * optionally buy dev card, then end turn.
+     * Returns true if the AI successfully took its turn.
+     */
+
+    private void autoDiscardForAIPlayers() {
+        for (Turn t : PLAYER_ORDER) {
+            PlayerStrategy strat = playerStrategies.get(t);
+            if (strat != null && strat.isAI()) {
+                Player p = turnToPlayer.get(t);
+                if (p.needsToDiscard()) {
+                    int required = p.getRequiredDiscardCount();
+                    HashMap<ResourceType, Integer> discardMap = new HashMap<>();
+                    ArrayList<ResourceType> resources = p.getResourcesAsList();
+                    java.util.Collections.shuffle(resources);
+                    int discarded = 0;
+                    for (ResourceType r : resources) {
+                        if (discarded >= required) break;
+                        discardMap.merge(r, 1, Integer::sum);
+                        discarded++;
+                    }
+                    p.discard(discardMap);
+                    logAIAction(t + " discarded " + required + " cards");
+                }
+            }
+        }
+    }
+
+    public boolean executeAITurn() {
+        Turn current = turnStateMachine.getTurn();
+        PlayerStrategy strategy = playerStrategies.get(current);
+        if (strategy == null || !strategy.isAI()) {
+            return false;
+        }
+
+        Player player = turnToPlayer.get(current);
+        int round = turnStateMachine.getRound();
+
+        if (round <= 2) {
+            executeAISetupTurn(strategy, player);
+        } else {
+            executeAINormalTurn(strategy, player);
+        }
+        return true;
+    }
+
+    private void executeAISetupTurn(PlayerStrategy strategy, Player player) {
+        // Place settlement
+        CityPoint settlement = strategy.chooseSettlementLocation(this, player);
+        if (settlement != null) {
+            onCityPointClick(settlement.getX(), settlement.getY());
+            logAIAction(player.color + " placed a settlement");
+        }
+
+        // Place road
+        RoadPoint road = strategy.chooseRoadLocation(this, player);
+        if (road != null) {
+            onRoadPointClick(road.getX(), road.getY());
+            logAIAction(player.color + " placed a road");
+        }
+    }
+
+    private void executeAINormalTurn(PlayerStrategy strategy, Player player) {
+        // Roll dice
+        onRollDiceClick();
+        logAIAction(player.color + " rolled a " + numRolled);
+
+        // Auto-discard for all AI players that need to discard
+        autoDiscardForAIPlayers();
+
+        // Handle robber if 7 was rolled
+        if (!robberMoved) {
+            RobberPoint robberChoice = strategy.chooseRobberPlacement(this, player);
+            if (robberChoice != null) {
+                onRobberPointClick(robberChoice.getX(), robberChoice.getY());
+                logAIAction(player.color + " moved the robber");
+            }
+
+            if (!eligiblePlayers.isEmpty()) {
+                Turn victim = strategy.choosePlayerToRob(this, player, new ArrayList<>(eligiblePlayers));
+                if (victim != Turn.NONE) {
+                    robCardFromPlayer(victim, rand);
+                    logAIAction(player.color + " stole from " + victim);
+                }
+            }
+
+            // Ensure robber is considered moved so the game doesn't freeze
+            robberMoved = true;
+        }
+
+        // Try to upgrade a settlement to a city
+        CityPoint upgrade = strategy.chooseCityUpgrade(this, player);
+        if (upgrade != null) {
+            onCityPointClick(upgrade.getX(), upgrade.getY());
+            logAIAction(player.color + " upgraded to a city");
+        }
+
+        // Try to build a settlement
+        if (player.canPayForSettlement() && player.settlements > 0) {
+            CityPoint settlement = strategy.chooseSettlementLocation(this, player);
+            if (settlement != null) {
+                onCityPointClick(settlement.getX(), settlement.getY());
+                logAIAction(player.color + " built a settlement");
+            }
+        }
+
+        // Try to build a road
+        if (player.canPayForRoad() && player.roads > 0) {
+            RoadPoint road = strategy.chooseRoadLocation(this, player);
+            if (road != null) {
+                onRoadPointClick(road.getX(), road.getY());
+                logAIAction(player.color + " built a road");
+            }
+        }
+
+        // Try to buy a dev card
+        if (strategy.shouldBuyDevCard(this, player)) {
+            buyDevCard();
+            logAIAction(player.color + " bought a development card");
         }
     }
 }

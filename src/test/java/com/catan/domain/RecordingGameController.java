@@ -72,7 +72,7 @@ public class RecordingGameController extends GameWindowController {
     }
 
     @Override
-    public void showRoad(Turn turn, int x, int y) {
+    public void showRoad(Turn turn, int x, int y, double angle) {
         roads.add(new RoadEvent(turn, x, y));
         log.add("showRoad(" + turn + "," + x + "," + y + ")");
     }

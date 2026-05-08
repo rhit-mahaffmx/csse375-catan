@@ -39,8 +39,12 @@ public class GameWindowController {
         this.gameWindow.addNextTurnButton(board);
     }
 
-    public void showRoad(Turn turn, int x, int y) {
-        gameWindow.showRoad(turn, x, y);
+    public void showRoad(Turn turn, int x, int y, double angle) {
+        gameWindow.showRoad(turn, x, y, angle);
+    }
+
+    public void showSidewaysRoad(Turn turn, int x, int y) {
+        gameWindow.showSidewaysRoad(turn, x, y);
     }
 
     public void addDiceRollButton(Board board) { this.gameWindow.addDiceRollButton(board);
@@ -70,7 +74,17 @@ public class GameWindowController {
     }
 
     public void showResourceCards(Board board, HashMap<ResourceType, Integer> resourceMap) {
-        gameWindow.showResourceCards(resourceMap);
+        java.util.ArrayList<Integer> fishTokenDenoms = new java.util.ArrayList<>();
+        int tradeTokenCount = 0;
+        if (board.turnStateMachine != null) {
+            Turn currentTurn = board.turnStateMachine.getTurn();
+            Player player = board.turnToPlayer.get(currentTurn);
+            for (FishToken ft : player.getFishTokenList()) {
+                fishTokenDenoms.add(ft.getFishCount());
+            }
+            tradeTokenCount = player.getTradeTokens();
+        }
+        gameWindow.showResourceCards(resourceMap, fishTokenDenoms, tradeTokenCount);
     }
 
     public void showInvalidInputAndPass(String message) {
@@ -107,5 +121,29 @@ public class GameWindowController {
 
     public void showEventText(String message) {
         gameWindow.showEventText(message);
+    }
+
+    public void addFishMarketButton(Board board) {
+        gameWindow.addFishMarketButton(board);
+    }
+
+    public void removeFishMarketPanel() {
+        gameWindow.removeFishMarketPanel();
+    }
+
+    public void showFishMarketError(String message) {
+        gameWindow.showFishMarketError(message);
+    }
+
+    public void addAILog() {
+        gameWindow.addAILog();
+    }
+
+    public void appendAILog(String message) {
+        gameWindow.appendAILog(message);
+    }
+
+    public void addBuildCostReference() {
+        gameWindow.addBuildCostReference();
     }
 }
